@@ -22,6 +22,7 @@ module.exports = {
         allowTemplateLiterals: true,
       },
     ],
+    'no-undef': 0,
     'prettier/prettier': [
       'error',
       {

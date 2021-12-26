@@ -1,0 +1,58 @@
+// font
+$font: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
+  Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+
+// font-sizes
+$font-big: 35px;
+$font-h1: 28px;
+$font-h2: 22px;
+$font-h3: 18px;
+$font-paragraph: 16px;
+$font-small: 14px;
+$font-extra-small: 12px;
+$font-tiny: 10px;
+
+// font-weight
+$weight-normal: 400;
+$weight-bold: 700;
+
+// colors
+$black: rgb(0, 0, 0);
+
+// media queries
+$phone: 525px;
+$tablet: 768px;
+$desktop: 1024px;
+$desktop-large: 1325px;
+
+// spacing
+$spacing1: 0.25rem;
+$spacing2: 0.5rem;
+$spacing3: 0.75rem;
+$spacing4: 1rem;
+$spacing5: 1.25rem;
+$spacing6: 1.5rem;
+$spacing7: 1.75rem;
+$spacing8: 2rem;
+$spacing9: 2.5rem;
+$spacing10: 3rem;
+$spacing11: 4rem;
+$spacing11: 6rem;
+$spacing13: 8rem;
+$spacing14: 12rem;
+$spacing15: 16rem;
+$spacing16: 24rem;
+$spacing17: 30rem;
+$spacing18: 48rem;
+
+// Box-shadow
+$box-shadow: 0 0px 10px rgba(0, 0, 0, 0.05);
+$box-shadow-big: 0 0px 17.5px rgba(0, 0, 0, 0.08);
+
+// Gradient
+$gradient: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
+
+// Border-radius
+$border-radius-small: 7px;
+$border-radius-medium: 17px;
+$border-radius-big: 22px;

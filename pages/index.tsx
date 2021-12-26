@@ -1,9 +1,11 @@
-import type { NextPage } from 'next'
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+// Components==============
+import React from 'react';
+import Head from 'next/head';
+import Image from 'next/image';
+import styles from 'styles/Home.module.css';
+// =========================
 
-const Home: NextPage = () => {
+export default function Dashboard() {
   return (
     <div className={styles.container}>
       <Head>
@@ -66,7 +68,5 @@ const Home: NextPage = () => {
         </a>
       </footer>
     </div>
-  )
+  );
 }
-
-export default Home

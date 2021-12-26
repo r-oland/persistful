@@ -1,11 +1,16 @@
 // Components==============
-import React from 'react';
+import useGetTest from 'actions/useGetTest';
 import Head from 'next/head';
 import Image from 'next/image';
+import React from 'react';
 import styles from 'styles/Home.module.css';
 // =========================
 
 export default function Dashboard() {
+  const allTest = useGetTest();
+
+  console.log(allTest);
+
   return (
     <div className={styles.container}>
       <Head>

@@ -23,6 +23,12 @@ module.exports = {
       },
     ],
     'no-undef': 0,
+    'no-underscore-dangle': 0,
+    'no-console': 0,
+    'import/extensions': 0,
+    'import/no-mutable-exports': 0,
+    'import/prefer-default-export': 0,
+    '@typescript-eslint/ban-ts-comment': 0,
     'prettier/prettier': [
       'error',
       {

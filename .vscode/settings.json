@@ -27,5 +27,15 @@
     "javascriptreact",
     "typescript",
     "typescriptreact"
+  ],
+  "vsicons.associations.folders": [
+    {
+      "icon": "paket",
+      "extensions": ["global_components"]
+    },
+    {
+      "icon": "db",
+      "extensions": ["actions"]
+    }
   ]
 }

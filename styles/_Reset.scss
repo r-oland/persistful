@@ -1,11 +1,18 @@
-svg {
-  display: block;
-}
-
 *,
 ::before,
 ::after {
   box-sizing: border-box;
+}
+
+body {
+  background-image: url('../public/Background.png');
+  background-size: 22px;
+  background-position-x: 11px;
+  background-position-y: 11px;
+}
+
+svg {
+  display: block;
 }
 
 body,

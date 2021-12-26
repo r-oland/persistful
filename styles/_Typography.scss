@@ -25,13 +25,8 @@ button {
   font-size: $font-paragraph;
 }
 
-small {
-  font-size: $font-small;
-}
-
 input,
 textarea,
 select {
   font-family: $font;
-  border-radius: $border-radius-small;
 }

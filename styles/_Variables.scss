@@ -1,12 +1,11 @@
 // font
-$font: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu,
-  Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+$font: 'Inter', sans-serif;
 
 // font-sizes
-$font-big: 35px;
-$font-h1: 28px;
-$font-h2: 22px;
-$font-h3: 18px;
+$font-h1: 40px;
+$font-h2: 24px;
+$font-h3: 20px;
+$font-large: 18px;
 $font-paragraph: 16px;
 $font-small: 14px;
 $font-extra-small: 12px;
@@ -14,10 +13,21 @@ $font-tiny: 10px;
 
 // font-weight
 $weight-normal: 400;
+$weight-semi-bold: 600;
 $weight-bold: 700;
 
 // colors
-$black: rgb(0, 0, 0);
+$true-black: #000000;
+$black: #282f36;
+$grey: #a8acb1;
+$grey-light: #eeeeef;
+$white: #ffffff;
+$red-dark: #df7262;
+$red: #ff8170;
+$red-light: #fbefed;
+$green-dark: #47b58b;
+$green: #2cd997;
+$green-light: #e5f7f0;
 
 // media queries
 $phone: 525px;
@@ -45,14 +55,5 @@ $spacing16: 24rem;
 $spacing17: 30rem;
 $spacing18: 48rem;
 
-// Box-shadow
-$box-shadow: 0 0px 10px rgba(0, 0, 0, 0.05);
-$box-shadow-big: 0 0px 17.5px rgba(0, 0, 0, 0.08);
-
-// Gradient
-$gradient: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0));
-
 // Border-radius
-$border-radius-small: 7px;
-$border-radius-medium: 17px;
-$border-radius-big: 22px;
+$border-radius: 1px;

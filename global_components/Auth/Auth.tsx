@@ -1,9 +1,9 @@
 // Components==============
-import { useSession } from 'next-auth/react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React from 'react';
 import { faSpinnerThird } from '@fortawesome/pro-regular-svg-icons';
-import { motion } from 'framer-motion';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useSession } from 'next-auth/react';
+import React from 'react';
 import styles from './Auth.module.scss';
 // =========================
 
@@ -12,22 +12,34 @@ export default function Auth({ children }: { children: JSX.Element }) {
     required: true,
   });
 
-  if (status === 'loading')
-    return (
-      <div className={styles.wrapper}>
+  return (
+    <AnimatePresence>
+      {status === 'loading' ? (
         <motion.div
+          className={styles.wrapper}
+          initial={{ opacity: 0 }}
           animate={{
-            rotate: [0, 720],
+            opacity: 1,
           }}
-          transition={{
-            duration: 1.5,
-            repeat: Infinity,
-          }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.2 }}
+          key={0}
         >
-          <FontAwesomeIcon icon={faSpinnerThird} />
+          <motion.div
+            animate={{
+              rotate: [0, 720],
+            }}
+            transition={{
+              duration: 1.5,
+              repeat: Infinity,
+            }}
+          >
+            <FontAwesomeIcon icon={faSpinnerThird} />
+          </motion.div>
         </motion.div>
-      </div>
-    );
-
-  return children;
+      ) : (
+        children
+      )}
+    </AnimatePresence>
+  );
 }

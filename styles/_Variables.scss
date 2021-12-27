@@ -22,12 +22,12 @@ $black: #282f36;
 $grey: #a8acb1;
 $grey-light: #eeeeef;
 $white: #ffffff;
-$red-dark: #df7262;
-$red: #ff8170;
-$red-light: #fbefed;
-$green-dark: #47b58b;
-$green: #2cd997;
-$green-light: #e5f7f0;
+$red-dark: #e56856;
+$red: #ff7360;
+$red-light: #fff1ef;
+$green-dark: #68b99a;
+$green: #18e597;
+$green-light: #e8fcf5;
 
 // media queries
 $phone: 525px;
@@ -47,7 +47,7 @@ $spacing8: 2rem;
 $spacing9: 2.5rem;
 $spacing10: 3rem;
 $spacing11: 4rem;
-$spacing11: 6rem;
+$spacing12: 6rem;
 $spacing13: 8rem;
 $spacing14: 12rem;
 $spacing15: 16rem;
@@ -55,5 +55,10 @@ $spacing16: 24rem;
 $spacing17: 30rem;
 $spacing18: 48rem;
 
-// Border-radius
+// Border
 $border-radius: 1px;
+$border: 1px solid $black;
+
+@mixin underline {
+  box-shadow: inset 0 -12px 0px 0px $green-light;
+}

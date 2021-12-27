@@ -1,0 +1,11 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  width: 100%;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  color: $green;
+  font-size: 70px;
+}

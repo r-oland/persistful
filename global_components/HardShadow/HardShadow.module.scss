@@ -1,0 +1,23 @@
+@import 'styles/Variables';
+
+.wrapper {
+  position: relative;
+  margin-top: 4px;
+  margin-right: 4px;
+
+  .content {
+    z-index: 1;
+    position: relative;
+  }
+
+  .shadow {
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: $true-black;
+    width: 100%;
+    height: 100%;
+    border-radius: $border-radius;
+  }
+}

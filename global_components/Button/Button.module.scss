@@ -1,0 +1,28 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: $spacing2;
+  color: $white;
+  padding: 0.4rem $spacing6;
+  font-weight: $weight-bold;
+  border: $border;
+  border-radius: $border-radius;
+
+  &:hover {
+    box-shadow: 0px 0px $true-black;
+  }
+
+  &.red {
+    background-color: $red;
+  }
+  &.green {
+    background-color: $green;
+  }
+  &.white {
+    background-color: $white;
+    color: $black;
+  }
+}

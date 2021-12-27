@@ -1,0 +1,59 @@
+@import 'styles/Variables';
+
+.wrapper {
+  width: 100%;
+  display: grid;
+
+  @media screen and (min-width: $desktop) {
+    grid-template-columns: 1fr 1fr;
+    height: 100vh;
+  }
+}
+
+.left {
+  background-color: $green-light;
+  position: relative;
+  padding: 0 $spacing8;
+  height: 60vw;
+  max-height: 350px;
+  span {
+    margin: $spacing8 10% !important;
+  }
+
+  @media screen and (min-width: $desktop) {
+    height: initial;
+    max-height: initial;
+
+    span {
+      margin: 0 10% !important;
+    }
+  }
+
+  .red {
+    background-color: $red-light;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: polygon(71% 52%, 100% 41%, 100% 100%, 0 100%, 0 60%, 34% 57%);
+  }
+}
+
+.right {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: $spacing6;
+  justify-items: center;
+  margin-top: $spacing10;
+
+  @media screen and (min-width: $desktop) {
+    margin-top: 0;
+  }
+
+  h1 {
+    @include underline;
+  }
+}

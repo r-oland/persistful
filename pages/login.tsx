@@ -40,3 +40,5 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     props: {},
   };
 };
+
+Login.noAuth = true;

@@ -1,7 +1,7 @@
 // Components==============
 import { motion } from 'framer-motion';
 import React from 'react';
-import { content, shadow, wrapper } from './HardShadow.module.scss';
+import styles from './HardShadow.module.scss';
 // =========================
 
 const variants = {
@@ -22,7 +22,7 @@ export default function HardShadow({
 }) {
   return (
     <motion.div
-      className={wrapper}
+      className={styles.wrapper}
       whileHover="hover"
       initial="initial"
       whileTap="tap"
@@ -30,12 +30,12 @@ export default function HardShadow({
     >
       <motion.div
         variants={child}
-        className={content}
+        className={styles.content}
         transition={{ type: 'tween', duration: 0.2 }}
       >
         {children}
       </motion.div>
-      <div className={shadow} />
+      <div className={styles.shadow} />
     </motion.div>
   );
 }

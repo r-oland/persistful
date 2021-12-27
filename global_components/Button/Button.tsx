@@ -2,7 +2,7 @@
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import { useRouter } from 'next/router';
 import React from 'react';
-import styles, { wrapper } from './Button.module.scss';
+import styles from './Button.module.scss';
 // =========================
 
 type Color = 'red' | 'green' | 'white';
@@ -34,7 +34,7 @@ export default function Button({
             : onClick
         }
         type={to ? 'button' : 'submit'}
-        className={`${wrapper} ${styles[color]}`}
+        className={`${styles.wrapper} ${styles[color]}`}
         style={
           inactive
             ? {

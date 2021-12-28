@@ -2,8 +2,9 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-auto-flow: column;
   align-items: center;
+  justify-content: center;
   gap: $spacing2;
   color: $white;
   padding: 0.4rem $spacing6;

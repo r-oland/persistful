@@ -42,18 +42,56 @@
 
 .right {
   display: grid;
-  justify-content: center;
   align-items: center;
   align-content: center;
-  gap: $spacing6;
-  justify-items: center;
   margin-top: $spacing10;
+  padding: 0 $spacing6;
+
+  @media screen and (min-width: $phone) {
+    justify-content: center;
+    padding: initial;
+  }
+
+  .content {
+    display: grid;
+    gap: $spacing6;
+    justify-items: center;
+
+    @media screen and (min-width: $phone) {
+      width: 300px;
+    }
+
+    h1 {
+      @include underline;
+    }
+
+    form {
+      display: grid;
+      gap: $spacing6;
+      width: 100%;
+    }
+
+    .buttons {
+      width: 100%;
+      display: grid;
+      gap: $spacing3;
+    }
+
+    .switch-form {
+      color: $grey;
+      font-size: $font-small;
+      text-align: center;
+      cursor: pointer;
+
+      strong {
+        font-size: $font-small;
+        margin-top: $spacing1;
+        color: $black;
+      }
+    }
+  }
 
   @media screen and (min-width: $desktop) {
     margin-top: 0;
-  }
-
-  h1 {
-    @include underline;
   }
 }

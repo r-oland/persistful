@@ -1,0 +1,33 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  gap: $spacing8;
+  justify-items: center;
+  align-content: center;
+
+  .text {
+    display: grid;
+    gap: $spacing4;
+    justify-items: center;
+
+    h1 {
+      @include underline;
+    }
+
+    p {
+      font-size: $font-large;
+      max-width: 800px;
+      text-align: center;
+    }
+  }
+
+  .buttons {
+    display: grid;
+    grid-auto-flow: column;
+    gap: $spacing4;
+  }
+}

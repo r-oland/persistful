@@ -12,18 +12,22 @@ export default function Button({
   onClick,
   to,
   inactive,
-  color,
+  color = 'green',
+  stretch,
+  submit,
 }: {
   children: React.ReactNode;
   onClick?: (event: React.MouseEvent<HTMLElement, MouseEvent>) => void;
   to?: string;
   inactive?: boolean;
-  color: Color;
+  color?: Color;
+  stretch?: boolean;
+  submit?: boolean;
 }) {
   const history = useRouter();
 
   return (
-    <HardShadow>
+    <HardShadow stretch={stretch}>
       <button
         onClick={
           to
@@ -33,16 +37,13 @@ export default function Button({
               }
             : onClick
         }
-        type={to ? 'button' : 'submit'}
+        type={submit ? 'submit' : 'button'}
         className={`${styles.wrapper} ${styles[color]}`}
-        style={
-          inactive
-            ? {
-                pointerEvents: 'none',
-                opacity: 0.5,
-              }
-            : {}
-        }
+        style={{
+          pointerEvents: inactive ? 'none' : 'all',
+          opacity: inactive ? 0.5 : 1,
+          width: stretch ? '100%' : '',
+        }}
       >
         {children}
       </button>

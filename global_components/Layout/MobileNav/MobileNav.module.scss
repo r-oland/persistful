@@ -1,0 +1,33 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: 65px;
+  background-color: $white;
+  border-top: 1px solid $grey-light;
+
+  .item {
+    display: grid;
+    justify-content: center;
+    justify-items: center;
+    align-items: start;
+    align-content: center;
+    gap: $spacing1;
+    grid-template-rows: 25px auto;
+    cursor: pointer;
+
+    svg {
+      font-size: $font-h2;
+    }
+
+    p {
+      font-size: $font-extra-small;
+    }
+
+    &.active {
+      color: $green;
+      font-weight: $weight-bold;
+    }
+  }
+}

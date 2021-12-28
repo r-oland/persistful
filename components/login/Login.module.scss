@@ -6,7 +6,7 @@
 
   @media screen and (min-width: $desktop) {
     grid-template-columns: 1fr 1fr;
-    height: 100vh;
+    height: $app-height;
   }
 }
 

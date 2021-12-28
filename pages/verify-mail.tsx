@@ -34,3 +34,4 @@ export default function VerifyMail() {
 }
 
 VerifyMail.noAuth = true;
+VerifyMail.noLayout = true;

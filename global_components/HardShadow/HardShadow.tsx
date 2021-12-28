@@ -11,7 +11,13 @@ const variants = {
 };
 
 const child = {
-  hover: { x: 0, y: 0 },
+  hover: {
+    x: 0,
+    y: 0,
+    transition: {
+      damping: 4,
+    },
+  },
   initial: { x: 4, y: -4 },
 };
 
@@ -31,11 +37,7 @@ export default function HardShadow({
       variants={variants}
       style={{ width: stretch ? 'calc(100% - 4px)' : '' }}
     >
-      <motion.div
-        variants={child}
-        className={styles.content}
-        transition={{ type: 'tween', duration: 0.2 }}
-      >
+      <motion.div variants={child} className={styles.content}>
         {children}
       </motion.div>
       <div className={styles.shadow} />

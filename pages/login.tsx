@@ -85,3 +85,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 };
 
 Login.noAuth = true;
+Login.noLayout = true;

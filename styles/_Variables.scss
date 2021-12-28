@@ -59,6 +59,9 @@ $spacing18: 48rem;
 $border-radius: 1px;
 $border: 1px solid $black;
 
+// App height
+$app-height: var(--app-height);
+
 @mixin underline {
   box-shadow: inset 0 -12px 0px 0px $green-light;
 }

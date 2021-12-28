@@ -1,8 +1,8 @@
 // Components==============
-import styles from 'components/dashboard/Dashboard.module.scss';
 import React from 'react';
+import styles from './SideBar.module.scss';
 // =========================
 
-export default function Dashboard() {
+export default function SideBar() {
   return <div className={styles.wrapper} />;
 }

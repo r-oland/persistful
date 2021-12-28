@@ -7,7 +7,7 @@ import React from 'react';
 import styles from './Auth.module.scss';
 // =========================
 
-export default function Auth({ children }: { children: JSX.Element }) {
+function Component({ children }: { children: React.ReactNode }) {
   const { status } = useSession({
     required: true,
   });
@@ -42,4 +42,16 @@ export default function Auth({ children }: { children: JSX.Element }) {
       )}
     </AnimatePresence>
   );
+}
+
+export default function Auth({
+  children,
+  noAuth,
+}: {
+  children: JSX.Element;
+  noAuth?: boolean;
+}) {
+  if (noAuth) return children;
+
+  return <Component>{children}</Component>;
 }

@@ -1,0 +1,23 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+
+  .content {
+    height: calc($app-height - 65px);
+    width: 100%;
+    overflow: auto;
+  }
+
+  @media screen and (min-width: $tablet) {
+    height: $app-height;
+    grid-template-columns: auto 1fr;
+    justify-content: start;
+
+    .content {
+      height: initial;
+      width: 100%;
+      overflow: auto;
+    }
+  }
+}

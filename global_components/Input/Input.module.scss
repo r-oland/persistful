@@ -1,0 +1,24 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  background-color: $green-light;
+  width: 100%;
+
+  input {
+    border: none;
+    background-color: transparent;
+    padding: $spacing4 $spacing4;
+    font-size: $font-small;
+    &::placeholder {
+      color: $green-dark;
+    }
+  }
+
+  .bar {
+    width: 10px;
+    background-color: $green;
+    height: 100%;
+  }
+}

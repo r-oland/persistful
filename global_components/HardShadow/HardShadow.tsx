@@ -17,8 +17,10 @@ const child = {
 
 export default function HardShadow({
   children,
+  stretch,
 }: {
   children: React.ReactNode;
+  stretch?: boolean;
 }) {
   return (
     <motion.div
@@ -27,6 +29,7 @@ export default function HardShadow({
       initial="initial"
       whileTap="tap"
       variants={variants}
+      style={{ width: stretch ? 'calc(100% - 4px)' : '' }}
     >
       <motion.div
         variants={child}

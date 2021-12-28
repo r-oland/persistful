@@ -2,14 +2,14 @@
 
 .wrapper {
   display: grid;
-  width: 90px;
+  width: 91px;
   background-color: $white;
   border-right: 1px solid $grey-light;
   align-content: start;
 
   .item {
     cursor: pointer;
-    height: 89px;
+    height: 90px;
     display: grid;
     justify-content: center;
     justify-items: center;

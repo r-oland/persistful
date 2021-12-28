@@ -3,21 +3,20 @@
 .wrapper {
   display: grid;
 
-  .content {
+  .app {
     height: calc($app-height - 65px);
     width: 100%;
     overflow: auto;
   }
 
   @media screen and (min-width: $tablet) {
-    height: $app-height;
     grid-template-columns: auto 1fr;
     justify-content: start;
 
-    .content {
+    .app {
       height: initial;
       width: 100%;
-      overflow: auto;
+      overflow: initial;
     }
   }
 }

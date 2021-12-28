@@ -16,7 +16,6 @@ export default function DesktopNav() {
     <motion.div
       className={styles.wrapper}
       initial={{ x: -90 }}
-      exit={{ x: -90 }}
       animate={{ x: 0 }}
       transition={{ damping: 4 }}
     >

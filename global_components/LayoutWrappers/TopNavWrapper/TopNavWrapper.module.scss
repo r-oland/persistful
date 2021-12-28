@@ -1,0 +1,8 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  height: 50px;
+  background-color: $white;
+  border-bottom: 1px solid $grey-light;
+}

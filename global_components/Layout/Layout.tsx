@@ -1,10 +1,9 @@
 // Components==============
-import { AnimatePresence } from 'framer-motion';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React from 'react';
-import MobileNav from './MobileNav/MobileNav';
-import styles from './Layout.module.scss';
 import DesktopNav from './DesktopNav/DesktopNav';
+import styles from './Layout.module.scss';
+import MobileNav from './MobileNav/MobileNav';
 // =========================
 
 function Component({ children }: { children: JSX.Element }) {
@@ -12,8 +11,8 @@ function Component({ children }: { children: JSX.Element }) {
 
   return (
     <div className={styles.wrapper}>
-      <AnimatePresence>{query && <DesktopNav />}</AnimatePresence>
-      <div className={styles.content}>{children}</div>
+      {query && <DesktopNav />}
+      <div className={styles.app}>{children}</div>
       {!query && <MobileNav />}
     </div>
   );

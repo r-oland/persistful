@@ -34,6 +34,7 @@ module.exports = {
     'import/no-mutable-exports': 0,
     'import/prefer-default-export': 0,
     '@typescript-eslint/ban-ts-comment': 0,
+    '@typescript-eslint/no-explicit-any': 0,
     'prettier/prettier': [
       'error',
       {

@@ -4,7 +4,6 @@
   display: grid;
 
   .content {
-    display: grid;
     overflow: auto;
     height: calc($app-height - 50px - 65px);
     padding: $spacing10 $spacing5 $spacing5;
@@ -19,7 +18,6 @@
 
     .content {
       height: $app-height;
-      display: grid;
       overflow: auto;
     }
   }

@@ -25,6 +25,8 @@ type AppPropsWithExtraProps = AppProps & {
 function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
   useAppHeight();
 
+  console.log(Component);
+
   return (
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={queryClient}>

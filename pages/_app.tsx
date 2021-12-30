@@ -1,6 +1,7 @@
 // Components==============
 import Auth from 'global_components/Auth/Auth';
 import Layout from 'global_components/Layout/Layout';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
@@ -10,7 +11,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import 'styles/App.scss';
 // =========================
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 type NextPageWithExtraProps = NextPage & {
   noAuth?: boolean;
@@ -28,9 +29,12 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={queryClient}>
         <Auth noAuth={Component.noAuth}>
-          <Layout noLayout={Component.noLayout}>
-            <Component {...pageProps} />
-          </Layout>
+          <>
+            <Layout noLayout={Component.noLayout}>
+              <Component {...pageProps} />
+            </Layout>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </>
         </Auth>
       </QueryClientProvider>
     </SessionProvider>

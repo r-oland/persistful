@@ -27,8 +27,8 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-export const getCollection = (collection: DbEntities) =>
-  clientPromise.then((r) => r.db().collection(collection));
+export const getCollection = <Type>(collection: DbEntities) =>
+  clientPromise.then((r) => r.db().collection<Type>(collection));
 
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.

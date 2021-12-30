@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCollection } from 'utils/getMongo';
-import { checkAuth } from '../../utils/checkAuth';
+import { checkAuth } from 'utils/checkAuth';
 
 export default async function handler(
   req: NextApiRequest,
@@ -38,7 +38,7 @@ export default async function handler(
       res.status(200).send({ ...result.value, ...req.body });
     }
   } catch (err: any) {
-    console.log(err);
+    console.error(err);
     return res.status(500).send(err?.message || err);
   }
 }

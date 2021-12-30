@@ -9,7 +9,7 @@ const updateUser = (data: Partial<UserEntity>) =>
 export default function useUpdateUser() {
   const queryClient = useQueryClient();
 
-  const test = useMutation(
+  const mutation = useMutation(
     'user',
     (data: Partial<UserEntity>) => updateUser(data),
     {
@@ -35,5 +35,5 @@ export default function useUpdateUser() {
     }
   );
 
-  return test;
+  return mutation;
 }

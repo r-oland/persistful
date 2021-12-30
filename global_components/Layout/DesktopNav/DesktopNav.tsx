@@ -23,7 +23,7 @@ export default function DesktopNav() {
         <ConditionaClick key={item.name} item={item}>
           <div
             className={`${styles.item} ${
-              getActiveRoute(router.asPath, item?.link) ? styles.active : ''
+              getActiveRoute(router.pathname, item?.link) ? styles.active : ''
             }`}
           >
             <FontAwesomeIcon icon={item.icon} />

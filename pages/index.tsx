@@ -1,8 +1,11 @@
 // Components==============
-import useAddActivity from 'actions/activity/useAddActivities';
+import useAddActivity from 'actions/activity/useAddActivity';
 import useDeleteActivity from 'actions/activity/useDeleteActivity';
 import useGetActivities from 'actions/activity/useGetActivities';
-import useUpdateActivity from 'actions/activity/useUpdateActivities';
+import useUpdateActivity from 'actions/activity/useUpdateActivity';
+import useAddReward from 'actions/reward/useAddReward';
+import useGetRewards from 'actions/reward/useGetRewards';
+import useUpdateReward from 'actions/reward/useUpdateReward';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import styles from 'components/dashboard/Dashboard.module.scss';
@@ -23,6 +26,10 @@ export default function Dashboard() {
 
   const user = useGetUser();
   const updateUser = useUpdateUser();
+
+  const rewards = useGetRewards();
+  const addReward = useAddReward();
+  const updateReward = useUpdateReward();
 
   return (
     <div className={styles.wrapper}>
@@ -56,8 +63,34 @@ export default function Dashboard() {
             })
           }
         >
-          add item
+          add activity
         </Button>
+        <Button
+          onClick={() =>
+            addReward.mutate({
+              image: 'hello',
+              name: 'new reward',
+              earnedCycles: 2,
+              startDate: new Date(),
+              totalCycles: 20,
+            })
+          }
+        >
+          add reward
+        </Button>
+        {rewards?.map((reward) => (
+          <div
+            key={reward._id}
+            onClick={() =>
+              updateReward.mutate({
+                id: reward._id,
+                earnedCycles: (reward.earnedCycles || 0) + 1,
+              })
+            }
+          >
+            {reward.name} {reward.earnedCycles}
+          </div>
+        ))}
         <Button
           onClick={() => updateUser.mutate({ streak: (user?.streak || 0) + 1 })}
         >

@@ -24,12 +24,23 @@ export default async function handler(
       // update reward streak if it exists
       if (req.body.activeRewardId) {
         const rewards = await getCollection<RewardEntity>('rewards');
-        const activeReward = new ObjectId(req.body.activeRewardId);
+        const activeRewardId = new ObjectId(req.body.activeRewardId);
+        const activeReward = await rewards.findOne({ _id: activeRewardId });
 
-        rewards.updateOne(
-          { _id: activeReward },
-          { $inc: { completedCycles: incValue } }
-        );
+        // if active reward doesn't exist or it's status is completed already, return
+        if (!activeReward || activeReward?.status === 'completed') return;
+
+        const completed =
+          activeReward.completedCycles + incValue === activeReward.totalCycles;
+
+        const updateValue = completed
+          ? // set status
+            { $set: { status: 'completed' } }
+          : // increment / decrement value
+            { $inc: { completedCycles: incValue } };
+
+        // @ts-ignore
+        rewards.updateOne({ _id: activeRewardId }, updateValue);
       }
 
       // find user and update streak

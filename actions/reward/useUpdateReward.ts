@@ -7,11 +7,14 @@ export default function useUpdateReward() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    'rewards',
+    ['active-reward', 'rewards'],
     (data: Partial<RewardEntity> & { id: string }) =>
       axios.put(`/api/reward/${data.id}`, data),
     {
-      onSuccess: () => queryClient.invalidateQueries('rewards'),
+      onSuccess: () => {
+        queryClient.invalidateQueries('active-reward');
+        queryClient.invalidateQueries('rewards');
+      },
     }
   );
 

@@ -16,10 +16,10 @@ export default function useGetDay(date?: Date) {
     day.getUTCMonth() + 1
   }/${day.getUTCDate()}`;
 
-  const { data } = useQuery(['day', key], () =>
+  const query = useQuery(['day', key], () =>
     // convert to local time
     getDay(getLocalISOTime(day.getTime()))
   );
 
-  return data;
+  return query;
 }

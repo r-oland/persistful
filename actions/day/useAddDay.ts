@@ -5,15 +5,16 @@ import { useMutation, useQueryClient } from 'react-query';
 
 export default function useAddDay() {
   const queryClient = useQueryClient();
+  const today = new Date();
 
-  const mutation = useMutation(
-    'days',
-    (data: Omit<DayEntity, '_id' | 'userId' | 'activities' | 'createdAt'>) =>
-      axios.post('/api/day', data),
-    {
-      onSuccess: () => queryClient.invalidateQueries('days'),
-    }
-  );
+  // serves as unique key for useQuery hook
+  const key = `${today.getUTCFullYear()}/${
+    today.getUTCMonth() + 1
+  }/${today.getUTCDate()}`;
+
+  const mutation = useMutation('days', () => axios.post('/api/day'), {
+    onSuccess: () => queryClient.invalidateQueries(['day', key]),
+  });
 
   return mutation;
 }

@@ -7,7 +7,7 @@ const getActivities = () =>
   axios.get('/api/activity').then(({ data }) => data as ActivityEntity[]);
 
 export default function useGetActivities() {
-  const { data } = useQuery('activities', getActivities);
+  const query = useQuery('activities', getActivities);
 
-  return data;
+  return query;
 }

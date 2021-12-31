@@ -12,7 +12,7 @@ export default async function handler(
     if (!session) return;
 
     // get days
-    const days = await getCollection<DayEntity>('days');
+    const days = await getCollection<Omit<DayEntity, '_id'>>('days');
 
     // Get user id
     const userId = session.user.uid;
@@ -34,7 +34,6 @@ export default async function handler(
 
       // Add new day entity
       const result = await days.insertOne({
-        ...req.body,
         activities: activitySnapshot,
         userId,
         createdAt: new Date(),

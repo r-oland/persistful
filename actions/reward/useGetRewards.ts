@@ -7,7 +7,7 @@ const getRewards = () =>
   axios.get('/api/reward').then(({ data }) => data as RewardEntity[]);
 
 export default function useGetRewards() {
-  const { data } = useQuery('rewards', getRewards);
+  const query = useQuery('rewards', getRewards);
 
-  return data;
+  return query;
 }

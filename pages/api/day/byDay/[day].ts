@@ -32,8 +32,8 @@ export default async function handler(
       // if it exists,fetch day
       if (today) return res.status(200).send(today);
 
-      // else return message
-      return res.status(200).send({ message: 'Not created yet' });
+      // else return nothing
+      return res.status(204).send(undefined);
     }
   } catch (err: any) {
     console.error(err);

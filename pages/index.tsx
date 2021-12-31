@@ -16,27 +16,33 @@ import SideBar from 'components/dashboard/SideBar/SideBar';
 import TopNav from 'components/dashboard/TopNav/TopNav';
 import Button from 'global_components/Button/Button';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React from 'react';
+import React, { useEffect } from 'react';
 // =========================
 
 export default function Dashboard() {
   const query = useMediaQ('min', 768);
 
-  const activities = useGetActivities();
+  const { data: activities } = useGetActivities();
   const addActivity = useAddActivity();
   const updateActivity = useUpdateActivity();
   const deleteActivity = useDeleteActivity();
 
-  const user = useGetUser();
+  const { data: user } = useGetUser();
   const updateUser = useUpdateUser();
 
-  const rewards = useGetRewards();
+  const { data: rewards } = useGetRewards();
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
 
-  const today = useGetDay();
+  const { data: today, isLoading } = useGetDay();
   const addDay = useAddDay();
   const updateDay = useUpdateDay();
+
+  useEffect(() => {
+    if (isLoading || !!today) return;
+
+    addDay.mutate();
+  }, [!!today, isLoading]);
 
   return (
     <div className={styles.wrapper}>
@@ -72,20 +78,16 @@ export default function Dashboard() {
         >
           add activity
         </Button>
-        <Button onClick={() => addDay.mutate({ currentGoal: 29 })}>
-          add day
-        </Button>
         {!!today && (
           <div
             key={today?._id}
             onClick={() =>
               updateDay.mutate({
                 id: today?._id,
-                currentGoal: (today?.currentGoal || 0) + 1,
               })
             }
           >
-            {today?.userId} {today?.currentGoal}
+            {today?.userId}
           </div>
         )}
         <Button

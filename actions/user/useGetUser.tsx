@@ -7,7 +7,7 @@ const getUser = () =>
   axios.get('/api/user').then(({ data }) => data as UserEntity);
 
 export default function useGetUser() {
-  const { data } = useQuery('user', getUser);
+  const query = useQuery('user', getUser);
 
-  return data;
+  return query;
 }

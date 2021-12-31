@@ -27,6 +27,21 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
+      const alreadyExists = await activities.findOne({
+        name: req.body?.name,
+        userId,
+      });
+
+      // if activity already exists ignore rest of post action and set status to active
+      if (alreadyExists) {
+        activities.findOneAndUpdate(
+          { name: req.body?.name, userId },
+          { $set: { status: 'active' } }
+        );
+
+        return res.status(200).send(alreadyExists);
+      }
+
       // Add new activity entity
       const result = await activities.insertOne({
         ...req.body,

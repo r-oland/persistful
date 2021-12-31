@@ -29,7 +29,8 @@ export default async function handler(
     }
 
     if (req.method === 'DELETE') {
-      // Change status to deleted so you can leter check if the name already exists to maintain history
+      // Change status to deleted so you can later check if the name already exists to maintain history
+      // Also necessary to maintain because it's being references the day entity
       const result = await activities.findOneAndUpdate(
         { _id },
         { $set: { status: 'deleted' } }

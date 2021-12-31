@@ -18,7 +18,10 @@ export default function useUpdateStreak(activeRewardId?: string) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('user');
-        if (activeRewardId) queryClient.invalidateQueries('rewards');
+        if (activeRewardId) {
+          queryClient.invalidateQueries('active-reward');
+          queryClient.invalidateQueries('rewards');
+        }
       },
     }
   );

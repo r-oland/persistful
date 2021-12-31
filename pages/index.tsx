@@ -123,7 +123,7 @@ export default function Dashboard() {
         >
           {user?.streak}
         </Button>
-        <Button onClick={() => updateStreak.mutate({ direction: 'dec' })}>
+        <Button onClick={() => updateStreak.mutate({ direction: 'inc' })}>
           trigger streak update
         </Button>
       </div>

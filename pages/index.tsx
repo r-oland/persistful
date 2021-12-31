@@ -10,6 +10,7 @@ import useAddReward from 'actions/reward/useAddReward';
 import useGetRewards from 'actions/reward/useGetRewards';
 import useUpdateReward from 'actions/reward/useUpdateReward';
 import useGetUser from 'actions/user/useGetUser';
+import useUpdateStreak from 'actions/user/useUpdateStreak';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import styles from 'components/dashboard/Dashboard.module.scss';
 import SideBar from 'components/dashboard/SideBar/SideBar';
@@ -27,12 +28,13 @@ export default function Dashboard() {
   const updateActivity = useUpdateActivity();
   const deleteActivity = useDeleteActivity();
 
-  const { data: user } = useGetUser();
-  const updateUser = useUpdateUser();
-
   const { data: rewards } = useGetRewards();
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
+
+  const { data: user } = useGetUser();
+  const updateUser = useUpdateUser();
+  const updateStreak = useUpdateStreak(rewards?.[0]?._id);
 
   const { data: today, isLoading } = useGetDay();
   const addDay = useAddDay();
@@ -95,7 +97,7 @@ export default function Dashboard() {
             addReward.mutate({
               image: 'hello',
               name: 'new reward',
-              earnedCycles: 2,
+              completedCycles: 2,
               totalCycles: 20,
             })
           }
@@ -108,17 +110,20 @@ export default function Dashboard() {
             onClick={() =>
               updateReward.mutate({
                 id: reward._id,
-                earnedCycles: (reward.earnedCycles || 0) + 1,
+                completedCycles: reward.completedCycles + 1,
               })
             }
           >
-            {reward.name} {reward.earnedCycles}
+            {reward.name} {reward.completedCycles}
           </div>
         ))}
         <Button
           onClick={() => updateUser.mutate({ streak: (user?.streak || 0) + 1 })}
         >
           {user?.streak}
+        </Button>
+        <Button onClick={() => updateStreak.mutate({ direction: 'dec' })}>
+          trigger streak update
         </Button>
       </div>
       {query && <SideBar />}

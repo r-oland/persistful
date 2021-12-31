@@ -4,7 +4,7 @@ import useDeleteActivity from 'actions/activity/useDeleteActivity';
 import useGetActivities from 'actions/activity/useGetActivities';
 import useUpdateActivity from 'actions/activity/useUpdateActivity';
 import useAddDay from 'actions/day/useAddDay';
-import useGetDays from 'actions/day/useGetDays';
+import useGetDay from 'actions/day/useGetDay';
 import useUpdateDay from 'actions/day/useUpdateDay';
 import useAddReward from 'actions/reward/useAddReward';
 import useGetRewards from 'actions/reward/useGetRewards';
@@ -34,7 +34,7 @@ export default function Dashboard() {
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
 
-  const days = useGetDays();
+  const today = useGetDay();
   const addDay = useAddDay();
   const updateDay = useUpdateDay();
 
@@ -75,19 +75,19 @@ export default function Dashboard() {
         <Button onClick={() => addDay.mutate({ currentGoal: 29 })}>
           add day
         </Button>
-        {days?.map((day) => (
+        {!!today && (
           <div
-            key={day._id}
+            key={today?._id}
             onClick={() =>
               updateDay.mutate({
-                id: day._id,
-                currentGoal: (day.currentGoal || 0) + 1,
+                id: today?._id,
+                currentGoal: (today?.currentGoal || 0) + 1,
               })
             }
           >
-            {day.userId} {day.currentGoal}
+            {today?.userId} {today?.currentGoal}
           </div>
-        ))}
+        )}
         <Button
           onClick={() =>
             addReward.mutate({

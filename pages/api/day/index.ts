@@ -25,7 +25,7 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
-      // Get activities snapshot to day entity
+      // Get activities snapshot to day entity to -> persist calc data for that day & enable displaying of deleted activities
       const activities = await getCollection<ActivityEntity>('activities');
       const activitySnapshot = await activities
         .find({ userId })

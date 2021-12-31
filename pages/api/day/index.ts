@@ -29,7 +29,9 @@ export default async function handler(
       const activities = await getCollection<ActivityEntity>('activities');
       const activitySnapshot = await activities
         .find({ userId })
-        .map((activity) => ({ activity, count: 0 } as DailyActivityEntity))
+        // Filter out the only values (next to the _id) that are needed
+        .project({ countCalc: 1, countMode: 1 })
+        .map((activity) => ({ ...activity, count: 0 } as DailyActivityEntity))
         .toArray();
 
       // Add new day entity

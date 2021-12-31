@@ -1,5 +1,7 @@
 type DailyActivityEntity = {
-  activity: ActivityEntity;
+  id: string;
+  countMode: 'minutes' | 'times';
+  countCalc?: number;
   count: number;
 };
 

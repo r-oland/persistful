@@ -14,6 +14,7 @@ export default async function handler(
 
     const rewards = await getCollection<RewardEntity>('rewards');
 
+    // update reward
     if (req.method === 'PUT') {
       const data = req.body;
       delete data.id;
@@ -25,6 +26,13 @@ export default async function handler(
       );
 
       res.status(200).send({ ...result.value, ...data });
+    }
+
+    // delete reward
+    if (req.method === 'DELETE') {
+      const result = await rewards.deleteOne({ _id });
+
+      res.status(200).send(result);
     }
   } catch (err: any) {
     console.error(err);

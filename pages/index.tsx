@@ -7,7 +7,7 @@ import useAddDay from 'actions/day/useAddDay';
 import useGetDay from 'actions/day/useGetDay';
 import useUpdateDay from 'actions/day/useUpdateDay';
 import useAddReward from 'actions/reward/useAddReward';
-import useGetRewards from 'actions/reward/useGetRewards';
+import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import useUpdateReward from 'actions/reward/useUpdateReward';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateStreak from 'actions/user/useUpdateStreak';
@@ -28,13 +28,13 @@ export default function Dashboard() {
   const updateActivity = useUpdateActivity();
   const deleteActivity = useDeleteActivity();
 
-  const { data: rewards } = useGetRewards();
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
+  const { data: activeReward } = useGetActiveReward();
 
   const { data: user } = useGetUser();
   const updateUser = useUpdateUser();
-  const updateStreak = useUpdateStreak(rewards?.[0]?._id);
+  const updateStreak = useUpdateStreak(activeReward?._id);
 
   const { data: today, isLoading } = useGetDay();
   const addDay = useAddDay();
@@ -99,24 +99,25 @@ export default function Dashboard() {
               name: 'new reward',
               completedCycles: 2,
               totalCycles: 20,
+              status: 'active',
             })
           }
         >
           add reward
         </Button>
-        {rewards?.map((reward) => (
+        {!!activeReward && (
           <div
-            key={reward._id}
+            key={activeReward._id}
             onClick={() =>
               updateReward.mutate({
-                id: reward._id,
-                completedCycles: reward.completedCycles + 1,
+                id: activeReward._id,
+                completedCycles: activeReward.completedCycles + 1,
               })
             }
           >
-            {reward.name} {reward.completedCycles}
+            {activeReward.name} {activeReward.completedCycles}
           </div>
-        ))}
+        )}
         <Button
           onClick={() => updateUser.mutate({ streak: (user?.streak || 0) + 1 })}
         >

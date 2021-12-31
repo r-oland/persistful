@@ -12,6 +12,7 @@ export default function useAddReward() {
       axios.post('/api/reward', data),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries('user');
         queryClient.invalidateQueries('active-reward');
         queryClient.invalidateQueries('rewards');
       },

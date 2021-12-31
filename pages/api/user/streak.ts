@@ -21,33 +21,31 @@ export default async function handler(
     const incValue = req.body.direction === 'inc' ? 1 : -1;
 
     if (req.method === 'PUT') {
-      // update reward streak if it exists
-      if (req.body.activeRewardId) {
-        const rewards = await getCollection<RewardEntity>('rewards');
-        const activeRewardId = new ObjectId(req.body.activeRewardId);
-        const activeReward = await rewards.findOne({ _id: activeRewardId });
-
-        // if active reward doesn't exist or it's status is completed already, return
-        if (!activeReward || activeReward?.status === 'completed') return;
-
-        const completed =
-          activeReward.completedCycles + incValue === activeReward.totalCycles;
-
-        const updateValue = completed
-          ? // set status
-            { $set: { status: 'completed' } }
-          : // increment / decrement value
-            { $inc: { completedCycles: incValue } };
-
-        // @ts-ignore
-        rewards.updateOne({ _id: activeRewardId }, updateValue);
-      }
-
       // find user and update streak
       const result = await users.updateOne(
         { _id },
         { $inc: { streak: incValue } }
       );
+
+      const rewards = await getCollection<RewardEntity>('rewards');
+      const activeRewardId = await users
+        .findOne({ _id })
+        .then((u) => u?.activeReward);
+
+      // update reward streak if it exists
+      if (activeRewardId) {
+        const activeReward = await rewards.findOne({ _id: activeRewardId });
+
+        // if active reward exists but it isn't completed yet, increment
+        if (
+          activeReward &&
+          activeReward.completedCycles !== activeReward.totalCycles
+        )
+          await rewards.updateOne(
+            { _id: activeRewardId },
+            { $inc: { completedCycles: incValue } }
+          );
+      }
 
       return res.status(200).send(result);
     }

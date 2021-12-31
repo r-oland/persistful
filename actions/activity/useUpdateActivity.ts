@@ -11,7 +11,10 @@ export default function useUpdateActivity() {
     (data: Partial<ActivityEntity> & { id: string }) =>
       axios.put(`/api/activity/${data.id}`, data),
     {
-      onSuccess: () => queryClient.invalidateQueries('activities'),
+      onSuccess: () => {
+        queryClient.invalidateQueries('activities');
+        queryClient.invalidateQueries('user');
+      },
     }
   );
 

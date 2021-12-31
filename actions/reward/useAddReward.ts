@@ -8,7 +8,7 @@ export default function useAddReward() {
 
   const mutation = useMutation(
     'rewards',
-    (data: Omit<RewardEntity, '_id' | 'userId'>) =>
+    (data: Omit<RewardEntity, '_id' | 'userId' | 'createdAt'>) =>
       axios.post('/api/reward', data),
     {
       onSuccess: () => queryClient.invalidateQueries('rewards'),

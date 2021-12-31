@@ -37,6 +37,7 @@ export default async function handler(
         ...req.body,
         activities: activitySnapshot,
         userId,
+        createdAt: new Date(),
       });
 
       return res.status(200).send(result);

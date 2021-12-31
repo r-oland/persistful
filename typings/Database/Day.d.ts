@@ -6,7 +6,7 @@ type DailyActivityEntity = {
 type DayEntity = {
   _id: string;
   userId: string;
-  date: Date;
   currentGoal: number;
   activities: DailyActivityEntity[];
+  createdAt: Date;
 };

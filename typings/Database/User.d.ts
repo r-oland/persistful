@@ -9,9 +9,10 @@ type UserEntity = {
   email: string;
   image?: string;
   emailVerified?: string;
-  activities: string[];
+  activities: ActivityEntity[];
   firstName?: string;
   rules: RulesEntity;
   streak: number;
   activeReward?: string;
+  createdAt: Date;
 };

@@ -5,6 +5,6 @@ type RewardEntity = {
   image: string;
   totalCycles: number;
   earnedCycles?: number;
-  startDate: Date;
   endDate?: Date;
+  createdAt: Date;
 };

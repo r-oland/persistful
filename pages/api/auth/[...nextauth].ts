@@ -68,6 +68,7 @@ export default NextAuth({
                 prm: false,
               },
               activities: [],
+              createdAt: new Date(),
             },
             // If Google API returns name value, remove it
             $unset: { name: '' },

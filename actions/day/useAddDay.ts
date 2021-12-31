@@ -8,7 +8,7 @@ export default function useAddDay() {
 
   const mutation = useMutation(
     'days',
-    (data: Omit<DayEntity, '_id' | 'userId' | 'activities'>) =>
+    (data: Omit<DayEntity, '_id' | 'userId' | 'activities' | 'createdAt'>) =>
       axios.post('/api/day', data),
     {
       onSuccess: () => queryClient.invalidateQueries('days'),

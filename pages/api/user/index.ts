@@ -23,8 +23,26 @@ export default async function handler(
     if (!user) return res.status(401).send('User not found');
 
     if (req.method === 'GET') {
-      // fetch user
-      return res.status(200).send(user);
+      // get activities
+      const activityCollection = await getCollection<ActivityEntity>(
+        'activities'
+      );
+
+      // Find activities based on user array
+      const activities = await activityCollection
+        .find({
+          // @ts-ignore
+          _id: { $in: user.activities },
+          status: 'active' || 'inactive',
+        })
+        .toArray();
+
+      const result = {
+        ...user,
+        activities,
+      };
+
+      return res.status(200).send(result);
     }
 
     if (req.method === 'PUT') {

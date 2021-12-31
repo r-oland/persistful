@@ -8,7 +8,8 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    await checkAuth(req, res);
+    const session = await checkAuth(req, res);
+    if (!session) return;
 
     const _id = new ObjectId(req.query.activityId as string);
 
@@ -28,7 +29,23 @@ export default async function handler(
     }
 
     if (req.method === 'DELETE') {
-      const result = await activities.deleteOne({ _id });
+      // get user
+      const userId = new ObjectId(session.user.uid);
+      const users = await getCollection<UserEntity>('users');
+      const user = await users.findOne({ _id: userId });
+
+      await users.findOneAndUpdate(
+        { _id: userId },
+        // @ts-ignore
+        { $set: { activities: user?.activities.filter((id) => id !== _id) } },
+        { upsert: true }
+      );
+
+      // Change status to deleted so you can leter check if the name already exists to maintain history
+      const result = await activities.findOneAndUpdate(
+        { _id },
+        { $set: { status: 'deleted' } }
+      );
 
       res.status(200).send(result);
     }

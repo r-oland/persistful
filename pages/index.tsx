@@ -72,9 +72,7 @@ export default function Dashboard() {
         >
           add activity
         </Button>
-        <Button
-          onClick={() => addDay.mutate({ currentGoal: 29, date: new Date() })}
-        >
+        <Button onClick={() => addDay.mutate({ currentGoal: 29 })}>
           add day
         </Button>
         {days?.map((day) => (
@@ -96,7 +94,6 @@ export default function Dashboard() {
               image: 'hello',
               name: 'new reward',
               earnedCycles: 2,
-              startDate: new Date(),
               totalCycles: 20,
             })
           }

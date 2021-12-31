@@ -29,6 +29,7 @@ export default async function handler(
       const result = await rewards.insertOne({
         ...req.body,
         userId,
+        createdAt: new Date(),
       });
 
       return res.status(200).send(result);

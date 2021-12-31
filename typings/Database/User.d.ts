@@ -13,4 +13,5 @@ type UserEntity = {
   rules: RulesEntity;
   streak: number;
   createdAt: Date;
+  activeReward: string;
 };

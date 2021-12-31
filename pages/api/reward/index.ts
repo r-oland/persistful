@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCollection } from 'utils/getMongo';
 import { checkAuth } from 'utils/checkAuth';
+import { ObjectId } from 'mongodb';
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,6 +17,7 @@ export default async function handler(
 
     // Get user id
     const userId = session.user.uid;
+    const objectUserId = new ObjectId(userId);
 
     if (req.method === 'GET') {
       const data = await rewards.find({ userId }).toArray();
@@ -26,11 +28,20 @@ export default async function handler(
 
     if (req.method === 'POST') {
       // Add new reward entity
-      const result = await rewards.insertOne({
-        ...req.body,
-        userId,
-        createdAt: new Date(),
-      });
+      const result = await rewards
+        .insertOne({
+          ...req.body,
+          userId,
+          createdAt: new Date(),
+        })
+        .then(async (r) => {
+          const users = await getCollection<UserEntity>('users');
+          await users.findOneAndUpdate(
+            { _id: objectUserId },
+            { $set: { activeReward: r.insertedId } },
+            { upsert: true }
+          );
+        });
 
       return res.status(200).send(result);
     }

@@ -34,7 +34,7 @@ export default function Dashboard() {
 
   const { data: user } = useGetUser();
   const updateUser = useUpdateUser();
-  const updateStreak = useUpdateStreak(activeReward?._id);
+  const updateStreak = useUpdateStreak();
 
   const { data: today, isLoading } = useGetDay();
   const addDay = useAddDay();
@@ -99,7 +99,6 @@ export default function Dashboard() {
               name: 'new reward',
               completedCycles: 2,
               totalCycles: 20,
-              status: 'active',
             })
           }
         >

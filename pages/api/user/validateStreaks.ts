@@ -167,10 +167,7 @@ export default async function handler(
       .reduce((prev, cur) => prev + cur);
 
     // update streak in user model
-    await users.updateOne(
-      { _id },
-      { $set: { streak: total + getAchievedStreaks(yesterday) } }
-    );
+    await users.updateOne({ _id }, { $set: { streak: total } });
 
     if (activeReward && startDateGeneralStreak) {
       // if genreal streak if going on for longer then the reward streak -> activeReward.created_at

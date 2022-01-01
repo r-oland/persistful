@@ -14,4 +14,5 @@ type UserEntity = {
   streak: number;
   createdAt: Date;
   activeReward: string;
+  lastValidation: Date;
 };

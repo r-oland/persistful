@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCollection } from 'utils/getMongo';
 import { checkAuth } from 'utils/checkAuth';
+import { ObjectId } from 'mongodb';
 
 export default async function handler(
   req: NextApiRequest,
@@ -34,11 +35,18 @@ export default async function handler(
         .map((activity) => ({ ...activity, count: 0 } as DailyActivityEntity))
         .toArray();
 
+      // get user
+      const users = await getCollection<UserEntity>('users');
+      const _id = new ObjectId(userId);
+      const user = await users.findOne({ _id });
+      if (!user) return;
+
       // Add new day entity
       const result = await days.insertOne({
         activities: activitySnapshot,
         userId,
         createdAt: new Date(),
+        dailyGoal: user.rules.dailyGoal,
       });
 
       return res.status(200).send(result);

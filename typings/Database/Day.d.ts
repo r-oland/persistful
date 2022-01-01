@@ -10,4 +10,8 @@ type DayEntity = {
   userId: string;
   activities: DailyActivityEntity[];
   createdAt: Date;
+  // For persisting history
+  dailyGoal: number;
+  streakCount?: number;
+  //
 };

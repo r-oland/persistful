@@ -23,6 +23,7 @@ module.exports = {
       },
     ],
     'no-undef': 0,
+    'no-plusplus': 0,
     'no-underscore-dangle': 0,
     'no-console': 0,
     'react/require-default-props': 0,

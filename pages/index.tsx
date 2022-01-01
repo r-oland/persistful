@@ -1,6 +1,5 @@
 // Components==============
 import useAddActivity from 'actions/activity/useAddActivity';
-import useDeleteActivity from 'actions/activity/useDeleteActivity';
 import useGetActivities from 'actions/activity/useGetActivities';
 import useUpdateActivity from 'actions/activity/useUpdateActivity';
 import useAddDay from 'actions/day/useAddDay';
@@ -26,7 +25,6 @@ export default function Dashboard() {
   const { data: activities } = useGetActivities();
   const addActivity = useAddActivity();
   const updateActivity = useUpdateActivity();
-  const deleteActivity = useDeleteActivity();
 
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
@@ -36,9 +34,9 @@ export default function Dashboard() {
   const updateUser = useUpdateUser();
   const updateStreak = useUpdateStreak();
 
-  const { data: today, isLoading } = useGetDay();
+  const { data: today, isLoading } = useGetDay(new Date());
   const addDay = useAddDay();
-  const updateDay = useUpdateDay();
+  const updateDay = useUpdateDay(new Date());
 
   useEffect(() => {
     if (isLoading || !!today) return;
@@ -59,7 +57,6 @@ export default function Dashboard() {
                 enablePattern: !activity.enablePattern,
               })
             }
-            onDoubleClick={() => deleteActivity.mutate(activity._id)}
           >
             {activity.name} {activity.status}{' '}
             {JSON.stringify(activity.enablePattern)}
@@ -67,12 +64,18 @@ export default function Dashboard() {
         ))}
         <Button
           onClick={() =>
+            updateUser.mutate({ lastValidation: new Date('1999-01-20') })
+          }
+        >
+          trigger validate
+        </Button>
+        <Button
+          onClick={() =>
             addActivity.mutate({
-              countMode: 'times',
+              countMode: 'minutes',
               icon: 'faUser',
               name: 'A new value',
               status: 'active',
-              countCalc: 20,
               enablePattern: true,
               pattern: [{ x: 20, y: 40, r: 80, shape: 'triangle', size: 2 }],
             })
@@ -86,10 +89,14 @@ export default function Dashboard() {
             onClick={() =>
               updateDay.mutate({
                 id: today?._id,
+                activities: today.activities.map((a) => ({
+                  ...a,
+                  count: a.count + 30,
+                })),
               })
             }
           >
-            {today?.userId}
+            {today?.userId} {today.activities[0].count}
           </div>
         )}
         <Button

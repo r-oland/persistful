@@ -1,13 +1,14 @@
 // Components==============
 import Auth from 'global_components/Auth/Auth';
 import Layout from 'global_components/Layout/Layout';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import ValidateEffect from 'global_components/ValidateEffect';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
 // =========================
 
@@ -34,6 +35,7 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
               <Component {...pageProps} />
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
+            <ValidateEffect />
           </>
         </Auth>
       </QueryClientProvider>

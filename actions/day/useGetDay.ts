@@ -1,19 +1,25 @@
 // Components==============
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 import { getDayString } from 'utils/getDayString';
 import { getLocalISOTime } from 'utils/getLocalISOTime';
 // =========================
 
 const getDay = async (date: string) =>
-  axios.get(`/api/day/byDay/${date}`).then(({ data }) => data as DayEntity);
+  axios.get(`/api/day/byDay/${date}`).then(({ data }) => data);
 
-export default function useGetDay(date: Date) {
+export default function useGetDay(
+  date: Date,
+  options?: UseQueryOptions<DayEntity>
+) {
   const key = getDayString(date);
 
-  const query = useQuery(['day', key], () =>
-    // convert to local time
-    getDay(getLocalISOTime(date.getTime()))
+  const query = useQuery<DayEntity>(
+    ['day', key],
+    () =>
+      // convert to local time
+      getDay(getLocalISOTime(date.getTime())),
+    options
   );
 
   return query;

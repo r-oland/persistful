@@ -11,7 +11,6 @@ export default function useUpdateReward() {
       axios.put(`/api/reward/${data.id}`, data),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(['rewards', 'active']);
         queryClient.invalidateQueries('rewards');
       },
     }

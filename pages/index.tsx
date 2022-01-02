@@ -9,7 +9,6 @@ import useAddReward from 'actions/reward/useAddReward';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import useUpdateReward from 'actions/reward/useUpdateReward';
 import useGetUser from 'actions/user/useGetUser';
-import useUpdateStreak from 'actions/user/useUpdateStreak';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import styles from 'components/dashboard/Dashboard.module.scss';
 import SideBar from 'components/dashboard/SideBar/SideBar';
@@ -32,7 +31,6 @@ export default function Dashboard() {
 
   const { data: user } = useGetUser();
   const updateUser = useUpdateUser();
-  const updateStreak = useUpdateStreak();
 
   const { data: today, isLoading } = useGetDay(new Date());
   const addDay = useAddDay();
@@ -138,9 +136,6 @@ export default function Dashboard() {
             {user?.streak}
           </Button>
         )}
-        <Button onClick={() => updateStreak.mutate({ direction: 'inc' })}>
-          trigger streak update
-        </Button>
       </div>
       {query && <SideBar />}
     </div>

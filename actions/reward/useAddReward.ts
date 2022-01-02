@@ -12,8 +12,7 @@ export default function useAddReward() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('user');
-        queryClient.invalidateQueries(['rewards', 'active']);
-        queryClient.invalidateQueries('rewards');
+        queryClient.invalidateQueries(['rewards']);
       },
     }
   );

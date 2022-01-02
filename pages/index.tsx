@@ -54,6 +54,7 @@ export default function Dashboard() {
             onClick={() =>
               updateActivity.mutate({
                 id: activity._id,
+                penalty: !activity.penalty,
                 enablePattern: !activity.enablePattern,
               })
             }
@@ -74,7 +75,7 @@ export default function Dashboard() {
             addActivity.mutate({
               countMode: 'minutes',
               icon: 'faUser',
-              name: 'A new value!!',
+              name: 'A new val',
               status: 'active',
               enablePattern: true,
               pattern: [{ x: 20, y: 40, r: 80, shape: 'triangle', size: 2 }],
@@ -130,6 +131,7 @@ export default function Dashboard() {
             onClick={() =>
               updateUser.mutate({
                 streak: (user?.streak || 0) + 1,
+                rules: { ...user?.rules, dailyGoal: 10 },
               })
             }
           >

@@ -41,11 +41,45 @@ export default async function handler(
       }
 
       // Add new activity entity
-      const result = await activities.insertOne({
-        ...req.body,
-        userId,
-        createdAt: new Date(),
-      });
+      const result = await activities
+        .insertOne({
+          ...req.body,
+          userId,
+          createdAt: new Date(),
+        })
+        .then(async (r) => {
+          // Add new activity entity to today's day entity
+          const days = await getCollection<DayEntity>('days');
+          const start = new Date(new Date().setUTCHours(0, 0, 0, 0));
+          const end = new Date(new Date().setUTCHours(23, 59, 59, 999));
+
+          const today = await days.findOne({
+            userId: session.user.uid,
+            createdAt: { $gte: start, $lt: end },
+          });
+
+          if (today)
+            await days.findOneAndUpdate(
+              {
+                userId: session.user.uid,
+                createdAt: { $gte: start, $lt: end },
+              },
+              {
+                $set: {
+                  activities: [
+                    ...today.activities,
+                    {
+                      _id: r.insertedId,
+                      count: 0,
+                      countMode: req.body?.countMode,
+                      countCalc: req.body?.countCalc,
+                      penalty: req.body?.penalty,
+                    },
+                  ],
+                },
+              }
+            );
+        });
 
       return res.status(200).send(result);
     }

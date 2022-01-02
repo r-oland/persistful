@@ -15,7 +15,7 @@ export default function useGetDay(
   const key = getDayString(date);
 
   const query = useQuery<DayEntity>(
-    ['day', key],
+    ['days', key],
     () =>
       // convert to local time
       getDay(getLocalISOTime(date.getTime())),

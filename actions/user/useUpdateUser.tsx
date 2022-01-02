@@ -22,7 +22,7 @@ export default function useUpdateUser() {
 
         if (newUserData?.rules?.dailyGoal) {
           const key = getDayString(new Date());
-          queryClient.invalidateQueries(['day', key]);
+          queryClient.invalidateQueries(['days', key]);
         }
       },
     }

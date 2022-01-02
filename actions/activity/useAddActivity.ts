@@ -15,7 +15,7 @@ export default function useAddActivity() {
         queryClient.invalidateQueries('activities');
 
         const key = getDayString(new Date());
-        queryClient.invalidateQueries(['day', key]);
+        queryClient.invalidateQueries(['days', key]);
       },
     }
   );

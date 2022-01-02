@@ -19,7 +19,7 @@ export default function useUpdateActivity() {
 
         if (data?.penalty !== undefined || data?.countMode || data?.countCalc) {
           const key = getDayString(new Date());
-          queryClient.invalidateQueries(['day', key]);
+          queryClient.invalidateQueries(['days', key]);
         }
       },
     }

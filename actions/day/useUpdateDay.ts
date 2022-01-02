@@ -14,7 +14,7 @@ export default function useUpdateDay(day: Date) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('days');
-        queryClient.invalidateQueries(['day', key]);
+        queryClient.invalidateQueries(['days', key]);
       },
     }
   );

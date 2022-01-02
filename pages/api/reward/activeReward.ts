@@ -25,7 +25,10 @@ export default async function handler(
       const activeReward = await rewards.findOne({ _id: activeRewardId });
 
       // if it doesn't exist return nothing
-      if (!activeReward) return res.status(204).send(undefined);
+      if (!activeReward)
+        return res
+          .status(204)
+          .send({ message: 'active reward does not exist' });
 
       // if it does return active reward
       return res.status(200).send(activeReward);

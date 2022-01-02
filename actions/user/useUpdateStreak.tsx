@@ -13,7 +13,6 @@ export default function useUpdateStreak() {
   const { data: activeReward } = useGetActiveReward();
 
   const mutation = useMutation(
-    'user',
     (data: { direction: 'inc' | 'dec' }) => updateStreak(data),
     {
       onSuccess: () => {

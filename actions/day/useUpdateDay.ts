@@ -9,7 +9,6 @@ export default function useUpdateDay(day: Date) {
   const key = getDayString(day);
 
   const mutation = useMutation(
-    'days',
     (data: Partial<DayEntity> & { id: string }) =>
       axios.put(`/api/day/${data.id}`, data),
     {

@@ -9,7 +9,7 @@ export default function useAddDay() {
   const today = new Date();
   const key = getDayString(today);
 
-  const mutation = useMutation('days', () => axios.post('/api/day'), {
+  const mutation = useMutation(() => axios.post('/api/day'), {
     onSuccess: () => queryClient.invalidateQueries(['day', key]),
   });
 

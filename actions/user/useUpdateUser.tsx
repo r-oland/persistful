@@ -1,6 +1,7 @@
 // Components==============
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
+import { getDayString } from 'utils/getDayString';
 // =========================
 
 const updateUser = (data: Partial<UserEntity>) =>
@@ -8,29 +9,22 @@ const updateUser = (data: Partial<UserEntity>) =>
 
 export default function useUpdateUser() {
   const queryClient = useQueryClient();
+  let newUserData: Partial<UserEntity>;
 
   const mutation = useMutation(
     'user',
-    (data: Partial<UserEntity>) => updateUser(data),
+    (data: Partial<UserEntity>) => {
+      newUserData = data;
+      return updateUser(data);
+    },
     {
-      onMutate: async (newVal) => {
-        // Cancel any outgoing refetches (so they don't overwrite our optimistic update)
-        await queryClient.cancelQueries('user');
+      onSuccess: () => {
+        queryClient.invalidateQueries('user');
 
-        // Snapshot of previous value
-        const prev = queryClient.getQueryData<UserEntity>('user');
-
-        // Optimistically update to the new value
-        if (prev) {
-          queryClient.setQueryData<UserEntity>('user', { ...prev, ...newVal });
+        if (newUserData?.rules?.dailyGoal) {
+          const key = getDayString(new Date());
+          queryClient.invalidateQueries(['day', key]);
         }
-
-        // Return a context with the previous value
-        return prev;
-      },
-      // If the mutation fails, use the context returned from onMutate to roll back
-      onError: (err, variables, context) => {
-        if (context) queryClient.setQueryData('user', context);
       },
     }
   );

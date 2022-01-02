@@ -1,3 +1,4 @@
+import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
@@ -40,8 +41,10 @@ export default async function handler(
     };
 
     // helper func that gets amount of achieved streaks
-    const getAchievedStreaks = (day: DayEntity) => {
+    const getAchievedStreaks = (day: DayEntity | null) => {
+      if (!day) return 0;
       if (!day.activities.length) return 0;
+
       // activities
       const totalPositive = day.activities
         .filter((a) => !a.penalty)
@@ -72,19 +75,43 @@ export default async function handler(
 
     // get yesterday
     const yesterdayDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
-    const start = new Date(yesterdayDate.setUTCHours(0, 0, 0, 0));
-    const end = new Date(yesterdayDate.setUTCHours(23, 59, 59, 999));
-
     const yesterday = await days.findOne({
       userId,
-      createdAt: { $gte: start, $lt: end },
+      createdAt: {
+        $gte: new Date(yesterdayDate.setUTCHours(0, 0, 0, 0)),
+        $lt: new Date(yesterdayDate.setUTCHours(23, 59, 59, 999)),
+      },
     });
 
-    // If there is no entry from yesterday reset the streak
-    if (!yesterday) return await reset();
+    if (user?.rules.secondChange) {
+      // get day before yesterday
+      const dayBeforeYesterdayDate = new Date(
+        new Date().getTime() - 48 * 60 * 60 * 1000
+      );
+      const dayBeforeYesterday = await days.findOne({
+        userId,
+        createdAt: {
+          $gte: new Date(dayBeforeYesterdayDate.setUTCHours(0, 0, 0, 0)),
+          $lt: new Date(dayBeforeYesterdayDate.setUTCHours(23, 59, 59, 999)),
+        },
+      });
 
-    // If daily goal wasn't achieved, reset the streak
-    if (!getAchievedStreaks(yesterday)) return await reset();
+      // If there is no entry from yesterday or the day before that reset the streak
+      if (!yesterday && !dayBeforeYesterday) return await reset();
+
+      // If daily goals weren't achieved, reset the streak
+      if (
+        !getAchievedStreaks(yesterday) &&
+        !getAchievedStreaks(dayBeforeYesterday)
+      )
+        return await reset();
+    } else {
+      // If there is no entry from yesterday reset the streak
+      if (!yesterday) return await reset();
+
+      // If daily goal wasn't achieved, reset the streak
+      if (!getAchievedStreaks(yesterday)) return await reset();
+    }
 
     //
     // * Now it's clear that there is a streak, so we need to calculate it. *
@@ -98,25 +125,42 @@ export default async function handler(
 
     // First date after a gap is found in the day entities
     let firstDateAfterGap;
+    let secondChangeUsed;
 
     // Check if there are any gaps in between dates;
     for (let i = 0; i < dayEntities.length; i++) {
       const day1 = dayEntities?.[i];
       const day2 = dayEntities?.[i + 1];
       const date1 = day1?.createdAt;
-      const date2 = day2?.createdAt;
+      // if day2 doesn't exist we can assume it's the current date (because we filtered it earlier)
+      const date2 = day2?.createdAt || new Date();
 
       if (date2 && date1) {
-        // To calculate the no. of days between two dates
-        const differenceInDays = Math.floor(
-          (new Date(date2).getTime() - new Date(date1).getTime()) /
-            (1000 * 3600 * 24)
-        );
+        const differenceInDays = getDifferenceInDays(date1, date2);
 
         // if diff is > 1, you have missing days, this means that the streak is invalid so you should pick the day available
         if (differenceInDays > 1) {
-          // Check if date2 hit it's goal
-          if (getAchievedStreaks(day2)) firstDateAfterGap = date2;
+          // if there is a difference of 2 and second change mode is on, check if this can be ingored
+          if (differenceInDays === 2 && user?.rules.secondChange) {
+            // Check if there was a second change used in the last 7 days, if there wasn't set new second change date
+            if (
+              secondChangeUsed &&
+              getDifferenceInDays(secondChangeUsed, date1) >= 7
+            )
+              secondChangeUsed = date1;
+
+            // if second change was already used and the week isn't over, set first date after gap
+            if (
+              secondChangeUsed &&
+              getDifferenceInDays(secondChangeUsed, date1) !== 0 &&
+              getDifferenceInDays(secondChangeUsed, date1) < 7
+            )
+              firstDateAfterGap = date2;
+
+            // If second change is not used yet, use it
+            if (!secondChangeUsed) secondChangeUsed = date1;
+            //  there is a gap, grab the next available & valid day as first day
+          } else if (getAchievedStreaks(day2)) firstDateAfterGap = date2;
         }
       }
     }
@@ -201,7 +245,7 @@ export default async function handler(
           ? activeReward.createdAt
           : startDateGeneralStreak;
 
-      const newValue = dayEntities
+      const reducibleArr = sortOnCreatedAt(dayEntities, 'asc')
         .filter((d) => {
           // Equalize hours to make sure that same days match
           const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
@@ -214,8 +258,11 @@ export default async function handler(
 
           return createdDate >= startDate;
         })
-        .map((day) => getAchievedStreaks(day))
-        .reduce((prev, cur) => prev + cur);
+        .map((day) => getAchievedStreaks(day));
+
+      const newValue = reducibleArr.length
+        ? reducibleArr.reduce((prev, cur) => prev + cur)
+        : 0;
 
       // set new reward value
       await rewards.updateOne(

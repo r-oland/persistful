@@ -1,7 +1,8 @@
-import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
+import { getDailyMinutes } from 'utils/getDailyMinutes';
+import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { getCollection } from 'utils/getMongo';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
@@ -46,16 +47,14 @@ export default async function handler(
       if (!day.activities.length) return 0;
 
       // activities
-      const totalPositive = day.activities
-        .filter((a) => !a.penalty)
-        .map((a) => a.count)
-        .reduce((prev, cur) => prev + cur);
+      const totalPositive = getDailyMinutes(
+        day.activities.filter((a) => !a.penalty)
+      );
 
       // penalities
-      const totalNegative = day.activities
-        .filter((a) => a.penalty)
-        .map((a) => a.count)
-        .reduce((prev, cur) => prev + cur);
+      const totalNegative = getDailyMinutes(
+        day.activities.filter((a) => a.penalty)
+      );
 
       const positiveReinforcementMode = user?.rules.prm;
       // possible if you have prm enabled -> will happen when you have no penalty activities

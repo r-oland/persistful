@@ -11,6 +11,7 @@ type PatternEntity = {
 type ActivityEntity = {
   _id: string;
   userId: string;
+  penalty: boolean;
   status: 'active' | 'inactive' | 'deleted';
   name: string;
   icon: string;

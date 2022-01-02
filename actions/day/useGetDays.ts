@@ -1,13 +1,12 @@
 // Components==============
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 // =========================
 
-const getDays = () =>
-  axios.get('/api/day').then(({ data }) => data as DayEntity[]);
+const getDays = () => axios.get('/api/day').then(({ data }) => data);
 
-export default function useGetDays() {
-  const { data } = useQuery('days', getDays);
+export default function useGetDays(options?: UseQueryOptions<DayEntity[]>) {
+  const { data } = useQuery<DayEntity[]>('days', getDays, options);
 
   return data;
 }

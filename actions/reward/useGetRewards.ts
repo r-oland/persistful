@@ -1,13 +1,14 @@
 // Components==============
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 // =========================
 
-const getRewards = () =>
-  axios.get('/api/reward').then(({ data }) => data as RewardEntity[]);
+const getRewards = () => axios.get('/api/reward').then(({ data }) => data);
 
-export default function useGetRewards() {
-  const query = useQuery('rewards', getRewards);
+export default function useGetRewards(
+  options?: UseQueryOptions<RewardEntity[]>
+) {
+  const query = useQuery<RewardEntity[]>('rewards', getRewards, options);
 
   return query;
 }

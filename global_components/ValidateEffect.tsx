@@ -2,12 +2,17 @@
 import useGetUser from 'actions/user/useGetUser';
 import useValidateStreaks from 'actions/user/useValidateStreaks';
 import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getDayString } from 'utils/getDayString';
 // =========================
 
 function Effect() {
-  const { data: user } = useGetUser();
+  const [enabled, setEnabled] = useState(true);
+
+  const { data: user } = useGetUser({
+    enabled,
+    onSuccess: () => setEnabled(false),
+  });
   const validateStreaks = useValidateStreaks();
 
   useEffect(() => {

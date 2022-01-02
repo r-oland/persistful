@@ -1,13 +1,18 @@
 // Components==============
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useQuery, UseQueryOptions } from 'react-query';
 // =========================
 
-const getActivities = () =>
-  axios.get('/api/activity').then(({ data }) => data as ActivityEntity[]);
+const getActivities = () => axios.get('/api/activity').then(({ data }) => data);
 
-export default function useGetActivities() {
-  const query = useQuery('activities', getActivities);
+export default function useGetActivities(
+  options?: UseQueryOptions<ActivityEntity[]>
+) {
+  const query = useQuery<ActivityEntity[]>(
+    'activities',
+    getActivities,
+    options
+  );
 
   return query;
 }

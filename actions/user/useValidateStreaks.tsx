@@ -11,7 +11,7 @@ export default function useValidateStreaks() {
   const queryClient = useQueryClient();
   const { data: activeReward } = useGetActiveReward();
 
-  const mutation = useMutation(['user', 'active-reward'], validateStreaks, {
+  const mutation = useMutation(validateStreaks, {
     onSuccess: () => {
       queryClient.invalidateQueries('user');
       // if reward is active, update rewards

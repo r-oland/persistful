@@ -12,7 +12,6 @@ export default function useUpdateUser() {
   let newUserData: Partial<UserEntity>;
 
   const mutation = useMutation(
-    'user',
     (data: Partial<UserEntity>) => {
       newUserData = data;
       return updateUser(data);

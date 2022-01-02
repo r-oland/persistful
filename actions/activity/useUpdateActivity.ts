@@ -9,7 +9,6 @@ export default function useUpdateActivity() {
   let data: Partial<ActivityEntity>;
 
   const mutation = useMutation(
-    'activities',
     (d: Partial<ActivityEntity> & { id: string }) => {
       data = d;
       return axios.put(`/api/activity/${d.id}`, d);

@@ -27,6 +27,21 @@ export default async function handler(
     }
 
     if (req.method === 'PUT') {
+      // if daily goal changes, also change it in today's day entity
+      if (req.body?.rules?.dailyGoal) {
+        const days = await getCollection<DayEntity>('days');
+        const start = new Date(new Date().setUTCHours(0, 0, 0, 0));
+        const end = new Date(new Date().setUTCHours(23, 59, 59, 999));
+
+        await days.findOneAndUpdate(
+          {
+            userId: session.user.uid,
+            createdAt: { $gte: start, $lt: end },
+          },
+          { $set: { dailyGoal: req.body?.rules?.dailyGoal } }
+        );
+      }
+
       // find user and update dep on request body
       const result = await users.findOneAndUpdate(
         { _id },

@@ -125,11 +125,17 @@ export default function Dashboard() {
             {activeReward.name} {activeReward.completedCycles}
           </div>
         )}
-        <Button
-          onClick={() => updateUser.mutate({ streak: (user?.streak || 0) + 1 })}
-        >
-          {user?.streak}
-        </Button>
+        {!!user && (
+          <Button
+            onClick={() =>
+              updateUser.mutate({
+                streak: (user?.streak || 0) + 1,
+              })
+            }
+          >
+            {user?.streak}
+          </Button>
+        )}
         <Button onClick={() => updateStreak.mutate({ direction: 'inc' })}>
           trigger streak update
         </Button>

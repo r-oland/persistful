@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getCollection } from 'utils/getMongo';
+import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
 export default async function handler(
   req: NextApiRequest,
@@ -35,15 +36,31 @@ export default async function handler(
           { $set: { completedCycles: 0 } }
         );
 
-      return res.status(200).send('Reset streaks');
+      return res.status(200).send({ message: 'Streaks reset' });
     };
 
     // helper func that gets amount of achieved streaks
     const getAchievedStreaks = (day: DayEntity) => {
       if (!day.activities.length) return 0;
-      const total = day.activities
+      // activities
+      const totalPositive = day.activities
+        .filter((a) => !a.penalty)
         .map((a) => a.count)
         .reduce((prev, cur) => prev + cur);
+
+      // penalities
+      const totalNegative = day.activities
+        .filter((a) => a.penalty)
+        .map((a) => a.count)
+        .reduce((prev, cur) => prev + cur);
+
+      const positiveReinforcementMode = user?.rules.prm;
+      // possible if you have prm enabled -> will happen when you have no penalty activities
+      const bonusScore = totalNegative === 0 ? 30 : 0;
+
+      const total = positiveReinforcementMode
+        ? totalPositive + bonusScore
+        : totalPositive - totalNegative;
 
       const goal = day.dailyGoal;
       const streaks = Math.floor(total / goal);
@@ -73,8 +90,11 @@ export default async function handler(
     // * Now it's clear that there is a streak, so we need to calculate it. *
     //
 
-    // Get all days
-    const dayEntities = await days.find({ userId }).toArray();
+    // Get all days except for today
+    const dayEntitiesGetter = await days.find({ userId }).toArray();
+    const dayEntities = dayEntitiesGetter.filter(
+      (d, i) => i !== dayEntitiesGetter.length - 1
+    );
 
     // First date after a gap is found in the day entities
     let firstDateAfterGap;
@@ -104,14 +124,15 @@ export default async function handler(
     // The first day entity post
     const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
-    // get index of item that did not achieve goal
-    const indexOfDateThatDidNotAchieveGoal = dayEntities
-      .reverse()
-      .findIndex((d) => !getAchievedStreaks(d));
+    // get index of item that did not achieve goal in order from newest to latest
+    const DescendingDayEntities = sortOnCreatedAt(dayEntities, 'desc');
+    const indexOfDateThatDidNotAchieveGoal = DescendingDayEntities.findIndex(
+      (d) => !getAchievedStreaks(d)
+    );
 
     // get date of the item after that index item. (-1 because the array is reversed)
     const dateThatDidNotAchieveGoal =
-      dayEntities.reverse()[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
+      DescendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
 
     // all possible dates of first item
     const dates = [firstDate, dateThatDidNotAchieveGoal, firstDateAfterGap];
@@ -124,18 +145,20 @@ export default async function handler(
       )[0] || new Date();
 
     // day entities that are used for calculating the general streak
-    const generalStreakDays = dayEntities.filter((d) => {
-      // Equalize hours to make sure that same days match
-      const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
-      const startDate = new Date(startDateGeneralStreak).setUTCHours(
-        12,
-        0,
-        0,
-        0
-      );
+    const generalStreakDays = sortOnCreatedAt(dayEntities, 'asc').filter(
+      (d) => {
+        // Equalize hours to make sure that same days match
+        const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
+        const startDate = new Date(startDateGeneralStreak).setUTCHours(
+          12,
+          0,
+          0,
+          0
+        );
 
-      return createdDate >= startDate;
-    });
+        return createdDate >= startDate;
+      }
+    );
 
     // generate array for bulk write
     let totalStreaks = 0;
@@ -209,7 +232,7 @@ export default async function handler(
       );
     }
 
-    return res.status(200).send(undefined);
+    return res.status(200).send({ messsage: 'streaks updated' });
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

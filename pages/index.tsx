@@ -74,10 +74,11 @@ export default function Dashboard() {
             addActivity.mutate({
               countMode: 'minutes',
               icon: 'faUser',
-              name: 'A new value',
+              name: 'A new value!!',
               status: 'active',
               enablePattern: true,
               pattern: [{ x: 20, y: 40, r: 80, shape: 'triangle', size: 2 }],
+              penalty: false,
             })
           }
         >
@@ -96,7 +97,7 @@ export default function Dashboard() {
               })
             }
           >
-            {today?.userId} {today.activities[0].count}
+            {today?.userId} {today.activities?.[0]?.count}
           </div>
         )}
         <Button

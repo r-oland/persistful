@@ -31,7 +31,7 @@ export default async function handler(
       const activitySnapshot = await activities
         .find({ userId })
         // Filter out the only values (next to the _id) that are needed
-        .project({ countCalc: 1, countMode: 1 })
+        .project({ countCalc: 1, countMode: 1, penalty: 1 })
         .map((activity) => ({ ...activity, count: 0 } as DailyActivityEntity))
         .toArray();
 

@@ -33,7 +33,7 @@ export default async function handler(
       if (today) return res.status(200).send(today);
 
       // else return nothing
-      return res.status(204).send(undefined);
+      return res.status(204).send({ message: 'today entity does not exist' });
     }
   } catch (err: any) {
     console.error(err);

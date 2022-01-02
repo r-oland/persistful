@@ -1,7 +1,6 @@
 // Components==============
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { getDayString } from 'utils/getDayString';
 // =========================
 
 export default function useUpdateActivity() {
@@ -18,8 +17,7 @@ export default function useUpdateActivity() {
         queryClient.invalidateQueries('activities');
 
         if (data?.penalty !== undefined || data?.countMode || data?.countCalc) {
-          const key = getDayString(new Date());
-          queryClient.invalidateQueries(['days', key]);
+          queryClient.invalidateQueries('days');
         }
       },
     }

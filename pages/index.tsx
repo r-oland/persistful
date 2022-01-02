@@ -34,7 +34,7 @@ export default function Dashboard() {
 
   const { data: today, isLoading } = useGetDay(new Date());
   const addDay = useAddDay();
-  const updateDay = useUpdateDay(new Date());
+  const updateDay = useUpdateDay();
 
   useEffect(() => {
     if (isLoading || !!today) return;

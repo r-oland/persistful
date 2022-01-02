@@ -25,6 +25,41 @@ export default async function handler(
         { upsert: true }
       );
 
+      // Also update changes in today's day entity
+      if (data?.penalty !== undefined || data?.countMode || data?.countCalc) {
+        const days = await getCollection<DayEntity>('days');
+        const start = new Date(new Date().setUTCHours(0, 0, 0, 0));
+        const end = new Date(new Date().setUTCHours(23, 59, 59, 999));
+
+        const today = await days.findOne({
+          userId: session.user.uid,
+          createdAt: { $gte: start, $lt: end },
+        });
+
+        await days.findOneAndUpdate(
+          {
+            userId: session.user.uid,
+            createdAt: { $gte: start, $lt: end },
+          },
+          {
+            $set: {
+              activities: today?.activities.map((a) =>
+                // @ts-ignore
+                a?._id.equals(result.value?._id)
+                  ? {
+                      ...a,
+                      penalty:
+                        data?.penalty !== undefined ? data.penalty : a.penalty,
+                      countMode: data?.countMode || a.countMode,
+                      countCalc: data?.countCalc || a.countCalc,
+                    }
+                  : a
+              ),
+            },
+          }
+        );
+      }
+
       res.status(200).send({ ...result.value, ...data });
     }
 

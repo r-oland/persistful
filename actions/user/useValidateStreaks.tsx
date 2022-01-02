@@ -26,7 +26,7 @@ export default function useValidateStreaks() {
         activeReward &&
         activeReward.completedCycles !== activeReward.totalCycles
       ) {
-        queryClient.invalidateQueries('active-reward');
+        queryClient.invalidateQueries(['rewards', 'active']);
         queryClient.invalidateQueries('rewards');
       }
     },

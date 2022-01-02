@@ -10,7 +10,7 @@ export default function useGetActiveReward(
   options?: UseQueryOptions<RewardEntity>
 ) {
   const query = useQuery<RewardEntity>(
-    'active-reward',
+    ['rewards', 'active'],
     getActiveReward,
     options
   );

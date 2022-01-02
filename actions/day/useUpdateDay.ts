@@ -1,12 +1,10 @@
 // Components==============
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { getDayString } from 'utils/getDayString';
 // =========================
 
-export default function useUpdateDay(day: Date) {
+export default function useUpdateDay() {
   const queryClient = useQueryClient();
-  const key = getDayString(day);
 
   const mutation = useMutation(
     (data: Partial<DayEntity> & { id: string }) =>
@@ -14,7 +12,6 @@ export default function useUpdateDay(day: Date) {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('days');
-        queryClient.invalidateQueries(['days', key]);
       },
     }
   );

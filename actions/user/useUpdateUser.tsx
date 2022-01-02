@@ -1,7 +1,6 @@
 // Components==============
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
-import { getDayString } from 'utils/getDayString';
 // =========================
 
 const updateUser = (data: Partial<UserEntity>) =>
@@ -21,8 +20,7 @@ export default function useUpdateUser() {
         queryClient.invalidateQueries('user');
 
         if (newUserData?.rules?.dailyGoal) {
-          const key = getDayString(new Date());
-          queryClient.invalidateQueries(['days', key]);
+          queryClient.invalidateQueries('days');
         }
       },
     }

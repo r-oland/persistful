@@ -1,4 +1,3 @@
-import { getDayString } from 'utils/getDayString';
 // Components==============
 import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
@@ -13,9 +12,7 @@ export default function useAddActivity() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('activities');
-
-        const key = getDayString(new Date());
-        queryClient.invalidateQueries(['days', key]);
+        queryClient.invalidateQueries('days');
       },
     }
   );

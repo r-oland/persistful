@@ -1,7 +1,6 @@
 // Components==============
 import Auth from 'global_components/Auth/Auth';
 import Layout from 'global_components/Layout/Layout';
-import ValidateEffect from 'global_components/ValidateEffect';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
@@ -12,7 +11,10 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
 // =========================
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  // disable stale state because data is not depended on external factors
+  defaultOptions: { queries: { staleTime: Infinity } },
+});
 
 type NextPageWithExtraProps = NextPage & {
   noAuth?: boolean;
@@ -35,7 +37,6 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
               <Component {...pageProps} />
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
-            <ValidateEffect />
           </>
         </Auth>
       </QueryClientProvider>

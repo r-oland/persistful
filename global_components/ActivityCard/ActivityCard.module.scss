@@ -2,4 +2,46 @@
 
 .wrapper {
   display: grid;
+  grid-template-columns: 1fr auto;
+  background-color: $white;
+  border: $border;
+
+  .content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    align-content: center;
+    gap: $spacing4;
+    padding: $spacing4 $spacing4;
+
+    .icon {
+      background-color: $green;
+      color: $white;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+      font-size: $font-large;
+    }
+
+    .info {
+      display: grid;
+    }
+  }
+
+  .bar {
+    width: 15px;
+    height: 100%;
+    background-color: $green;
+    border-left: $border;
+  }
+
+  &.penalty {
+    .bar,
+    .icon {
+      background-color: $red;
+    }
+  }
 }

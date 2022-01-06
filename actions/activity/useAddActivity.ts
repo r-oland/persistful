@@ -7,7 +7,7 @@ export default function useAddActivity() {
   const queryClient = useQueryClient();
 
   const mutation = useMutation(
-    (data: Omit<ActivityEntity, '_id' | 'userId' | 'createdAt'>) =>
+    (data: Omit<ActivityEntity, '_id' | 'userId' | 'createdAt' | 'count'>) =>
       axios.post('/api/activity', data),
     {
       onSuccess: () => {

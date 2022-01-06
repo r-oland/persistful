@@ -1,0 +1,13 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing8;
+
+  .activities {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: $spacing4;
+  }
+}

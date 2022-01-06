@@ -37,7 +37,7 @@ export default async function handler(
           { $set: { status: 'active' } }
         );
 
-        return res.status(200).send(alreadyExists);
+        return res.status(200).send({ message: 'activity already exists' });
       }
 
       // Add new activity entity
@@ -45,6 +45,7 @@ export default async function handler(
         .insertOne({
           ...req.body,
           userId,
+          count: 0,
           createdAt: new Date(),
         })
         .then(async (r) => {

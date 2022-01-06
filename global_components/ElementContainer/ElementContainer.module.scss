@@ -1,0 +1,50 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  border: $border;
+
+  &.green {
+    .bar {
+      background-color: $green;
+    }
+  }
+
+  &.red {
+    .bar {
+      background-color: $red;
+    }
+  }
+
+  &.black {
+    .bar {
+      background-color: $black;
+    }
+  }
+
+  &.green-with-background {
+    background-color: $green-light;
+
+    .bar {
+      background-color: $green-dark;
+    }
+  }
+
+  &.red-with-background {
+    background-color: $red-light;
+
+    .bar {
+      background-color: $red-dark;
+    }
+  }
+
+  .bar {
+    height: 15px;
+    width: 100%;
+    border-bottom: $border;
+  }
+
+  .content {
+    padding: $spacing4;
+  }
+}

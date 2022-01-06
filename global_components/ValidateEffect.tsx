@@ -1,4 +1,6 @@
 // Components==============
+import useAddDay from 'actions/day/useAddDay';
+import useGetDay from 'actions/day/useGetDay';
 import useGetUser from 'actions/user/useGetUser';
 import useValidateStreaks from 'actions/user/useValidateStreaks';
 import { useSession } from 'next-auth/react';
@@ -9,16 +11,24 @@ import { getDayString } from 'utils/getDayString';
 function Effect() {
   const { data: user } = useGetUser();
   const validateStreaks = useValidateStreaks();
+  const { data: today, isLoading } = useGetDay(new Date());
+  const addDay = useAddDay();
 
   useEffect(() => {
     if (!user) return;
     // set lastValidation when editing previous date
     const lastValidation = new Date(user.lastValidation);
-    const today = new Date();
 
-    if (getDayString(lastValidation) !== getDayString(today))
+    if (getDayString(lastValidation) !== getDayString(new Date()))
       validateStreaks.mutate();
   }, [user?.lastValidation]);
+
+  // if today's day entity doesn't exists yet, add it
+  useEffect(() => {
+    if (isLoading || !!today) return;
+
+    addDay.mutate();
+  }, [!!today, isLoading]);
 
   return null;
 }

@@ -7,9 +7,16 @@
     overflow: auto;
     height: calc($app-height - 50px - 65px);
     padding: $spacing10 $spacing5 $spacing5;
+    display: grid;
+    gap: $spacing9;
+    align-content: start;
 
-    @media screen and (min-width: $tablet) {
-      padding: 90px $spacing11 $spacing11;
+    .title {
+      display: inline;
+      @include underline;
+      font-size: $font-h3;
+      justify-self: start;
+      background-color: $white;
     }
   }
 
@@ -19,6 +26,11 @@
     .content {
       height: $app-height;
       overflow: auto;
+      padding: 90px $spacing11 $spacing11;
+
+      .title {
+        font-size: $font-h1;
+      }
     }
   }
 }

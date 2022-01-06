@@ -9,7 +9,10 @@ import React from 'react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
+import { fontawesomeHelper } from 'utils/fontawesomeHelper';
 // =========================
+
+fontawesomeHelper();
 
 export const queryClient = new QueryClient({
   // disable stale state because data is not depended on external factors

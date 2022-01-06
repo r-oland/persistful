@@ -24,18 +24,18 @@ const child = {
 export default function HardShadow({
   children,
   stretch,
-  clickAnimation,
+  animations,
 }: {
   children: React.ReactNode;
   stretch?: boolean;
-  clickAnimation?: boolean;
+  animations?: boolean;
 }) {
   return (
     <motion.div
       className={styles.wrapper}
-      whileHover="hover"
+      whileHover={animations ? 'hover' : undefined}
       initial="initial"
-      whileTap={clickAnimation ? 'tap' : undefined}
+      whileTap={animations ? 'tap' : undefined}
       variants={variants}
       style={{ width: stretch ? 'calc(100% - 4px)' : '' }}
     >

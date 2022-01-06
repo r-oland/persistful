@@ -3,6 +3,7 @@ import useAddActivity from 'actions/activity/useAddActivity';
 import useGetActivities from 'actions/activity/useGetActivities';
 import Button from 'global_components/Button/Button';
 import React from 'react';
+import { getActivityCount } from 'utils/getActivityCount';
 // =========================
 
 export default function Activities() {
@@ -14,7 +15,7 @@ export default function Activities() {
       {activities?.map((a) => (
         <div key={a._id}>
           <p>{a.name}</p>
-          <strong>{a.count}</strong>
+          <strong>{getActivityCount(a)}</strong>
         </div>
       ))}
       <Button

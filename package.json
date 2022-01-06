@@ -8,6 +8,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/pro-regular-svg-icons": "^5.15.4",
     "@fortawesome/pro-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",

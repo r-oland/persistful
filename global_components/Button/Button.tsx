@@ -27,7 +27,7 @@ export default function Button({
   const history = useRouter();
 
   return (
-    <HardShadow stretch={stretch}>
+    <HardShadow stretch={stretch} animations>
       <button
         onClick={
           to

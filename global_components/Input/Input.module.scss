@@ -3,22 +3,48 @@
 .wrapper {
   display: grid;
   grid-template-columns: 1fr auto;
-  background-color: $green-light;
   width: 100%;
+  transition: 0.2s;
+
+  &.green {
+    background-color: $green-light;
+
+    input {
+      &::placeholder {
+        color: $green-dark;
+      }
+    }
+
+    .bar {
+      background-color: $green;
+    }
+  }
+
+  &.red {
+    background-color: $red-light;
+
+    input {
+      &::placeholder {
+        color: $red-dark;
+      }
+    }
+
+    .bar {
+      background-color: $red;
+    }
+  }
 
   input {
     border: none;
     background-color: transparent;
     padding: $spacing4 $spacing4;
     font-size: $font-small;
-    &::placeholder {
-      color: $green-dark;
-    }
+    transition: 0.2s;
   }
 
   .bar {
     width: 10px;
-    background-color: $green;
     height: 100%;
+    transition: 0.2s;
   }
 }

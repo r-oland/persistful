@@ -37,7 +37,10 @@ export default function HardShadow({
       initial="initial"
       whileTap={animations ? 'tap' : undefined}
       variants={variants}
-      style={{ width: stretch ? 'calc(100% - 4px)' : '' }}
+      style={{
+        width: stretch ? 'calc(100% - 4px)' : '',
+        cursor: animations ? 'pointer' : 'initial',
+      }}
     >
       <motion.div variants={child} className={styles.content}>
         {children}

@@ -67,7 +67,8 @@ export default async function handler(
       const goal = day.dailyGoal;
       const streaks = Math.floor(total / goal);
 
-      return streaks;
+      // prevent negative streaks
+      return streaks < 0 ? 0 : streaks;
     };
 
     const days = await getCollection<DayEntity>('days');

@@ -1,0 +1,8 @@
+@import 'styles/Variables';
+
+.wrapper {
+  .content {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+}

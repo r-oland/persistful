@@ -5,13 +5,14 @@
   grid-template-columns: 1fr auto;
   background-color: $white;
   border: $border;
+  border-radius: $border-radius;
 
   .content {
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;
     align-content: center;
-    gap: $spacing4;
+    gap: $spacing3;
     padding: $spacing4 $spacing4;
 
     .icon {
@@ -28,6 +29,9 @@
 
     .info {
       display: grid;
+      p {
+        font-size: $font-small;
+      }
     }
   }
 
@@ -36,12 +40,25 @@
     height: 100%;
     background-color: $green;
     border-left: $border;
+    transition: 0.2s;
+  }
+
+  &.selected {
+    .bar {
+      background-color: $green-dark;
+    }
   }
 
   &.penalty {
     .bar,
     .icon {
       background-color: $red;
+    }
+
+    &.selected {
+      .bar {
+        background-color: $red-dark;
+      }
     }
   }
 }

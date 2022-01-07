@@ -54,7 +54,8 @@ export default function Activities() {
       {!!goals?.length && (
         <ConditionalWrapper color="green-with-background">
           {goals.map(
-            (goal) => !!goal && <ActivityCard activity={goal} key={goal._id} />
+            (goal) =>
+              !!goal && <ActivityCard activity={goal} key={goal._id} canEdit />
           )}
         </ConditionalWrapper>
       )}
@@ -62,7 +63,9 @@ export default function Activities() {
         <ConditionalWrapper color="red-with-background">
           {penalties.map(
             (penalty) =>
-              !!penalty && <ActivityCard activity={penalty} key={penalty._id} />
+              !!penalty && (
+                <ActivityCard activity={penalty} key={penalty._id} canEdit />
+              )
           )}
         </ConditionalWrapper>
       )}

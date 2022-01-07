@@ -37,7 +37,9 @@ export default async function handler(
           { $set: { status: 'active' } }
         );
 
-        return res.status(200).send({ message: 'activity already exists' });
+        return res
+          .status(200)
+          .send({ _id: alreadyExists._id, message: 'activity already exists' });
       }
 
       // Add new activity entity
@@ -80,6 +82,8 @@ export default async function handler(
                 },
               }
             );
+
+          return r;
         });
 
       return res.status(200).send(result);

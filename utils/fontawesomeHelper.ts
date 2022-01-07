@@ -18,3 +18,12 @@ export const fontawesomeHelper = () => {
     faSackDollar
   );
 };
+
+export const icons = [
+  'file-code',
+  'watch-fitness',
+  'waveform',
+  'book-spells',
+  'french-fries',
+  'sack-dollar',
+];

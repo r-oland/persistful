@@ -1,0 +1,19 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  justify-content: center;
+  align-items: center;
+  border-radius: $border-radius;
+  background-color: $green-light;
+  color: $green;
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+  transition: 0.2s;
+
+  &.penalty {
+    background-color: $red-light;
+    color: $red;
+  }
+}

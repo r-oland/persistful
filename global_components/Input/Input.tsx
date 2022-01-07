@@ -8,14 +8,16 @@ export default function Input({
   value,
   onChange,
   placeholder,
+  color = 'green',
 }: {
   type?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
+  color?: 'red' | 'green';
 }) {
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${styles[color]}`}>
       <input
         type={type}
         value={value}

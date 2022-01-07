@@ -1,0 +1,32 @@
+@import 'styles/Variables';
+
+.wrapper {
+  width: 50px;
+  height: 22px;
+  background-color: $green-light;
+  transition: 0.2s;
+  transition-property: background-color;
+  border-radius: 50px;
+  position: relative;
+  cursor: pointer;
+
+  &.penalty {
+    background-color: $red-light;
+
+    .circle {
+      background-color: $red;
+    }
+  }
+
+  .circle {
+    border-radius: 100%;
+    width: 18px;
+    height: 18px;
+    background-color: $green;
+    transition: 0.2s;
+    transition-property: background-color;
+    position: absolute;
+    top: 2px;
+    left: 2px;
+  }
+}

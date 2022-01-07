@@ -1,0 +1,103 @@
+@import 'styles/Variables';
+
+.wrapper {
+  position: relative;
+
+  .icon {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    font-size: $font-large;
+    width: 40px;
+    height: 40px;
+    border-radius: 100%;
+    background-color: $green-light;
+    color: $green;
+    cursor: pointer;
+    transition: 0.2s;
+  }
+
+  .arrow-1,
+  .arrow-2 {
+    position: absolute;
+    top: 41px;
+    left: 13px;
+  }
+
+  .arrow-1 {
+    z-index: 2;
+    transform: translateY(2px);
+  }
+
+  .arrow-2 {
+    z-index: 1;
+  }
+
+  .tooltip {
+    position: absolute;
+    top: $spacing10;
+
+    .inside {
+      width: 180px;
+      height: 120px;
+      background-color: $white;
+      border: $border;
+
+      .bar {
+        height: 15px;
+        background-color: $green;
+        transition: 0.2s;
+        border-bottom: $border;
+      }
+
+      .content {
+        padding: $spacing4;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        justify-items: center;
+        font-size: $font-paragraph;
+        gap: $spacing4;
+        overflow: auto;
+
+        .active {
+          color: $green;
+        }
+
+        svg {
+          cursor: pointer;
+          transition: 0.2s;
+          &:hover {
+            color: $green;
+          }
+        }
+      }
+    }
+  }
+
+  &.penalty {
+    .icon {
+      background-color: $red-light;
+      color: $red;
+    }
+
+    .tooltip {
+      .inside {
+        .bar {
+          background-color: $red;
+        }
+
+        .content {
+          .active {
+            color: $red;
+          }
+
+          svg {
+            &:hover {
+              color: $red;
+            }
+          }
+        }
+      }
+    }
+  }
+}

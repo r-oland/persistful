@@ -3,20 +3,24 @@
 .wrapper {
   display: grid;
   border: $border;
+  border-radius: $border-radius;
 
   &.green {
+    background-color: $white;
     .bar {
       background-color: $green;
     }
   }
 
   &.red {
+    background-color: $white;
     .bar {
       background-color: $red;
     }
   }
 
   &.black {
+    background-color: $white;
     .bar {
       background-color: $black;
     }
@@ -42,6 +46,7 @@
     height: 15px;
     width: 100%;
     border-bottom: $border;
+    transition: 0.2s;
   }
 
   .content {

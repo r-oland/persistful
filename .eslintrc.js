@@ -34,6 +34,8 @@ module.exports = {
     'import/extensions': 0,
     'import/no-mutable-exports': 0,
     'import/prefer-default-export': 0,
+    'import/no-cycle': 0,
+    'no-nested-ternary': 0,
     '@typescript-eslint/ban-ts-comment': 0,
     '@typescript-eslint/no-explicit-any': 0,
     'prettier/prettier': [

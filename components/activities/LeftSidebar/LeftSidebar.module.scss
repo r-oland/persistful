@@ -1,0 +1,13 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  gap: $spacing6;
+  height: calc($app-height - 181px);
+  grid-template-columns: repeat(2, 220px);
+  align-content: start;
+  padding: $spacing11 $spacing10;
+  border-right: 1px solid $grey-light;
+  background-color: $white;
+  overflow: auto;
+}

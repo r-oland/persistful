@@ -5,7 +5,6 @@ import useGetUser from 'actions/user/useGetUser';
 import useValidateStreaks from 'actions/user/useValidateStreaks';
 import { useSession } from 'next-auth/react';
 import React, { useEffect } from 'react';
-import { getDayString } from 'utils/getDayString';
 // =========================
 
 function Effect() {
@@ -19,7 +18,7 @@ function Effect() {
     // set lastValidation when editing previous date
     const lastValidation = new Date(user.lastValidation);
 
-    if (getDayString(lastValidation) !== getDayString(new Date()))
+    if (lastValidation.toLocaleDateString() !== new Date().toLocaleDateString())
       validateStreaks.mutate();
   }, [user?.lastValidation]);
 

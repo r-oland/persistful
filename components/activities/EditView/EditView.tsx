@@ -23,7 +23,7 @@ import IconSelector from './IconSelector/IconSelector';
 const defaultPreviewItems = {
   status: 'active',
   penalty: false,
-  name: 'New item',
+  name: 'New activity',
   count: 90,
   countMode: 'minutes',
   countCalc: 30,
@@ -67,6 +67,10 @@ export default function EditView() {
       if (newActivity)
         return setSaveObject((prev) => ({ ...prev, penalty: isToggled }));
 
+      // if set to inactive, skip saveObject and save right away
+      if (!isToggled && activity)
+        return updateActivity.mutate({ id: activity._id, status: 'inactive' });
+
       setSaveObject((prev) => ({
         ...prev,
         status: isToggled ? 'active' : 'inactive',
@@ -77,6 +81,7 @@ export default function EditView() {
   }, [isToggled]);
 
   const penaltyMode = newActivity ? isToggled : activity?.penalty;
+  const inactive = !newActivity && !isToggled;
 
   return (
     <div className={styles.wrapper}>
@@ -104,7 +109,11 @@ export default function EditView() {
                 penalty={penaltyMode}
               />
             </div>
-            <div className={styles['icon-input']}>
+            <div
+              className={`${styles['icon-input']} ${
+                inactive ? styles.inactive : ''
+              }`}
+            >
               <IconSelector
                 penalty={!!penaltyMode}
                 icon={saveObject.icon || activity?.icon || 'book-spells'}
@@ -120,7 +129,7 @@ export default function EditView() {
                 color={penaltyMode ? 'red' : 'green'}
               />
             </div>
-            <div>
+            <div className={inactive ? styles.inactive : ''}>
               <b>Count mode</b>
               <div
                 onClick={() => {
@@ -141,6 +150,7 @@ export default function EditView() {
                 <motion.div
                   {...framerFade}
                   initial={{ opacity: activity?.countMode === 'times' ? 1 : 0 }}
+                  className={inactive ? styles.inactive : ''}
                 >
                   <b>Calculated minutes per count</b>
                   <Slider
@@ -157,7 +167,11 @@ export default function EditView() {
                 </motion.div>
               )}
             </AnimatePresence>
-            <div className={styles['preview-wrapper']}>
+            <div
+              className={`${styles['preview-wrapper']} ${
+                inactive ? styles.inactive : ''
+              }`}
+            >
               <div className={styles['column-1']}>
                 <b>Preview</b>
                 <ActivityCard
@@ -235,6 +249,7 @@ export default function EditView() {
                         id: activity._id,
                       });
                     }}
+                    inactive={inactive}
                   >
                     <FontAwesomeIcon icon={faSave} /> Save
                   </Button>

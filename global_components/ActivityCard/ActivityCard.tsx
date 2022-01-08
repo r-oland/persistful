@@ -22,24 +22,30 @@ export default function ActivityCard({
   if (canEdit) return <EditableActivityCard activity={activity} />;
 
   return (
-    <HardShadow animations stretch>
-      <div
-        className={`${styles.wrapper}  ${
-          activity.penalty ? styles.penalty : ''
-        } ${selected ? styles.selected : ''}`}
-        onClick={onClick}
-      >
-        <div className={styles.content}>
-          <div className={styles.icon}>
-            <FontAwesomeIcon icon={activity.icon as IconName} />
+    <div
+      style={{
+        opacity: activity.status === 'inactive' ? 0.4 : 1,
+      }}
+    >
+      <HardShadow animations stretch>
+        <div
+          className={`${styles.wrapper}  ${
+            activity.penalty ? styles.penalty : ''
+          } ${selected ? styles.selected : ''}`}
+          onClick={onClick}
+        >
+          <div className={styles.content}>
+            <div className={styles.icon}>
+              <FontAwesomeIcon icon={activity.icon as IconName} />
+            </div>
+            <div className={styles.info}>
+              <p>{activity.name}</p>
+              <h3>{getActivityCount(activity)}</h3>
+            </div>
           </div>
-          <div className={styles.info}>
-            <p>{activity.name}</p>
-            <h3>{getActivityCount(activity)}</h3>
-          </div>
+          <div className={styles.bar} />
         </div>
-        <div className={styles.bar} />
-      </div>
-    </HardShadow>
+      </HardShadow>
+    </div>
   );
 }

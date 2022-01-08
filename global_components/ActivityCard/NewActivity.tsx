@@ -21,16 +21,14 @@ export default function NewActivity() {
             `}
         onClick={() => setSelectedActivity('new-activity')}
       >
-        <div
-          className={styles.content}
-          // to account for missing space due to a lack of count
-          style={{ padding: '1.07rem 1rem' }}
-        >
-          <div className={styles.icon}>
-            <FontAwesomeIcon icon={faPlus} />
+        <div className={styles.content}>
+          <div className={styles['icon-wrapper']}>
+            <div className={styles.icon}>
+              <FontAwesomeIcon icon={faPlus} />
+            </div>
           </div>
           <div className={styles.info}>
-            <p>New actvitiy</p>
+            <p>New activity</p>
           </div>
         </div>
         <div className={styles.bar} />

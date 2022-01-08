@@ -21,6 +21,7 @@ export default function LeftSidebar() {
           key={a._id}
           onClick={() => setSelectedActivity(a._id)}
           selected={selectedActivity === a._id}
+          activities={activities}
         />
       ))}
     </div>

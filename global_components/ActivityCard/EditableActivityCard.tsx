@@ -5,6 +5,8 @@ import useGetDay from 'actions/day/useGetDay';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
 import React from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
+import { getActivityPercentage } from 'utils/getActivityPercentage';
+import ActivityProgress from './ActivityProgress/ActivityProgress';
 import styles from './ActivityCard.module.scss';
 // =========================
 
@@ -15,6 +17,8 @@ export default function EditableActivityCard({
 }) {
   const { data: day } = useGetDay(new Date());
   const { mutate } = useUpdateActivityCount();
+
+  const percentage = getActivityPercentage(activity, day?.activities);
 
   if (!day) return null;
 
@@ -30,8 +34,16 @@ export default function EditableActivityCard({
       }
     >
       <div className={styles.content}>
-        <div className={styles.icon}>
-          <FontAwesomeIcon icon={activity.icon as IconName} />
+        <div className={styles['icon-wrapper']}>
+          <div className={styles.icon}>
+            {percentage !== undefined && (
+              <ActivityProgress
+                percentage={percentage}
+                penalty={activity.penalty}
+              />
+            )}
+            <FontAwesomeIcon icon={activity.icon as IconName} />
+          </div>
         </div>
         <div className={styles.info}>
           <p>{activity.name}</p>

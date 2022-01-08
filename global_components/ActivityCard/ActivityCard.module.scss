@@ -15,16 +15,27 @@
     gap: $spacing3;
     padding: $spacing4 $spacing4;
 
-    .icon {
-      background-color: $green;
-      color: $white;
-      width: 40px;
-      height: 40px;
+    .icon-wrapper {
+      background-color: $green-light;
+      width: 43px;
+      height: 43px;
       display: grid;
       justify-content: center;
       align-items: center;
       border-radius: 100%;
-      font-size: $font-large;
+      position: relative;
+
+      .icon {
+        background-color: $green;
+        color: $white;
+        width: 40px;
+        height: 40px;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        border-radius: 100%;
+        font-size: $font-large;
+      }
     }
 
     .info {
@@ -53,9 +64,15 @@
   }
 
   &.penalty {
-    .bar,
-    .icon {
+    .bar {
       background-color: $red;
+    }
+
+    .icon-wrapper {
+      background-color: $red-light;
+      .icon {
+        background-color: $red;
+      }
     }
 
     &.selected {

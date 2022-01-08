@@ -235,6 +235,7 @@ export default function EditView() {
                 <ActivityCard
                   activity={{ ...localActivity, ...saveObject }}
                   disableAnimations
+                  activities={activities}
                 />
               </div>
               <div>

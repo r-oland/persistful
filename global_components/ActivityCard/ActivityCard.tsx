@@ -4,6 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import React from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
+import { getActivityPercentage } from 'utils/getActivityPercentage';
+import ActivityProgress from './ActivityProgress/ActivityProgress';
 import styles from './ActivityCard.module.scss';
 import EditableActivityCard from './EditableActivityCard';
 // =========================
@@ -14,14 +16,18 @@ export default function ActivityCard({
   onClick,
   selected,
   disableAnimations,
+  activities,
 }: {
   activity: ActivityEntity;
   canEdit?: boolean;
   onClick?: () => void;
   selected?: boolean;
   disableAnimations?: boolean;
+  activities?: ActivityEntity[];
 }) {
   if (canEdit) return <EditableActivityCard activity={activity} />;
+
+  const percentage = getActivityPercentage(activity, activities);
 
   return (
     <div
@@ -37,8 +43,16 @@ export default function ActivityCard({
           onClick={onClick}
         >
           <div className={styles.content}>
-            <div className={styles.icon}>
-              <FontAwesomeIcon icon={activity.icon as IconName} />
+            <div className={styles['icon-wrapper']}>
+              {percentage !== undefined && (
+                <ActivityProgress
+                  percentage={percentage}
+                  penalty={activity.penalty}
+                />
+              )}
+              <div className={styles.icon}>
+                <FontAwesomeIcon icon={activity.icon as IconName} />
+              </div>
             </div>
             <div className={styles.info}>
               <p>{activity.name}</p>

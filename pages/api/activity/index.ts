@@ -18,7 +18,9 @@ export default async function handler(
     const userId = session.user.uid;
 
     if (req.method === 'GET') {
-      const data = await activities.find({ userId }).toArray();
+      const data = await activities
+        .find({ userId, status: 'active' || 'inactive' })
+        .toArray();
 
       // fetch activities
       return res.status(200).send(data);

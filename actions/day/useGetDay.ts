@@ -1,7 +1,6 @@
 // Components==============
 import axios from 'axios';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { getDayString } from 'utils/getDayString';
 import { getLocalISOTime } from 'utils/getLocalISOTime';
 // =========================
 
@@ -12,7 +11,7 @@ export default function useGetDay(
   date: Date,
   options?: UseQueryOptions<DayEntity>
 ) {
-  const key = getDayString(date);
+  const key = date.toLocaleDateString();
 
   const query = useQuery<DayEntity>(
     ['days', key],

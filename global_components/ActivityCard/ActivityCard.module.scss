@@ -31,6 +31,9 @@
       display: grid;
       p {
         font-size: $font-small;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
       }
     }
   }

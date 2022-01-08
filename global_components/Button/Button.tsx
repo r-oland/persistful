@@ -27,26 +27,31 @@ export default function Button({
   const history = useRouter();
 
   return (
-    <HardShadow stretch={stretch} animations>
-      <button
-        onClick={
-          to
-            ? (e) => {
-                e.stopPropagation();
-                history.push(to);
-              }
-            : onClick
-        }
-        type={submit ? 'submit' : 'button'}
-        className={`${styles.wrapper} ${styles[color]}`}
-        style={{
-          pointerEvents: inactive ? 'none' : 'all',
-          opacity: inactive ? 0.5 : 1,
-          width: stretch ? '100%' : '',
-        }}
-      >
-        {children}
-      </button>
-    </HardShadow>
+    <div
+      style={{
+        pointerEvents: inactive ? 'none' : 'initial',
+        opacity: inactive ? 0.4 : 1,
+      }}
+    >
+      <HardShadow stretch={stretch} animations>
+        <button
+          onClick={
+            to
+              ? (e) => {
+                  e.stopPropagation();
+                  history.push(to);
+                }
+              : onClick
+          }
+          type={submit ? 'submit' : 'button'}
+          className={`${styles.wrapper} ${styles[color]}`}
+          style={{
+            width: stretch ? '100%' : '',
+          }}
+        >
+          {children}
+        </button>
+      </HardShadow>
+    </div>
   );
 }

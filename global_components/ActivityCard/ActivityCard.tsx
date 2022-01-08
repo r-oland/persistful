@@ -13,11 +13,13 @@ export default function ActivityCard({
   canEdit,
   onClick,
   selected,
+  disableAnimations,
 }: {
   activity: ActivityEntity;
   canEdit?: boolean;
   onClick?: () => void;
   selected?: boolean;
+  disableAnimations?: boolean;
 }) {
   if (canEdit) return <EditableActivityCard activity={activity} />;
 
@@ -27,7 +29,7 @@ export default function ActivityCard({
         opacity: activity.status === 'inactive' ? 0.4 : 1,
       }}
     >
-      <HardShadow animations stretch>
+      <HardShadow animations={!disableAnimations} stretch>
         <div
           className={`${styles.wrapper}  ${
             activity.penalty ? styles.penalty : ''

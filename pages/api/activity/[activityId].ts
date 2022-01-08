@@ -52,6 +52,7 @@ export default async function handler(
                         data?.penalty !== undefined ? data.penalty : a.penalty,
                       countMode: data?.countMode || a.countMode,
                       countCalc: data?.countCalc || a.countCalc,
+                      count: data?.count || a.count,
                     }
                   : a
               ),

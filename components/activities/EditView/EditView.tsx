@@ -14,13 +14,13 @@ import Input from 'global_components/Input/Input';
 import Slider from 'global_components/Slider/Slider';
 import Toggle from 'global_components/Toggle/Toggle';
 import { ActivitiesContext } from 'pages/activities';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { framerFade } from 'utils/framerAnimations';
 import styles from './EditView.module.scss';
 import IconSelector from './IconSelector/IconSelector';
 // =========================
 
-const defaultPreviewItems = {
+const defaultValues = {
   status: 'active',
   penalty: false,
   name: 'New activity',
@@ -39,49 +39,118 @@ export default function EditView() {
     useContext(ActivitiesContext);
   const newActivity = selectedActivity === 'new-activity';
   const activity = activities?.find((a) => selectedActivity === a._id);
+  const localActivity = activity || defaultValues;
 
   // states
-  const [counter, setCounter] = useState(0);
   const [isToggled, setIsToggled] = useState(
-    newActivity ? defaultPreviewItems.penalty : activity?.status === 'active'
+    newActivity ? defaultValues.penalty : activity?.status === 'active'
   );
-  const [name, setName] = useState(
-    (newActivity ? defaultPreviewItems.name : activity?.name) || ''
-  );
-  const [countMode, setCountMode] = useState(
-    newActivity
-      ? defaultPreviewItems.countMode === 'times'
-      : activity?.countMode === 'times'
-  );
-  const [enablePattern, setEnablePattern] = useState(
-    newActivity ? defaultPreviewItems.enablePattern : !!activity?.enablePattern
-  );
+  const [name, setName] = useState(localActivity.name);
   const [saveObject, setSaveObject] = useState<Partial<ActivityEntity>>(
-    newActivity ? defaultPreviewItems : {}
+    newActivity ? defaultValues : {}
   );
   //
 
-  // Set toggle value to save object
-  useEffect(() => {
-    if (counter > 0) {
-      if (newActivity)
-        return setSaveObject((prev) => ({ ...prev, penalty: isToggled }));
+  // functions
+  const handleToggle = () => {
+    setIsToggled((prev) => !prev);
 
-      // if set to inactive, skip saveObject and save right away
-      if (!isToggled && activity)
-        return updateActivity.mutate({ id: activity._id, status: 'inactive' });
+    const currentToggle = !isToggled;
 
-      setSaveObject((prev) => ({
+    if (newActivity)
+      return setSaveObject((prev) => ({
         ...prev,
-        status: isToggled ? 'active' : 'inactive',
+        penalty: currentToggle,
       }));
-    }
 
-    setCounter(1);
-  }, [isToggled]);
+    // Bypass saveObject and save right away
+    if (activity)
+      return updateActivity.mutate({
+        id: activity._id,
+        status: currentToggle ? 'active' : 'inactive',
+      });
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSaveObject((prev) => ({ ...prev, name: e.target.value }));
+    setName(e.target.value);
+  };
+
+  const handleCountModeChange = (countsInTimes: boolean) => {
+    const recalculateCount = () => {
+      // reset count to original
+      if (countsInTimes && localActivity.countMode === 'times')
+        return localActivity.count;
+
+      // reset count to original
+      if (!countsInTimes && localActivity.countMode === 'minutes')
+        return localActivity.count;
+
+      //  calculate minutes to times
+      if (countsInTimes) return localActivity.count / localActivity.countCalc;
+
+      // calculate times to minutes
+      return localActivity.count * localActivity.countCalc;
+    };
+
+    // reset countCalc in case it was changed
+    const conditionalReset = saveObject.countCalc
+      ? { countCalc: localActivity.countCalc }
+      : {};
+
+    setSaveObject((prev) => ({
+      ...prev,
+      ...conditionalReset,
+      countMode: !countsInTimes ? 'minutes' : 'times',
+      count: recalculateCount(),
+    }));
+  };
+
+  const handleCountCalcChange = (value: number) => {
+    setSaveObject((prev) => ({ ...prev, countCalc: value }));
+  };
+
+  const handleEnablePatternChange = (enablePattern: boolean) =>
+    setSaveObject((prev) => ({
+      ...prev,
+      enablePattern,
+    }));
+
+  const handleAddActivity = () => {
+    if (!name) return;
+
+    addActivity.mutateAsync({ ...defaultValues, ...saveObject }).then((r) => {
+      setTimeout(() => {
+        setSelectedActivity(r.data?._id || r.data?.insertedId);
+      }, 100);
+    });
+  };
+
+  const handleDeleteActivity = () => {
+    if (!activity?._id) return;
+
+    updateActivity
+      .mutateAsync({
+        id: activity._id,
+        status: 'deleted',
+      })
+      .then(() => setSelectedActivity('new-activity'));
+  };
+
+  const handleSaveActivity = () => {
+    if (!name || !activity?._id) return;
+    updateActivity.mutate({
+      ...saveObject,
+      id: activity._id,
+    });
+  };
+  //
 
   const penaltyMode = newActivity ? isToggled : activity?.penalty;
   const inactive = !newActivity && !isToggled;
+  const showSlider = saveObject?.countMode
+    ? saveObject.countMode === 'times'
+    : localActivity.countMode === 'times';
 
   return (
     <div className={styles.wrapper}>
@@ -105,7 +174,7 @@ export default function EditView() {
               )}
               <Toggle
                 isToggled={isToggled}
-                setIsToggled={setIsToggled}
+                onClick={handleToggle}
                 penalty={penaltyMode}
               />
             </div>
@@ -116,37 +185,28 @@ export default function EditView() {
             >
               <IconSelector
                 penalty={!!penaltyMode}
-                icon={saveObject.icon || activity?.icon || 'book-spells'}
+                icon={saveObject?.icon || localActivity.icon}
                 setSaveObject={setSaveObject}
               />
               <Input
                 value={name}
-                onChange={(e) => {
-                  setSaveObject((prev) => ({ ...prev, name: e.target.value }));
-                  setName(e.target.value);
-                }}
+                onChange={handleNameChange}
                 placeholder="Name"
                 color={penaltyMode ? 'red' : 'green'}
               />
             </div>
             <div className={inactive ? styles.inactive : ''}>
               <b>Count mode</b>
-              <div
-                onClick={() => {
-                  setCountMode((prev) => !prev);
-                  setSaveObject((prev) => ({
-                    ...prev,
-                    countMode: countMode ? 'minutes' : 'times',
-                  }));
-                }}
-                className={styles.checkbox}
+              <Checkbox
+                initialValue={localActivity.countMode === 'times'}
+                penalty={penaltyMode}
+                onClick={handleCountModeChange}
               >
-                <Checkbox isChecked={countMode} penalty={penaltyMode} />
                 <p>Count activity in x amount of times instead of time</p>
-              </div>
+              </Checkbox>
             </div>
             <AnimatePresence>
-              {countMode && (
+              {showSlider && (
                 <motion.div
                   {...framerFade}
                   initial={{ opacity: activity?.countMode === 'times' ? 1 : 0 }}
@@ -155,11 +215,9 @@ export default function EditView() {
                   <b>Calculated minutes per count</b>
                   <Slider
                     initialValue={
-                      activity?.countCalc || defaultPreviewItems.countCalc
+                      saveObject?.countCalc || localActivity.countCalc
                     }
-                    handleRelease={(value) =>
-                      setSaveObject((prev) => ({ ...prev, countCalc: value }))
-                    }
+                    handleRelease={handleCountCalcChange}
                     penalty={penaltyMode}
                     min={10}
                     max={120}
@@ -175,33 +233,23 @@ export default function EditView() {
               <div className={styles['column-1']}>
                 <b>Preview</b>
                 <ActivityCard
-                  activity={
-                    activity
-                      ? { ...activity, ...saveObject }
-                      : { ...defaultPreviewItems, ...saveObject }
-                  }
+                  activity={{ ...localActivity, ...saveObject }}
+                  disableAnimations
                 />
               </div>
               <div>
                 <b>Pattern</b>
                 <div className={styles['pattern-wrapper']}>
-                  <div
-                    className={styles.checkbox}
-                    onClick={() => {
-                      setEnablePattern((prev) => !prev);
-                      setSaveObject((prev) => ({
-                        ...prev,
-                        enablePattern: !enablePattern,
-                      }));
-                    }}
+                  <Checkbox
+                    initialValue={localActivity.enablePattern}
+                    penalty={penaltyMode}
+                    onClick={handleEnablePatternChange}
                   >
-                    <Checkbox isChecked={enablePattern} penalty={penaltyMode} />
                     <p>Enable</p>
-                  </div>
-                  <div className={styles.checkbox}>
-                    <Box penalty={penaltyMode} />
+                  </Checkbox>
+                  <Box penalty={penaltyMode}>
                     <p>Randomize</p>
-                  </div>
+                  </Box>
                 </div>
               </div>
             </div>
@@ -209,52 +257,24 @@ export default function EditView() {
               {newActivity ? (
                 <Button
                   color={penaltyMode ? 'red' : 'green'}
-                  onClick={() => {
-                    if (!name) return;
-
-                    addActivity
-                      .mutateAsync({ ...defaultPreviewItems, ...saveObject })
-                      .then((r) => {
-                        setTimeout(() => {
-                          setSelectedActivity(
-                            r.data?._id || r.data?.insertedId
-                          );
-                        }, 100);
-                      });
-                  }}
+                  onClick={handleAddActivity}
                 >
                   <FontAwesomeIcon icon={faPlus} /> Add activity
                 </Button>
-              ) : activity ? (
+              ) : (
                 <>
-                  <Button
-                    color="red"
-                    onClick={() => {
-                      updateActivity
-                        .mutateAsync({
-                          id: activity._id,
-                          status: 'deleted',
-                        })
-                        .then(() => setSelectedActivity('new-activity'));
-                    }}
-                  >
+                  <Button color="red" onClick={handleDeleteActivity}>
                     <FontAwesomeIcon icon={faTrash} /> Delete
                   </Button>
                   <Button
                     color="green"
-                    onClick={() => {
-                      if (!name) return;
-                      updateActivity.mutate({
-                        ...saveObject,
-                        id: activity._id,
-                      });
-                    }}
+                    onClick={handleSaveActivity}
                     inactive={inactive}
                   >
                     <FontAwesomeIcon icon={faSave} /> Save
                   </Button>
                 </>
-              ) : null}
+              )}
             </div>
           </div>
         </ElementContainer>

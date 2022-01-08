@@ -25,7 +25,7 @@ export default function EditableActivityCard({
         mutate({
           id: day._id,
           activityId: activity._id,
-          value: 10,
+          value: activity.countMode === 'times' ? 1 : 10,
         })
       }
     >

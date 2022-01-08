@@ -6,17 +6,17 @@ import styles from './Toggle.module.scss';
 
 export default function Toggle({
   isToggled,
-  setIsToggled,
+  onClick,
   penalty,
 }: {
   isToggled: boolean;
-  setIsToggled: React.Dispatch<React.SetStateAction<boolean>>;
+  onClick: () => void;
   penalty?: boolean;
 }) {
   return (
     <div
       className={`${styles.wrapper} ${penalty ? styles.penalty : ''}`}
-      onClick={() => setIsToggled((prev) => !prev)}
+      onClick={onClick}
     >
       <motion.div
         className={styles.circle}

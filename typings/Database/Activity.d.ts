@@ -19,6 +19,6 @@ type ActivityEntity = {
   pattern?: PatternEntity[];
   count: number;
   countMode: 'minutes' | 'times';
-  countCalc?: number;
+  countCalc: number;
   createdAt: Date;
 };

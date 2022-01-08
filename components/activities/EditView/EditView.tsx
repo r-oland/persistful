@@ -11,6 +11,7 @@ import Box from 'global_components/Checkbox/Box';
 import Checkbox from 'global_components/Checkbox/Checkbox';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import Input from 'global_components/Input/Input';
+import Slider from 'global_components/Slider/Slider';
 import Toggle from 'global_components/Toggle/Toggle';
 import { ActivitiesContext } from 'pages/activities';
 import React, { useContext, useEffect, useState } from 'react';
@@ -25,6 +26,7 @@ const defaultPreviewItems = {
   name: 'New item',
   count: 90,
   countMode: 'minutes',
+  countCalc: 30,
   icon: 'book-spells',
   enablePattern: false,
 } as ActivityEntity;
@@ -141,7 +143,17 @@ export default function EditView() {
                   initial={{ opacity: activity?.countMode === 'times' ? 1 : 0 }}
                 >
                   <b>Calculated minutes per count</b>
-                  <div>slider</div>
+                  <Slider
+                    initialValue={
+                      activity?.countCalc || defaultPreviewItems.countCalc
+                    }
+                    handleRelease={(value) =>
+                      setSaveObject((prev) => ({ ...prev, countCalc: value }))
+                    }
+                    penalty={penaltyMode}
+                    min={10}
+                    max={120}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

@@ -22,6 +22,7 @@ module.exports = {
         allowTemplateLiterals: true,
       },
     ],
+    radix: 0,
     'no-undef': 0,
     'no-plusplus': 0,
     'no-underscore-dangle': 0,

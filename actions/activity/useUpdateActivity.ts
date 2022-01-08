@@ -16,7 +16,12 @@ export default function useUpdateActivity() {
       onSuccess: () => {
         queryClient.invalidateQueries('activities');
 
-        if (data?.penalty !== undefined || data?.countMode || data?.countCalc) {
+        if (
+          data?.penalty !== undefined ||
+          data?.countMode ||
+          data?.countCalc ||
+          data?.count
+        ) {
           queryClient.invalidateQueries('days');
         }
       },

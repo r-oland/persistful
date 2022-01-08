@@ -2,18 +2,26 @@
 
 .wrapper {
   display: grid;
-  justify-content: center;
+  grid-template-columns: auto 1fr;
   align-items: center;
-  border-radius: $border-radius;
-  background-color: $green-light;
-  color: $green;
-  width: 25px;
-  height: 25px;
+  gap: $spacing4;
   cursor: pointer;
-  transition: 0.2s;
 
-  &.penalty {
-    background-color: $red-light;
-    color: $red;
+  .checkbox {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    border-radius: $border-radius;
+    background-color: $green-light;
+    color: $green;
+    width: 25px;
+    height: 25px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &.penalty {
+      background-color: $red-light;
+      color: $red;
+    }
   }
 }

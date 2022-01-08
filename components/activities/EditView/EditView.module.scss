@@ -45,14 +45,6 @@
       }
     }
 
-    .checkbox {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      align-items: center;
-      gap: $spacing4;
-      cursor: pointer;
-    }
-
     .preview-wrapper {
       display: grid;
       grid-template-columns: 1fr 1fr;

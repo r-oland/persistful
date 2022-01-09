@@ -15,8 +15,8 @@ import { fontawesomeHelper } from 'utils/fontawesomeHelper';
 fontawesomeHelper();
 
 export const queryClient = new QueryClient({
-  // disable stale state because data is not depended on external factors
-  defaultOptions: { queries: { staleTime: Infinity } },
+  // get fresh data after 15 mins of use -> in case someone left their tab open
+  defaultOptions: { queries: { staleTime: 15 * 1000 * 60 } },
 });
 
 type NextPageWithExtraProps = NextPage & {

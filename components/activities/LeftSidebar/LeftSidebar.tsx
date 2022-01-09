@@ -15,15 +15,17 @@ export default function LeftSidebar() {
   return (
     <div className={styles.wrapper}>
       <NewActivity />
-      {activities?.map((a) => (
-        <ActivityCard
-          activity={a}
-          key={a._id}
-          onClick={() => setSelectedActivity(a._id)}
-          selected={selectedActivity === a._id}
-          activities={activities}
-        />
-      ))}
+      {activities
+        ?.filter((a) => a.status !== 'deleted')
+        ?.map((a) => (
+          <ActivityCard
+            activity={a}
+            key={a._id}
+            onClick={() => setSelectedActivity(a._id)}
+            selected={selectedActivity === a._id}
+            activities={activities}
+          />
+        ))}
     </div>
   );
 }

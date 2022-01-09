@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
-import { getDailyMinutes } from 'utils/getDailyMinutes';
+import { getAchievedStreaks } from 'utils/getAchievedStreaks';
 import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { getCollection } from 'utils/getMongo';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
@@ -41,36 +41,6 @@ export default async function handler(
       return res.status(200).send({ message: 'Streaks reset' });
     };
 
-    // helper func that gets amount of achieved streaks
-    const getAchievedStreaks = (day: DayEntity | null) => {
-      if (!day) return 0;
-      if (!day.activities.length) return 0;
-
-      // activities
-      const totalPositive = getDailyMinutes(
-        day.activities.filter((a) => !a.penalty)
-      );
-
-      // penalities
-      const totalNegative = getDailyMinutes(
-        day.activities.filter((a) => a.penalty)
-      );
-
-      const positiveReinforcementMode = user?.rules.prm;
-      // possible if you have prm enabled -> will happen when you have no penalty activities
-      const bonusScore = totalNegative === 0 ? 30 : 0;
-
-      const total = positiveReinforcementMode
-        ? totalPositive + bonusScore
-        : totalPositive - totalNegative;
-
-      const goal = day.dailyGoal;
-      const streaks = Math.floor(total / goal);
-
-      // prevent negative streaks
-      return streaks < 0 ? 0 : streaks;
-    };
-
     const days = await getCollection<DayEntity>('days');
 
     // get yesterday
@@ -101,8 +71,8 @@ export default async function handler(
 
       // If daily goals weren't achieved, reset the streak
       if (
-        !getAchievedStreaks(yesterday) &&
-        !getAchievedStreaks(dayBeforeYesterday)
+        !getAchievedStreaks(yesterday, user) &&
+        !getAchievedStreaks(dayBeforeYesterday, user)
       )
         return await reset();
     } else {
@@ -110,7 +80,7 @@ export default async function handler(
       if (!yesterday) return await reset();
 
       // If daily goal wasn't achieved, reset the streak
-      if (!getAchievedStreaks(yesterday)) return await reset();
+      if (!getAchievedStreaks(yesterday, user)) return await reset();
     }
 
     //
@@ -160,7 +130,7 @@ export default async function handler(
             // If second change is not used yet, use it
             if (!secondChangeUsed) secondChangeUsed = date1;
             //  there is a gap, grab the next available & valid day as first day
-          } else if (getAchievedStreaks(day2)) firstDateAfterGap = date2;
+          } else if (getAchievedStreaks(day2, user)) firstDateAfterGap = date2;
         }
       }
     }
@@ -171,7 +141,7 @@ export default async function handler(
     // get index of item that did not achieve goal in order from newest to latest
     const DescendingDayEntities = sortOnCreatedAt(dayEntities, 'desc');
     const indexOfDateThatDidNotAchieveGoal = DescendingDayEntities.findIndex(
-      (d) => !getAchievedStreaks(d)
+      (d) => !getAchievedStreaks(d, user)
     );
 
     // get date of the item after that index item. (-1 because the array is reversed)
@@ -208,7 +178,7 @@ export default async function handler(
     let totalStreaks = 0;
 
     const bulkArray = generalStreakDays.map((day) => {
-      const sum = getAchievedStreaks(day);
+      const sum = getAchievedStreaks(day, user);
       totalStreaks = sum + totalStreaks;
 
       return {
@@ -230,7 +200,7 @@ export default async function handler(
 
     // total sum of all completed streak day cycles
     const total = generalStreakDays
-      .map((day) => getAchievedStreaks(day))
+      .map((day) => getAchievedStreaks(day, user))
       .reduce((prev, cur) => prev + cur);
 
     // update streak in user model
@@ -258,7 +228,7 @@ export default async function handler(
 
           return createdDate >= startDate;
         })
-        .map((day) => getAchievedStreaks(day));
+        .map((day) => getAchievedStreaks(day, user));
 
       const newValue = reducibleArr.length
         ? reducibleArr.reduce((prev, cur) => prev + cur)

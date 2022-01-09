@@ -1,15 +1,13 @@
+import { getActivitySum } from './getActivitySum';
+
 export const getActivityPercentage = (
   activity: ActivityEntity,
   activities?: DailyActivityEntity[]
 ) => {
   if (!activities?.length) return undefined;
 
-  const total =
-    activities
-      .map((a) =>
-        a.countMode === 'times' && a.countCalc ? a.count * a.countCalc : a.count
-      )
-      .reduce((prev, cur) => (prev || 0) + (cur || 0)) || 0;
+  const total = getActivitySum(activities);
+  if (!total) return undefined;
 
   const count =
     activity.countMode === 'times'

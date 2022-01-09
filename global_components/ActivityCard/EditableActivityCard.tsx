@@ -22,8 +22,14 @@ export default function EditableActivityCard({
 
   if (!day) return null;
 
+  const inactiveWithCount = activity.status !== 'active' && activity.count;
+
   return (
     <div
+      style={{
+        opacity: inactiveWithCount ? 0.4 : 1,
+        pointerEvents: inactiveWithCount ? 'none' : 'initial',
+      }}
       className={`${styles.wrapper}  ${activity.penalty ? styles.penalty : ''}`}
       onClick={() =>
         mutate({

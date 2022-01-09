@@ -9,6 +9,8 @@ import React from 'react';
 import { converMinutesToHours } from 'utils/convertMinutesToHours';
 import { getAchievedStreaks } from 'utils/getAchievedStreaks';
 import { getActivitySum } from 'utils/getActivitySum';
+import { getProgress } from 'utils/getProgress';
+import Circles from './Circles/Circles';
 import styles from './ProgressCircle.module.scss';
 // =========================
 
@@ -24,18 +26,27 @@ export default function ProgressCircle() {
   const valueTo = !day ? undefined : totalSum;
   const counter = useCounter({ valueTo });
 
-  const streak = getAchievedStreaks(day, user);
+  const streak = getAchievedStreaks(day, user, true);
+  const progress = getProgress(streak);
 
   return (
     <div className={styles.wrapper}>
-      <h1>{converMinutesToHours(counter)}</h1>
-      <p>
-        <FontAwesomeIcon icon={faFlame} /> {(user?.streak || 0) + streak}
-      </p>
-      <p>
-        <FontAwesomeIcon icon={faBullseye} />
-        {converMinutesToHours(user?.rules.dailyGoal || 0)}
-      </p>
+      <Circles progress={progress} />
+      <div className={styles.center}>
+        <h1 style={{ fontSize: progress[2] ? 35 : 40 }}>
+          {converMinutesToHours(counter)}
+        </h1>
+        <div className={styles.bottom}>
+          <div className={styles.streak}>
+            <FontAwesomeIcon icon={faFlame} />{' '}
+            <p>{(user?.streak || 0) + Math.floor(streak)}</p>
+          </div>
+          <div className={styles.goal}>
+            <FontAwesomeIcon icon={faBullseye} />{' '}
+            <p>{converMinutesToHours(user?.rules.dailyGoal || 0)}</p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

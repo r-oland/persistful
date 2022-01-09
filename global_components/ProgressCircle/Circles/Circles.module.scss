@@ -1,0 +1,58 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+  grid-row: 1;
+  grid-column: 1;
+
+  svg {
+    grid-row: 1;
+    grid-column: 1;
+  }
+
+  &.outer {
+    svg {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  &.middle {
+    svg {
+      width: 89%;
+      height: 89%;
+    }
+  }
+
+  &.inner {
+    svg {
+      width: 76%;
+      height: 76%;
+    }
+  }
+
+  .background {
+    stroke: $green-light;
+  }
+
+  .progress {
+    transform: rotate(-90deg);
+    stroke: $green;
+  }
+
+  .stroke {
+    transform: rotate(-90deg);
+    stroke: $black;
+  }
+
+  .shadow {
+    transform: rotate(-90deg) translate(-4px, -4px);
+    stroke: $true-black;
+
+    circle {
+      box-shadow: -4px 4px $true-black;
+    }
+  }
+}

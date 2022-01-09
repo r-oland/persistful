@@ -38,6 +38,7 @@ export default function Slider({
         type="range"
         min={min}
         max={max}
+        step={5}
         value={sliderPosition}
         className={styles.slider}
         onChange={handleChange}

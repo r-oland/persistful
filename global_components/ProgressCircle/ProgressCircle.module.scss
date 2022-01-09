@@ -2,4 +2,44 @@
 
 .wrapper {
   display: grid;
+  justify-content: center;
+  justify-items: center;
+  align-items: center;
+  width: 325px;
+  height: 325px;
+  position: relative;
+
+  .center {
+    grid-row: 1;
+    grid-column: 1;
+    display: grid;
+    justify-items: center;
+
+    .bottom {
+      display: grid;
+      grid-auto-flow: column;
+      gap: $spacing3;
+
+      .streak,
+      .goal {
+        font-size: $font-small;
+        display: grid;
+        grid-auto-flow: column;
+        gap: $spacing1;
+        align-items: center;
+
+        p {
+          font-size: $font-small;
+        }
+      }
+
+      .streak {
+        color: $red-dark;
+      }
+
+      .goal {
+        color: $grey;
+      }
+    }
+  }
 }

@@ -38,9 +38,10 @@ export default function Activities() {
 
   // Grab activities from the daily snapshot to use the values that where used that day
   const activities = day?.activities?.map((activitySnapshot) => {
-    const activity = activityEntities?.find(
-      (a) => a._id === activitySnapshot._id
-    );
+    const activity = activityEntities
+      // filter inactive activities without count
+      ?.filter((a) => a.status === 'active' || activitySnapshot.count)
+      ?.find((a) => a._id === activitySnapshot._id);
     // Overwrite values with snapshot if they differ from current activity
     if (activity) return { ...activity, ...activitySnapshot };
     return undefined;

@@ -14,7 +14,7 @@ export const useCounter = ({ valueTo }: { valueTo?: number }) => {
   const increasePerInterval = 1;
 
   // Delay time per interval, setting this to null wil stop the loop
-  const delay = 40;
+  const delay = 15;
 
   useInterval(
     () => {

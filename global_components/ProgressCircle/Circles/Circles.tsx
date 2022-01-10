@@ -46,7 +46,7 @@ function Circle({ percentage, index }: { percentage: number; index: number }) {
       }`}
     >
       <AnimatePresence>
-        {percentage > 0 && (
+        {(index === 0 || percentage > 0) && (
           <svg viewBox="0 0 100 100" className={styles.background}>
             <motion.circle
               cx="50"

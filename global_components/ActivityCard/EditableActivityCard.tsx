@@ -2,12 +2,13 @@
 import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
-import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
-import React from 'react';
+import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import React, { useEffect, useRef, useState } from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
 import { getActivityPercentage } from 'utils/getActivityPercentage';
-import ActivityProgress from './ActivityProgress/ActivityProgress';
 import styles from './ActivityCard.module.scss';
+import ActivityProgress from './ActivityProgress/ActivityProgress';
+import Overlay from './Overlay/Overlay';
 // =========================
 
 export default function EditableActivityCard({
@@ -16,7 +17,21 @@ export default function EditableActivityCard({
   activity: ActivityEntity;
 }) {
   const { data: day } = useGetDay(new Date());
-  const { mutate } = useUpdateActivityCount();
+  const [displayOverlay, setDisplayOverlay] = useState(false);
+
+  const ref = useRef<HTMLDivElement>(null);
+  useOnClickOutside({
+    refs: [ref],
+    handler: () => setDisplayOverlay(false),
+    condition: displayOverlay,
+  });
+
+  // reset overlay values on open
+  const [key, setKey] = useState(0);
+  useEffect(() => {
+    if (displayOverlay) setKey((prev) => prev + 1);
+  }, [displayOverlay]);
+  //
 
   const percentage = getActivityPercentage(activity, day?.activities);
 
@@ -31,13 +46,8 @@ export default function EditableActivityCard({
         pointerEvents: inactiveWithCount ? 'none' : 'initial',
       }}
       className={`${styles.wrapper}  ${activity.penalty ? styles.penalty : ''}`}
-      onClick={() =>
-        mutate({
-          id: day._id,
-          activityId: activity._id,
-          value: activity.countMode === 'times' ? 1 : 10,
-        })
-      }
+      onClick={() => setDisplayOverlay(true)}
+      ref={ref}
     >
       <div className={styles.content}>
         <div className={styles['icon-wrapper']}>
@@ -57,6 +67,17 @@ export default function EditableActivityCard({
         </div>
       </div>
       <div className={styles.bar} />
+      <Overlay
+        show={displayOverlay}
+        hide={(e) => {
+          e.stopPropagation();
+          setDisplayOverlay(false);
+        }}
+        activity={activity}
+        percentage={percentage}
+        day={day}
+        key={key}
+      />
     </div>
   );
 }

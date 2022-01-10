@@ -6,8 +6,11 @@
   background-color: $white;
   border: $border;
   border-radius: $border-radius;
+  position: relative;
+  overflow: hidden;
 
   .content {
+    cursor: pointer;
     display: grid;
     grid-template-columns: auto 1fr;
     align-items: center;

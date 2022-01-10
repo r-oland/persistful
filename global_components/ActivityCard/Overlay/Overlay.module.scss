@@ -1,0 +1,147 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  background-color: $green;
+  position: absolute;
+  top: 0;
+  left: -14px;
+
+  .content {
+    padding: $spacing2 $spacing4;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: $spacing4;
+
+    .outer-icon-wrapper {
+      display: grid;
+      gap: $spacing1;
+      justify-items: center;
+      justify-content: start;
+
+      p {
+        font-size: $font-small;
+        font-weight: $weight-semi-bold;
+        color: $white;
+      }
+
+      .icon-wrapper {
+        width: 43px;
+        height: 43px;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+        .icon {
+          background-color: $white;
+          color: $green;
+          width: 40px;
+          height: 40px;
+          display: grid;
+          justify-content: center;
+          align-items: center;
+          border-radius: 100%;
+          font-size: $font-large;
+        }
+      }
+    }
+
+    .time {
+      display: grid;
+      grid-auto-flow: column;
+      justify-content: center;
+      gap: $spacing3;
+      align-items: start;
+      overflow: hidden;
+      position: relative;
+      height: 62px;
+
+      .fade-top,
+      .fade-bottom {
+        width: 100%;
+        height: 20px;
+        position: absolute;
+        left: 0;
+        background-color: $green;
+        opacity: 0.7;
+        pointer-events: none;
+      }
+
+      .fade-top {
+        top: 0;
+      }
+
+      .fade-bottom {
+        bottom: 0;
+      }
+
+      p {
+        font-size: $font-large;
+        font-weight: $weight-bold;
+      }
+
+      .dots {
+        padding-top: calc($spacing5 - 1px);
+      }
+
+      .time-picker {
+        padding-top: $spacing5;
+
+        p {
+          height: 20px;
+        }
+      }
+    }
+
+    .buttons {
+      display: grid;
+
+      .direction,
+      .add {
+        cursor: pointer;
+        width: 28px;
+        height: 28px;
+        border: 2px solid $green-light;
+        background-color: $white;
+        border-radius: 100%;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        svg {
+          font-size: $font-small;
+        }
+      }
+
+      .add {
+        color: $green;
+      }
+    }
+  }
+
+  &.penalty {
+    background-color: $red;
+
+    .outer-icon-wrapper {
+      .icon-wrapper {
+        .icon {
+          color: $red;
+        }
+      }
+    }
+
+    .buttons {
+      .direction,
+      .add {
+        border: 2px solid $red-light;
+      }
+
+      .add {
+        color: $red;
+      }
+    }
+  }
+}

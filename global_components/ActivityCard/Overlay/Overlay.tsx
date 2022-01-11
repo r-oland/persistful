@@ -5,9 +5,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
 import { motion } from 'framer-motion';
 import React, { useState } from 'react';
+import { converMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
 import ActivityProgress from '../ActivityProgress/ActivityProgress';
-import { hours, minutes } from './hoursAndMinutes';
 import styles from './Overlay.module.scss';
 import TimePicker from './TimePicker';
 // =========================
@@ -39,9 +39,35 @@ export default function Overlay({
   const [negativeDirection, setNegativeDirection] = useState(false);
   const [hourState, setHourState] = useState(0);
   const [minuteState, setMinuteState] = useState(0);
+  const [timesState, setTimesState] = useState(1);
 
   const total = minuteState + hourState * 60;
   const time = negativeDirection ? -total : total;
+  const times = negativeDirection ? -timesState : timesState;
+
+  // Get hours and minutes separately
+  const hoursAndMinutes = converMinutesToHours(activity.count)
+    .split(':')
+    .map((string) => parseInt(string));
+
+  const hoursArrayLength = negativeDirection ? hoursAndMinutes[0] + 1 : 24;
+  const hours = Array.from(Array(hoursArrayLength).keys()).map((i) =>
+    i < 10 ? `0${i}` : `${i}`
+  );
+
+  const minutesArrayLength = negativeDirection
+    ? hoursAndMinutes[1] / 5 + 1
+    : 12;
+  const minutes = Array.from(Array(minutesArrayLength).keys()).map((key) => {
+    const i = key * 5;
+    return i < 10 ? `0${i}` : `${i}`;
+  });
+
+  const timesArrayLength = negativeDirection ? activity.count : 99;
+  const timesValues = Array.from(Array(timesArrayLength).keys()).map((key) => {
+    const i = key + 1;
+    return i < 10 ? `0${i}` : `${i}`;
+  });
 
   if (!day) return null;
 
@@ -69,9 +95,28 @@ export default function Overlay({
           <p>{getActivityCount(activity)}</p>
         </div>
         <div className={styles.time}>
-          <TimePicker values={hours} setState={setHourState} />
-          <p className={styles.dots}>:</p>
-          <TimePicker values={minutes} setState={setMinuteState} />
+          {activity.countMode === 'minutes' ? (
+            <>
+              <TimePicker
+                values={hours}
+                setState={setHourState}
+                resetEffect={negativeDirection}
+              />
+              <p className={styles.dots}>:</p>
+              <TimePicker
+                values={minutes}
+                setState={setMinuteState}
+                resetEffect={negativeDirection}
+              />
+            </>
+          ) : (
+            <TimePicker
+              values={timesValues}
+              setState={setTimesState}
+              times
+              resetEffect={negativeDirection}
+            />
+          )}
           <div className={styles['fade-top']} />
           <div className={styles['fade-bottom']} />
         </div>
@@ -79,6 +124,11 @@ export default function Overlay({
           <div
             className={styles.direction}
             onClick={() => setNegativeDirection((prev) => !prev)}
+            style={{
+              opacity: !negativeDirection && activity.count === 0 ? 0.5 : 1,
+              pointerEvents:
+                !negativeDirection && activity.count === 0 ? 'none' : 'initial',
+            }}
           >
             <FontAwesomeIcon icon={negativeDirection ? faMinus : faPlus} />
           </div>
@@ -90,7 +140,7 @@ export default function Overlay({
               mutate({
                 id: day._id,
                 activityId: activity._id,
-                value: activity.countMode === 'times' ? 1 : time,
+                value: activity.countMode === 'times' ? times : time,
               });
             }}
           >

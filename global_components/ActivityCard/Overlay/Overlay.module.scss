@@ -143,5 +143,12 @@
         color: $red;
       }
     }
+
+    .time {
+      .fade-top,
+      .fade-bottom {
+        background-color: $red;
+      }
+    }
   }
 }

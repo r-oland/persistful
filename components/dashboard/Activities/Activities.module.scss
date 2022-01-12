@@ -2,12 +2,16 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $spacing8;
+  gap: $spacing6;
+
+  @media screen and (min-width: 1600px) {
+    gap: $spacing8;
+    grid-template-columns: 1fr 1fr;
+  }
 
   .activities {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(215px, 1fr));
     gap: $spacing4;
   }
 }

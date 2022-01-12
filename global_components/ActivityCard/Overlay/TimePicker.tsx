@@ -17,8 +17,9 @@ export default function TimePicker({
 }) {
   const controls = useAnimation();
   const valuesCount = 30;
+  const gap = 23;
   const amountOfValues = times ? [0] : Array.from(Array(valuesCount).keys());
-  const startPos = times ? 0 : values.length * -20 * (valuesCount / 2);
+  const startPos = times ? 0 : values.length * -gap * (valuesCount / 2);
 
   const y = useMotionValue(startPos);
 
@@ -34,20 +35,20 @@ export default function TimePicker({
       animate={controls}
       style={{ y }}
       dragConstraints={
-        times ? { bottom: 0, top: (values.length - 1) * -20 } : undefined
+        times ? { bottom: 0, top: (values.length - 1) * -gap } : undefined
       }
       onDragEnd={(c, i) => {
         const getNearestValue = () => {
           // Get nearest integer
-          const nearestVal = Math.round(y.get() / 20) * 20;
+          const nearestVal = Math.round(y.get() / gap) * gap;
 
           // calculate index of parent (Fragment)
           const parentIndex =
-            Math.floor(Math.abs(nearestVal / 20 / values.length)) *
+            Math.floor(Math.abs(nearestVal / gap / values.length)) *
             values.length;
 
           // get index of item
-          const index = Math.abs(nearestVal) / 20 - parentIndex;
+          const index = Math.abs(nearestVal) / gap - parentIndex;
 
           // get & set value
           const value = parseInt(values[index]);
@@ -75,7 +76,9 @@ export default function TimePicker({
       {amountOfValues.map((index) => (
         <Fragment key={index}>
           {values.map((val) => (
-            <p key={val}>{val}</p>
+            <p key={val} style={{ height: gap }}>
+              {val}
+            </p>
           ))}
         </Fragment>
       ))}

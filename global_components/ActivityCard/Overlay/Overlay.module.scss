@@ -17,7 +17,6 @@
 
     .outer-icon-wrapper {
       display: grid;
-      gap: $spacing1;
       justify-items: center;
       justify-content: start;
 
@@ -98,6 +97,7 @@
 
     .buttons {
       display: grid;
+      align-content: space-between;
 
       .direction,
       .add {

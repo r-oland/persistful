@@ -6,7 +6,7 @@ import styles from './Circles.module.scss';
 // =========================
 
 function Circle({ percentage, index }: { percentage: number; index: number }) {
-  const strokeWidth = index === 0 ? 5 : index === 1 ? 6.5 : 8;
+  const strokeWidth = index === 0 ? 5 : index === 1 ? 6.5 : 8.5;
   const radius = 45;
   const circumference = Math.ceil(2 * Math.PI * radius);
   const fillPercentage = Math.abs(

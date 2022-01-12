@@ -23,7 +23,8 @@ export default function TimePicker({
   const y = useMotionValue(startPos);
 
   useEffect(() => {
-    controls.start({ y: startPos });
+    controls.stop();
+    controls.set({ y: startPos });
   }, [resetEffect]);
 
   return (

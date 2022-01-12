@@ -50,20 +50,25 @@ export default function Overlay({
     .split(':')
     .map((string) => parseInt(string));
 
-  const hoursArrayLength = negativeDirection ? hoursAndMinutes[0] + 1 : 24;
+  const hoursArrayLength =
+    negativeDirection && activity.countMode === 'minutes'
+      ? hoursAndMinutes[0] + 1
+      : 24;
   const hours = Array.from(Array(hoursArrayLength).keys()).map((i) =>
     i < 10 ? `0${i}` : `${i}`
   );
 
-  const minutesArrayLength = negativeDirection
-    ? hoursAndMinutes[1] / 5 + 1
-    : 12;
+  const minutesArrayLength =
+    negativeDirection && activity.countMode === 'minutes'
+      ? hoursAndMinutes[1] / 5 + 1
+      : 12;
   const minutes = Array.from(Array(minutesArrayLength).keys()).map((key) => {
     const i = key * 5;
     return i < 10 ? `0${i}` : `${i}`;
   });
 
-  const timesArrayLength = negativeDirection ? activity.count : 99;
+  const timesArrayLength =
+    negativeDirection && activity.countMode === 'times' ? activity.count : 99;
   const timesValues = Array.from(Array(timesArrayLength).keys()).map((key) => {
     const i = key + 1;
     return i < 10 ? `0${i}` : `${i}`;

@@ -1,7 +1,5 @@
 @import 'styles/Variables';
 
 .wrapper {
-  h3 {
-    margin-bottom: $spacing4;
-  }
+  display: grid;
 }

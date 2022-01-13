@@ -1,0 +1,27 @@
+@import 'styles/Variables';
+
+.circle,
+.triangle {
+  position: absolute;
+  opacity: 0.1;
+
+  &.red {
+    background-color: $red;
+  }
+
+  &.green {
+    background-color: $green;
+  }
+
+  &.grey {
+    background-color: $black;
+  }
+}
+
+.circle {
+  border-radius: 100%;
+}
+
+.triangle {
+  clip-path: polygon(50% 20%, 0% 100%, 100% 100%);
+}

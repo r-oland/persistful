@@ -11,7 +11,9 @@ export default function VerifyMail() {
   return (
     <div className={styles.wrapper}>
       <div className={styles.text}>
-        <h1>Check your email</h1>
+        <div>
+          <h1>Check your email</h1>
+        </div>
         <p>
           We've sent you a verification link to your email adres. This code
           expires shortly, so quit reading and start clicking!

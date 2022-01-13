@@ -12,7 +12,6 @@
     align-content: start;
 
     .title {
-      display: inline;
       @include underline;
       font-size: $font-h3;
       justify-self: start;

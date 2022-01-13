@@ -8,6 +8,8 @@
   gap: $spacing8;
   justify-items: center;
   align-content: center;
+  text-align: center;
+  padding: 0 $spacing4;
 
   .text {
     display: grid;
@@ -27,7 +29,11 @@
 
   .buttons {
     display: grid;
-    grid-auto-flow: column;
     gap: $spacing4;
+    justify-items: center;
+
+    @media screen and (min-width: 350px) {
+      grid-auto-flow: column;
+    }
   }
 }

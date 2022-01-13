@@ -18,7 +18,9 @@ export default function Dashboard() {
     <div className={styles.wrapper}>
       {!query && <TopNav />}
       <div className={styles.content}>
-        <h1 className={styles.title}>{sentence}</h1>
+        <div>
+          <h1 className={styles.title}>{sentence}</h1>
+        </div>
         <ProgressCircle />
         <Activities />
       </div>

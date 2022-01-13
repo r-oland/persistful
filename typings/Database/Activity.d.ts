@@ -1,8 +1,10 @@
 // Don't remove activity from db -> when creating new activity check if name already exists -> if it does reactivate this activity
 
 type PatternEntity = {
-  x: number;
-  y: number;
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
   r: number;
   size: number;
   shape: 'triangle' | 'circle';

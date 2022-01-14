@@ -1,0 +1,42 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 65px;
+  height: 65px;
+  position: relative;
+
+  .content {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .background {
+    stroke: $green-light;
+  }
+
+  .stroke {
+    position: absolute;
+    transform: rotate(-90deg);
+    stroke: $green;
+  }
+
+  &.penalty {
+    .background {
+      stroke: $red-light;
+    }
+
+    .stroke {
+      stroke: $red;
+    }
+  }
+}

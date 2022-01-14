@@ -9,7 +9,7 @@ export default function SideBar() {
   return (
     <SideBarWrapper>
       <div className={styles.wrapper}>
-        <h3>Next reward</h3>
+        <h3 className={styles.title}>Next reward</h3>
         <NewRewardCard />
       </div>
     </SideBarWrapper>

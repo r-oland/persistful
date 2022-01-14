@@ -221,6 +221,7 @@ export default function EditView() {
                     penalty={penaltyMode}
                     min={10}
                     max={120}
+                    time
                   />
                 </motion.div>
               )}

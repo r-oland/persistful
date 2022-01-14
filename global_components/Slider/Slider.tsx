@@ -10,12 +10,16 @@ export default function Slider({
   penalty,
   min,
   max,
+  time,
+  step = 5,
 }: {
   initialValue: number;
   handleRelease: (value: number) => void;
   penalty?: boolean;
   min: number;
   max: number;
+  time?: boolean;
+  step?: number;
 }) {
   const [value, setValue] = useState(initialValue);
   const [sliderPosition, setSliderPosition] = useState(initialValue);
@@ -38,7 +42,7 @@ export default function Slider({
         type="range"
         min={min}
         max={max}
-        step={5}
+        step={step}
         value={sliderPosition}
         className={styles.slider}
         onChange={handleChange}
@@ -49,7 +53,7 @@ export default function Slider({
           left: `calc(${percentage}% - ${offset}px)`,
         }}
       >
-        {converMinutesToHours(value)}
+        {time ? converMinutesToHours(value) : value}
       </p>
     </div>
   );

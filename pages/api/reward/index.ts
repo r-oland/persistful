@@ -1,7 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { getCollection } from 'utils/getMongo';
-import { checkAuth } from 'utils/checkAuth';
 import { ObjectId } from 'mongodb';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { checkAuth } from 'utils/checkAuth';
+import { getCollection } from 'utils/getMongo';
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,6 +27,21 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
+      // // handle image
+      // const db = await getMongo.then((r) => r.db());
+      // const bucket = new GridFSBucket(db, { bucketName: 'bucky' });
+
+      // fs.createReadStream('public/images/carrot.svg').pipe(
+      //   bucket.openUploadStream('myFile', {
+      //     chunkSizeBytes: 1048576,
+      //     metadata: { field: 'myField', value: 'myValue' },
+      //   })
+      // );
+
+      // bucket
+      //   .openDownloadStreamByName('myFile')
+      //   .pipe(fs.createWriteStream('./test.svg'));
+
       // Add new reward entity
       const result = await rewards
         .insertOne({

@@ -1,4 +1,5 @@
 // Components==============
+import { AnimatePresence } from 'framer-motion';
 import Button from 'global_components/Button/Button';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import RewardModal from 'global_components/RewardModal/RewardModal';
@@ -27,7 +28,9 @@ export default function NewRewardCard() {
           ))}
         </div>
       </ElementContainer>
-      <RewardModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} />
+      <AnimatePresence>
+        {modalIsOpen && <RewardModal setModalIsOpen={setModalIsOpen} />}
+      </AnimatePresence>
     </>
   );
 }

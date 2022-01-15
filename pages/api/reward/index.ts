@@ -27,25 +27,11 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
-      // // handle image
-      // const db = await getMongo.then((r) => r.db());
-      // const bucket = new GridFSBucket(db, { bucketName: 'bucky' });
-
-      // fs.createReadStream('public/images/carrot.svg').pipe(
-      //   bucket.openUploadStream('myFile', {
-      //     chunkSizeBytes: 1048576,
-      //     metadata: { field: 'myField', value: 'myValue' },
-      //   })
-      // );
-
-      // bucket
-      //   .openDownloadStreamByName('myFile')
-      //   .pipe(fs.createWriteStream('./test.svg'));
-
       // Add new reward entity
       const result = await rewards
         .insertOne({
           ...req.body,
+          image: '/images/carrot.svg',
           userId,
           createdAt: new Date(),
         })

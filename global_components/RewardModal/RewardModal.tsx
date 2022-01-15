@@ -1,7 +1,14 @@
 // Components==============
-import { faCamera, faSave, faTrash } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCamera,
+  faSave,
+  faThumbsDown,
+  faTrash,
+} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAddReward from 'actions/reward/useAddReward';
+import useDeleteReward from 'actions/reward/useDeleteReward';
+import useUpdateReward from 'actions/reward/useUpdateReward';
 import Button from 'global_components/Button/Button';
 import Input from 'global_components/Input/Input';
 import Modal from 'global_components/Modal/Modal';
@@ -14,56 +21,66 @@ import styles from './RewardModal.module.scss';
 // =========================
 
 export default function RewardModal({
-  modalIsOpen,
   setModalIsOpen,
+  reward,
 }: {
-  modalIsOpen: boolean;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  reward?: RewardEntity;
 }) {
   const addReward = useAddReward();
+  const updateReward = useUpdateReward();
+  const deleteReward = useDeleteReward();
 
-  const [name, setName] = useState('');
-  const [productLink, setProductLink] = useState('');
-  const [totalCycles, setTotalCycles] = useState(30);
-  const [file, setFile] = useState<File | undefined>(undefined);
-  const [image, setImage] = useState('');
+  const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
 
+  const name = saveObject?.name || reward?.name || '';
+  const productLink = saveObject?.productLink || reward?.productLink || '';
+  const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
+  const image = saveObject?.image || reward?.image || '';
+  const completedCycles = reward?.completedCycles || 0;
+  const minSlider = reward?.completedCycles ? reward.completedCycles + 1 : 1;
   const maxSlider = 120;
 
-  const counter = useCounter({ valueTo: totalCycles });
+  const totalCounter = useCounter({ valueTo: totalCycles });
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
 
     const firstFile = e.target.files[0];
-    setFile(firstFile);
-
     const fileToString = URL.createObjectURL(firstFile);
-    setImage(fileToString);
+    console.log(fileToString);
   }
+
+  const handleRedButton = () => {
+    setModalIsOpen(false);
+    if (reward) return deleteReward.mutate(reward._id);
+  };
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setModalIsOpen(false);
 
-    if (!file) return alert('No image set');
+    // Add new reward
+    if (!reward) {
+      // if (!file) return alert('No image set');
 
-    addReward.mutate({
-      name,
-      totalCycles,
-      image: '',
-      productLink,
-      completedCycles: 0,
-    });
+      return addReward.mutate({
+        name,
+        totalCycles,
+        image: '',
+        productLink,
+        completedCycles,
+      });
+    }
+
+    // Update existing reward
+    updateReward.mutate({ ...saveObject, id: reward._id });
   };
 
   return (
-    <Modal
-      modalIsOpen={modalIsOpen}
-      setModalIsOpen={setModalIsOpen}
-      color="green"
-    >
+    <Modal setModalIsOpen={setModalIsOpen} color="green">
       <form className={styles.wrapper} onSubmit={handleSave}>
-        <div>
+        <div className={styles.top}>
           <h3 className={styles.title}>
             What do you wan't to dangle to the end of your stick?
           </h3>
@@ -86,7 +103,9 @@ export default function RewardModal({
           </label>
           <Input
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) =>
+              setSaveObject((prev) => ({ ...prev, name: e.target.value }))
+            }
             placeholder="A big juicy carrot"
           />
         </div>
@@ -96,7 +115,12 @@ export default function RewardModal({
               <p className={styles['sub-title']}>Product link</p>
               <Input
                 value={productLink}
-                onChange={(e) => setProductLink(e.target.value)}
+                onChange={(e) =>
+                  setSaveObject((prev) => ({
+                    ...prev,
+                    productLink: e.target.value,
+                  }))
+                }
                 placeholder="https://vegtablemarket.com/bjc"
               />
             </div>
@@ -105,9 +129,11 @@ export default function RewardModal({
               <Slider
                 initialValue={totalCycles}
                 max={maxSlider}
-                min={1}
+                min={minSlider}
                 step={1}
-                handleRelease={(value) => setTotalCycles(value)}
+                handleRelease={(value) =>
+                  setSaveObject((prev) => ({ ...prev, totalCycles: value }))
+                }
               />
             </div>
           </div>
@@ -121,17 +147,30 @@ export default function RewardModal({
         </div>
         <div className={styles.bottom}>
           <div className={styles['progress-circle']}>
-            <SmallProgressCircle percentage={(100 / maxSlider) * totalCycles}>
-              <h3>{counter}</h3>
+            <SmallProgressCircle
+              percentage={
+                reward
+                  ? (100 / totalCycles) * completedCycles
+                  : (100 / maxSlider) * totalCycles
+              }
+            >
+              {reward ? (
+                <p className={styles.counter}>
+                  {reward.completedCycles}/{totalCounter}
+                </p>
+              ) : (
+                <h3>{totalCounter}</h3>
+              )}
             </SmallProgressCircle>
             <p>Streak cycles</p>
           </div>
           <div className={styles.buttons}>
-            <Button color="red">
-              <FontAwesomeIcon icon={faTrash} /> Delete
+            <Button color="red" onClick={handleRedButton}>
+              <FontAwesomeIcon icon={reward ? faTrash : faThumbsDown} />{' '}
+              {reward ? 'Delete' : 'Not my style'}
             </Button>
             <Button color="green" submit>
-              <FontAwesomeIcon icon={faSave} /> Let's go
+              <FontAwesomeIcon icon={faSave} /> {reward ? 'Save' : "Let's go!"}
             </Button>
           </div>
         </div>

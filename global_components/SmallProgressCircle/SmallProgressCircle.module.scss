@@ -4,8 +4,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 65px;
-  height: 65px;
   position: relative;
 
   .content {
@@ -20,23 +18,37 @@
     height: 100%;
   }
 
-  .background {
-    stroke: $green-light;
-  }
-
   .stroke {
     position: absolute;
     transform: rotate(-90deg);
-    stroke: $green;
   }
 
-  &.penalty {
+  &.green {
+    .background {
+      stroke: $green-light;
+    }
+
+    .stroke {
+      stroke: $green;
+    }
+  }
+
+  &.red {
     .background {
       stroke: $red-light;
     }
 
     .stroke {
       stroke: $red;
+    }
+  }
+  &.black {
+    .background {
+      stroke: $grey-light;
+    }
+
+    .stroke {
+      stroke: $black;
     }
   }
 }

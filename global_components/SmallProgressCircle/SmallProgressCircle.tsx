@@ -4,15 +4,18 @@ import styles from './SmallProgressCircle.module.scss';
 
 export default function SmallProgressCircle({
   percentage,
-  penalty,
+  color = 'green',
   children,
+  large,
 }: {
   percentage: number;
-  penalty?: boolean;
+  color?: 'green' | 'red' | 'black';
   children?: React.ReactNode;
+  large?: boolean;
 }) {
   const strokeWidth = 6;
   const radius = 45;
+  const size = large ? 90 : 65;
   const circumference = Math.ceil(2 * Math.PI * radius);
   const fillPercentage = Math.abs(
     Math.ceil((circumference / 100) * (percentage - 100))
@@ -34,7 +37,10 @@ export default function SmallProgressCircle({
   };
 
   return (
-    <div className={`${styles.wrapper} ${penalty ? styles.penalty : ''}`}>
+    <div
+      className={`${styles.wrapper} ${styles[color]}`}
+      style={{ width: size, height: size }}
+    >
       <svg viewBox="0 0 100 100" className={styles.background}>
         <circle
           cx="50"

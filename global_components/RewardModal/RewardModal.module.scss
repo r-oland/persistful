@@ -4,14 +4,18 @@
   display: grid;
   gap: $spacing4;
 
-  .title {
-    @include underline;
-    justify-self: start;
-    margin-bottom: $spacing2;
-  }
+  .top {
+    display: grid;
+    gap: $spacing2;
 
-  .description {
-    font-size: $font-small;
+    .title {
+      @include underline;
+      justify-self: start;
+    }
+
+    .description {
+      font-size: $font-small;
+    }
   }
 
   .sub-title {
@@ -82,6 +86,11 @@
 
       p {
         font-size: $font-large;
+      }
+
+      .counter {
+        font-size: $font-small;
+        font-weight: $weight-bold;
       }
     }
 

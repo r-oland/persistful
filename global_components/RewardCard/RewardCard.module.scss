@@ -1,5 +1,76 @@
 @import 'styles/Variables';
 
 .wrapper {
-  display: grid;
+  background-color: $white;
+  border: $border;
+
+  .image {
+    position: relative;
+    width: 100%;
+    height: 80px;
+    background-color: $black;
+    z-index: 1;
+
+    img {
+      object-fit: cover;
+    }
+  }
+
+  .content {
+    display: grid;
+    position: relative;
+    gap: $spacing2;
+    padding: $spacing4;
+
+    .top {
+      display: grid;
+      gap: $spacing2;
+
+      .title {
+        font-weight: $weight-bold;
+        @include underline-grey;
+      }
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: center;
+      gap: $spacing4;
+
+      .count-wrapper,
+      .cycles-left {
+        transform: translateY(-4px);
+      }
+
+      .count-wrapper {
+        position: relative;
+        display: grid;
+        justify-content: center;
+        align-items: center;
+
+        .flame {
+          grid-column: 1;
+          grid-row: 1;
+          width: 30px;
+        }
+
+        .count {
+          grid-column: 1;
+          grid-row: 1;
+          transform: translateY(8px);
+          font-weight: $weight-bold;
+          font-size: 13px;
+          text-align: center;
+          color: $white;
+        }
+      }
+
+      .cycles-left {
+        font-weight: $weight-bold;
+        font-size: $font-tiny;
+        width: 53px;
+      }
+    }
+  }
 }

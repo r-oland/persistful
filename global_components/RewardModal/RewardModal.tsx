@@ -32,11 +32,12 @@ export default function RewardModal({
   const deleteReward = useDeleteReward();
 
   const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
+  const [localImage, setLocalImage] = useState('');
 
   const name = saveObject?.name || reward?.name || '';
   const productLink = saveObject?.productLink || reward?.productLink || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
-  const image = saveObject?.image || reward?.image || '';
+  const image = localImage || reward?.image || '';
   const completedCycles = reward?.completedCycles || 0;
   const minSlider = reward?.completedCycles ? reward.completedCycles + 1 : 1;
   const maxSlider = 120;
@@ -46,9 +47,9 @@ export default function RewardModal({
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
     if (!e.target.files) return;
 
-    const firstFile = e.target.files[0];
-    const fileToString = URL.createObjectURL(firstFile);
-    console.log(fileToString);
+    // @ts-ignore
+    setSaveObject((prev) => ({ ...prev, image: e.target.files[0] }));
+    setLocalImage(URL.createObjectURL(e.target.files[0]));
   }
 
   const handleRedButton = () => {
@@ -58,23 +59,26 @@ export default function RewardModal({
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setModalIsOpen(false);
 
     // Add new reward
     if (!reward) {
-      // if (!file) return alert('No image set');
+      if (!saveObject.image) return alert('No image set');
 
-      return addReward.mutate({
+      addReward.mutate({
         name,
         totalCycles,
-        image: '',
+        image: saveObject.image,
         productLink,
-        completedCycles,
       });
+      return setModalIsOpen(false);
     }
 
     // Update existing reward
-    updateReward.mutate({ ...saveObject, id: reward._id });
+    updateReward.mutate({
+      ...saveObject,
+      id: reward._id,
+    });
+    setModalIsOpen(false);
   };
 
   return (

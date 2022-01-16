@@ -1,7 +1,16 @@
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { addImageToStorage } from 'utils/addImageToStorage';
 import { checkAuth } from 'utils/checkAuth';
+import { formDataParser } from 'utils/formDataParser';
 import { getCollection } from 'utils/getMongo';
+
+// disable the default body parser
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
 
 export default async function handler(
   req: NextApiRequest,
@@ -27,13 +36,22 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
+      const data = await formDataParser(req);
+
+      // FormData converts number to string -> convert back
+      data.fields.totalCycles = parseInt(data.fields.totalCycles);
+
+      // Handle uploading image
+      const image = await addImageToStorage(data);
+
       // Add new reward entity
       const result = await rewards
         .insertOne({
-          ...req.body,
-          image: '/images/carrot.svg',
+          ...data.fields,
+          image,
           userId,
           createdAt: new Date(),
+          completedCycles: 0,
         })
         .then(async (r) => {
           const users = await getCollection<UserEntity>('users');

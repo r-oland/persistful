@@ -30,6 +30,11 @@
         font-weight: $weight-bold;
         @include underline-grey;
       }
+
+      .description {
+        font-size: $font-small;
+        margin-top: $spacing1;
+      }
     }
 
     .bottom {

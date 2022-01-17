@@ -38,6 +38,8 @@
   cursor: pointer;
 
   &::-webkit-slider-thumb {
+    -webkit-appearance: none;
+
     width: 10px;
     height: 40px;
     border-radius: $border-radius;

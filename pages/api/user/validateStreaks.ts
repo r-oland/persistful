@@ -231,7 +231,9 @@ export default async function handler(
         .map((day) => getAchievedStreaks(day, user));
 
       const newValue = reducibleArr.length
-        ? reducibleArr.reduce((prev, cur) => prev + cur)
+        ? reducibleArr.reduce((prev, cur) => prev + cur) -
+          // - start cycles in case you added a reward mid day with already achieved streaks
+          activeReward.startCycles
         : 0;
 
       // set new reward value

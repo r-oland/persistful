@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { addImageToStorage } from 'utils/addImageToStorage';
 import { checkAuth } from 'utils/checkAuth';
 import { formDataParser } from 'utils/formDataParser';
+import { getAchievedStreaks } from 'utils/getAchievedStreaks';
 import { getCollection } from 'utils/getMongo';
 
 // disable the default body parser
@@ -36,6 +37,22 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
+      // get daily streak to set startCycles
+      const users = await getCollection<UserEntity>('users');
+      const days = await getCollection<DayEntity>('days');
+
+      const today = await days.findOne({
+        userId,
+        createdAt: {
+          $gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
+          $lt: new Date(new Date().setUTCHours(23, 59, 59, 999)),
+        },
+      });
+
+      const user = await users.findOne({ _id: objectUserId });
+      const dailyStreak = getAchievedStreaks(today, user);
+      //
+
       const data = await formDataParser(req);
 
       // FormData converts number to string -> convert back
@@ -51,10 +68,10 @@ export default async function handler(
           image,
           userId,
           createdAt: new Date(),
+          startCycles: dailyStreak,
           completedCycles: 0,
         })
         .then(async (r) => {
-          const users = await getCollection<UserEntity>('users');
           await users.findOneAndUpdate(
             { _id: objectUserId },
             { $set: { activeReward: r.insertedId } },

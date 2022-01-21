@@ -11,25 +11,66 @@
     gap: $spacing9;
     align-content: start;
 
-    .title {
-      @include underline;
-      font-size: $font-h3;
-      justify-self: start;
-      background-color: $white;
+    .title-wrapper {
+      text-align: center;
+
+      .title {
+        @include underline;
+        font-size: $font-h2;
+        justify-self: start;
+        background-color: $white;
+
+        @media screen and (min-width: $phone) {
+          font-size: $font-h1;
+        }
+      }
+
+      @media screen and (min-width: 1175px) {
+        text-align: initial;
+      }
+    }
+
+    @media screen and (min-width: $tablet) {
+      height: calc($app-height - 50px);
+      overflow: auto;
+      padding: $spacing10 $spacing11 $spacing11;
+    }
+
+    @media screen and (min-width: $desktop-extra-large) {
+      padding-top: 90px;
     }
   }
 
-  @media screen and (min-width: $tablet) {
-    grid-template-columns: 1fr auto;
+  .top {
+    display: grid;
+    gap: $spacing11;
 
-    .content {
-      height: $app-height;
-      overflow: auto;
-      padding: 90px $spacing11 $spacing11;
+    .progress-wrapper {
+      justify-self: center;
+    }
 
-      .title {
-        font-size: $font-h1;
+    @media screen and (min-width: $tablet) {
+      grid-template-rows: 1fr 1fr;
+    }
+
+    @media screen and (min-width: 1175px) {
+      grid-template-rows: initial;
+      grid-template-columns: auto 1fr;
+
+      .progress-wrapper {
+        justify-self: initial;
       }
     }
+  }
+
+  .graph {
+    width: 100%;
+    height: 100%;
+    background-color: $white;
+    border: 1px solid $grey-light;
+  }
+
+  @media screen and (min-width: $desktop-extra-large) {
+    grid-template-columns: 1fr auto;
   }
 }

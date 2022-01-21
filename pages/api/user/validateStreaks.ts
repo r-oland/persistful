@@ -35,7 +35,7 @@ export default async function handler(
       if (activeReward)
         await rewards.updateOne(
           { _id: activeRewardId },
-          { $set: { completedCycles: 0 } }
+          { $set: { completedCycles: 0, startCycles: 0 } }
         );
 
       return res.status(200).send({ message: 'Streaks reset' });

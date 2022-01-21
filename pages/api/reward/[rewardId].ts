@@ -5,6 +5,7 @@ import { getCollection } from 'utils/getMongo';
 import { promises as fs } from 'fs';
 import { addImageToStorage } from 'utils/addImageToStorage';
 import { formDataParser } from 'utils/formDataParser';
+import { bucket } from 'utils/getBucket';
 
 // disable the default body parser
 export const config = {
@@ -18,9 +19,11 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    await checkAuth(req, res);
+    const session = await checkAuth(req, res);
+    if (!session) return res.status(404).send({ message: 'Session not found' });
 
     const _id = new ObjectId(req.query.rewardId as string);
+    const userId = session.user.uid;
 
     const rewards = await getCollection<RewardEntity>('rewards');
 
@@ -31,18 +34,24 @@ export default async function handler(
 
       // FormData converts number to string -> convert back
       if (data.fields.totalCycles)
-        data.fields.totalCycles = parseInt(data.fields.totalCycles);
+        (data.fields.totalCycles as string | number) = parseInt(
+          data.fields.totalCycles as string
+        );
 
       let image;
 
       if (data.files?.image) {
         // Handle uploading image
-        const newImage = await addImageToStorage(data);
+        const newImage = await addImageToStorage(data, `rewards/${userId}`);
         image = newImage;
 
         // remove old image
         const reward = await rewards.findOne<RewardEntity>({ _id });
-        await fs.unlink(`public${reward?.image}`);
+        const file = reward?.image.replace(
+          `https://storage.googleapis.com/${process.env.GOOGLE_BUCKET_NAME}/`,
+          ''
+        );
+        if (file) bucket.file(file).delete();
       }
 
       const result = await rewards.findOneAndUpdate(

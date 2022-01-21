@@ -1,5 +1,10 @@
-import { IncomingForm } from 'formidable';
+import formidable, { IncomingForm } from 'formidable';
 import { NextApiRequest } from 'next';
+
+export type FormDataParserTypes = {
+  fields: formidable.Fields;
+  files: formidable.Files;
+};
 
 export const formDataParser = async (req: NextApiRequest) => {
   // custom body parser (for handling image)
@@ -9,7 +14,7 @@ export const formDataParser = async (req: NextApiRequest) => {
       if (err) return reject(err);
       resolve({ fields, files });
     });
-  })) as any;
+  })) as FormDataParserTypes;
 
   return data;
 };

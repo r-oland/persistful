@@ -58,9 +58,13 @@ export default function Overlay({
     i < 10 ? `0${i}` : `${i}`
   );
 
+  const noMinuteLimit = hoursAndMinutes[0] - hourState > 0;
+
   const minutesArrayLength =
     negativeDirection && activity.countMode === 'minutes'
-      ? hoursAndMinutes[1] / 5 + 1
+      ? noMinuteLimit
+        ? 12
+        : hoursAndMinutes[1] / 5 + 1
       : 12;
   const minutes = Array.from(Array(minutesArrayLength).keys()).map((key) => {
     const i = key * 5;
@@ -105,13 +109,13 @@ export default function Overlay({
               <TimePicker
                 values={hours}
                 setState={setHourState}
-                resetEffect={negativeDirection}
+                resetEffect={[negativeDirection]}
               />
               <p className={styles.dots}>:</p>
               <TimePicker
                 values={minutes}
                 setState={setMinuteState}
-                resetEffect={negativeDirection}
+                resetEffect={[negativeDirection, minutes.length]}
               />
             </>
           ) : (
@@ -119,7 +123,7 @@ export default function Overlay({
               values={timesValues}
               setState={setTimesState}
               times
-              resetEffect={negativeDirection}
+              resetEffect={[negativeDirection]}
             />
           )}
           <div className={styles['fade-top']} />

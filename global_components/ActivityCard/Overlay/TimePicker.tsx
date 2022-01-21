@@ -13,7 +13,7 @@ export default function TimePicker({
   values: string[];
   setState: React.Dispatch<React.SetStateAction<number>>;
   times?: boolean;
-  resetEffect: boolean;
+  resetEffect: any[];
 }) {
   const controls = useAnimation();
   const valuesCount = 30;
@@ -26,7 +26,7 @@ export default function TimePicker({
   useEffect(() => {
     controls.stop();
     controls.set({ y: startPos });
-  }, [resetEffect]);
+  }, [...resetEffect]);
 
   return (
     <motion.div

@@ -39,3 +39,6 @@ yarn-error.log*
 
 # storage folder
 public/storage
+
+# Google cloud key
+storage-key.json

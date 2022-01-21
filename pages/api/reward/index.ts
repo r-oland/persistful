@@ -56,15 +56,17 @@ export default async function handler(
       const data = await formDataParser(req);
 
       // FormData converts number to string -> convert back
-      data.fields.totalCycles = parseInt(data.fields.totalCycles);
+      (data.fields.totalCycles as string | number) = parseInt(
+        data.fields.totalCycles as string
+      );
 
       // Handle uploading image
-      const image = await addImageToStorage(data);
+      const image = await addImageToStorage(data, `rewards/${userId}`);
 
       // Add new reward entity
       const result = await rewards
         .insertOne({
-          ...data.fields,
+          ...(data.fields as any),
           image,
           userId,
           createdAt: new Date(),

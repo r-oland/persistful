@@ -12,16 +12,22 @@ import React from 'react';
 const sentence = 'Yeez, bit of an overachiever are we?';
 
 export default function Dashboard() {
-  const query = useMediaQ('min', 768);
+  const query = useMediaQ('min', 1500);
+  const tabletQuery = useMediaQ('min', 768);
 
   return (
     <div className={styles.wrapper}>
       {!query && <TopNav />}
       <div className={styles.content}>
-        <div>
+        <div className={styles['title-wrapper']}>
           <h1 className={styles.title}>{sentence}</h1>
         </div>
-        <ProgressCircle />
+        <div className={styles.top}>
+          <div className={styles['progress-wrapper']}>
+            <ProgressCircle />
+          </div>
+          {tabletQuery && <div className={styles.graph} />}
+        </div>
         <Activities />
       </div>
       {query && <SideBar />}

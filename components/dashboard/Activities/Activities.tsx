@@ -4,7 +4,7 @@ import useGetDay from 'actions/day/useGetDay';
 import ActivityCard from 'global_components/ActivityCard/ActivityCard';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styles from './Activities.module.scss';
 // =========================
 
@@ -16,18 +16,31 @@ function ConditionalWrapper({
   twoItems: boolean;
 }) {
   const query = useMediaQ('min', 768);
+  const ref = useRef<HTMLDivElement>(null);
+  const [penalty, setPenalty] = useState(false);
 
   if (query) return <div className={styles.wrapper}>{children}</div>;
+
+  const getScrollPosition = (value: number) => {
+    if (!ref.current) return;
+    if (value > ref.current.clientWidth / 2) return setPenalty(true);
+
+    if (penalty) setPenalty(false);
+  };
 
   return (
     <div className={styles['mobile-wrapper']}>
       <div
         className={styles.items}
         style={{ gridTemplateColumns: twoItems ? '100% 100%' : '' }}
+        ref={ref}
+        onScroll={(e: any) => getScrollPosition(e.target.scrollLeft)}
       >
         {children}
       </div>
-      <div className={styles.toggle}>
+      <div
+        className={`${styles.toggle} ${penalty ? styles['is-penalty'] : ''}`}
+      >
         <div className={styles.activity} />
         <div className={styles.penalty} />
       </div>
@@ -101,6 +114,11 @@ export default function Activities() {
                 <div
                   className={getThreeItemClasses(goals, i, query)}
                   key={goal._id}
+                  style={{
+                    scrollSnapAlign: (goals.length === 3 ? i === 2 : i === 0)
+                      ? 'start'
+                      : '',
+                  }}
                 >
                   <ActivityCard activity={goal} canEdit />
                 </div>
@@ -116,6 +134,7 @@ export default function Activities() {
                 <div
                   className={getThreeItemClasses(penalties, i, query)}
                   key={penalty._id}
+                  style={{ scrollSnapAlign: i === 0 ? 'start' : '' }}
                 >
                   <ActivityCard activity={penalty} canEdit />
                 </div>

@@ -28,6 +28,12 @@
     align-self: end;
     gap: $spacing4;
     overflow: auto;
+    scroll-snap-type: x mandatory;
+
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+      display: none;
+    }
   }
 
   .mobile-activities {
@@ -48,10 +54,26 @@
       height: 8px;
       border-radius: 100%;
       border: 1px solid $green;
+      transition: 0.2s;
     }
 
     .activity {
       background-color: $green;
+    }
+
+    &.is-penalty {
+      .penalty,
+      .activity {
+        border: 1px solid $red;
+      }
+
+      .activity {
+        background-color: transparent;
+      }
+
+      .penalty {
+        background-color: $red;
+      }
     }
   }
 }

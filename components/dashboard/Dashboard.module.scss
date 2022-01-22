@@ -6,9 +6,9 @@
   .content {
     overflow: auto;
     height: calc($app-height - 50px - 65px);
-    padding: $spacing10 $spacing5 $spacing5;
+    padding: $spacing7 $spacing5 $spacing5;
     display: grid;
-    gap: $spacing9;
+    gap: $spacing7;
     align-content: start;
     grid-template-rows: auto auto 1fr;
 
@@ -35,6 +35,7 @@
       height: calc($app-height - 50px);
       overflow: auto;
       padding: $spacing10 $spacing11 $spacing11;
+      gap: $spacing9;
       grid-template-rows: initial;
     }
 

@@ -38,12 +38,14 @@ function ConditionalWrapper({
       >
         {children}
       </div>
-      <div
-        className={`${styles.toggle} ${penalty ? styles['is-penalty'] : ''}`}
-      >
-        <div className={styles.activity} />
-        <div className={styles.penalty} />
-      </div>
+      {twoItems && (
+        <div
+          className={`${styles.toggle} ${penalty ? styles['is-penalty'] : ''}`}
+        >
+          <div className={styles.activity} />
+          <div className={styles.penalty} />
+        </div>
+      )}
     </div>
   );
 }

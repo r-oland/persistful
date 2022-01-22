@@ -207,23 +207,26 @@ export default function EditView() {
             </div>
             <AnimatePresence>
               {showSlider && (
-                <motion.div
-                  {...framerFade}
-                  initial={{ opacity: activity?.countMode === 'times' ? 1 : 0 }}
-                  className={inactive ? styles.inactive : ''}
-                >
-                  <b>Calculated minutes per count</b>
-                  <Slider
-                    initialValue={
-                      saveObject?.countCalc || localActivity.countCalc
-                    }
-                    handleRelease={handleCountCalcChange}
-                    penalty={penaltyMode}
-                    min={10}
-                    max={120}
-                    time
-                  />
-                </motion.div>
+                <div className={inactive ? styles.inactive : ''}>
+                  <motion.div
+                    {...framerFade}
+                    initial={{
+                      opacity: activity?.countMode === 'times' ? 1 : 0,
+                    }}
+                  >
+                    <b>Calculated minutes per count</b>
+                    <Slider
+                      initialValue={
+                        saveObject?.countCalc || localActivity.countCalc
+                      }
+                      handleRelease={handleCountCalcChange}
+                      penalty={penaltyMode}
+                      min={10}
+                      max={120}
+                      time
+                    />
+                  </motion.div>
+                </div>
               )}
             </AnimatePresence>
             <div

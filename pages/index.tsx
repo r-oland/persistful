@@ -13,7 +13,8 @@ const sentence = 'Yeez, bit of an overachiever are we?';
 
 export default function Dashboard() {
   const query = useMediaQ('min', 1500);
-  const tabletQuery = useMediaQ('min', 768);
+  // @ts-ignore
+  const desktopQuery = useMediaQ('min', 1175);
 
   return (
     <div className={styles.wrapper}>
@@ -26,7 +27,7 @@ export default function Dashboard() {
           <div className={styles['progress-wrapper']}>
             <ProgressCircle />
           </div>
-          {tabletQuery && <div className={styles.graph} />}
+          {desktopQuery && <div className={styles.graph} />}
         </div>
         <Activities />
       </div>

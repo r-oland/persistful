@@ -10,6 +10,33 @@ import styles from './Activities.module.scss';
 
 function ConditionalWrapper({
   children,
+  twoItems,
+}: {
+  children: React.ReactNode | null;
+  twoItems: boolean;
+}) {
+  const query = useMediaQ('min', 768);
+
+  if (query) return <div className={styles.wrapper}>{children}</div>;
+
+  return (
+    <div className={styles['mobile-wrapper']}>
+      <div
+        className={styles.items}
+        style={{ gridTemplateColumns: twoItems ? '100% 100%' : '' }}
+      >
+        {children}
+      </div>
+      <div className={styles.toggle}>
+        <div className={styles.activity} />
+        <div className={styles.penalty} />
+      </div>
+    </div>
+  );
+}
+
+function ConditionalActivitiesWrapper({
+  children,
   color,
 }: {
   children: React.ReactNode | null;
@@ -24,8 +51,18 @@ function ConditionalWrapper({
       </ElementContainer>
     );
 
-  return <div>{children}</div>;
+  return <div className={styles['mobile-activities']}>{children}</div>;
 }
+
+// Reorder the cards when there are 3 items to start the first card in the left bottom
+const getThreeItemClasses = (items: any[], i = 0) =>
+  items.length === 3
+    ? i === 0
+      ? styles['bottom-right']
+      : i === 2
+      ? styles['bottom-left']
+      : ''
+    : '';
 
 export default function Activities() {
   // Only set activities on mount -> this is done this way so that the activities.get end point doesn't
@@ -51,25 +88,34 @@ export default function Activities() {
   const penalties = activities?.filter((a) => a?.penalty);
 
   return (
-    <div className={styles.wrapper}>
+    <ConditionalWrapper twoItems={!!(goals?.length && penalties?.length)}>
       {!!goals?.length && (
-        <ConditionalWrapper color="green-with-background">
+        <ConditionalActivitiesWrapper color="green-with-background">
           {goals.map(
-            (goal) =>
-              !!goal && <ActivityCard activity={goal} key={goal._id} canEdit />
-          )}
-        </ConditionalWrapper>
-      )}
-      {!!penalties?.length && (
-        <ConditionalWrapper color="red-with-background">
-          {penalties.map(
-            (penalty) =>
-              !!penalty && (
-                <ActivityCard activity={penalty} key={penalty._id} canEdit />
+            (goal, i) =>
+              !!goal && (
+                <div className={getThreeItemClasses(goals, i)} key={goal._id}>
+                  <ActivityCard activity={goal} canEdit />
+                </div>
               )
           )}
-        </ConditionalWrapper>
+        </ConditionalActivitiesWrapper>
       )}
-    </div>
+      {!!penalties?.length && (
+        <ConditionalActivitiesWrapper color="red-with-background">
+          {penalties.map(
+            (penalty, i) =>
+              !!penalty && (
+                <div
+                  className={getThreeItemClasses(penalties, i)}
+                  key={penalty._id}
+                >
+                  <ActivityCard activity={penalty} canEdit />
+                </div>
+              )
+          )}
+        </ConditionalActivitiesWrapper>
+      )}
+    </ConditionalWrapper>
   );
 }

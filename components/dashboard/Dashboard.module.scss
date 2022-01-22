@@ -10,6 +10,7 @@
     display: grid;
     gap: $spacing9;
     align-content: start;
+    grid-template-rows: auto auto 1fr;
 
     .title-wrapper {
       text-align: center;
@@ -34,6 +35,7 @@
       height: calc($app-height - 50px);
       overflow: auto;
       padding: $spacing10 $spacing11 $spacing11;
+      grid-template-rows: initial;
     }
 
     @media screen and (min-width: $desktop-extra-large) {
@@ -49,12 +51,7 @@
       justify-self: center;
     }
 
-    @media screen and (min-width: $tablet) {
-      grid-template-rows: 1fr 1fr;
-    }
-
     @media screen and (min-width: 1175px) {
-      grid-template-rows: initial;
       grid-template-columns: auto 1fr;
 
       .progress-wrapper {

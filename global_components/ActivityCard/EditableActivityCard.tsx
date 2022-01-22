@@ -2,6 +2,7 @@
 import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
+import { useMediaQ } from 'hooks/useMediaQ';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useEffect, useRef, useState } from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
@@ -18,6 +19,8 @@ export default function EditableActivityCard({
 }) {
   const { data: day } = useGetDay(new Date());
   const [displayOverlay, setDisplayOverlay] = useState(false);
+
+  const query = useMediaQ('min', 525);
 
   const ref = useRef<HTMLDivElement>(null);
   useOnClickOutside({
@@ -49,6 +52,7 @@ export default function EditableActivityCard({
       onClick={() => setDisplayOverlay(true)}
       ref={ref}
     >
+      {!query && <div className={styles['mobile-bar']} />}
       <div className={styles.content}>
         <div className={styles['icon-wrapper']}>
           <div className={styles.icon}>
@@ -66,7 +70,7 @@ export default function EditableActivityCard({
           <h3>{getActivityCount(activity)}</h3>
         </div>
       </div>
-      <div className={styles.bar} />
+      {query && <div className={styles.bar} />}
       <Overlay
         show={displayOverlay}
         hide={(e) => {

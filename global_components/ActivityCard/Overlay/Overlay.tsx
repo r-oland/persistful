@@ -4,6 +4,7 @@ import { faCheck, faMinus, faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
 import { motion } from 'framer-motion';
+import { useMediaQ } from 'hooks/useMediaQ';
 import React, { useState } from 'react';
 import { converMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
@@ -11,11 +12,6 @@ import ActivityProgress from '../ActivityProgress/ActivityProgress';
 import styles from './Overlay.module.scss';
 import TimePicker from './TimePicker';
 // =========================
-
-const wrapper = {
-  initial: { x: '100%' },
-  animate: { x: 14 },
-};
 
 const content = {
   initial: { opacity: 0 },
@@ -40,6 +36,8 @@ export default function Overlay({
   const [hourState, setHourState] = useState(0);
   const [minuteState, setMinuteState] = useState(0);
   const [timesState, setTimesState] = useState(1);
+
+  const query = useMediaQ('min', 525);
 
   const total = minuteState + hourState * 60;
   const time = negativeDirection ? -total : total;
@@ -78,6 +76,11 @@ export default function Overlay({
     return i < 10 ? `0${i}` : `${i}`;
   });
 
+  const wrapperVariants = {
+    initial: query ? { x: '100%' } : { y: 14 },
+    animate: query ? { x: 14 } : { y: '100%' },
+  };
+
   if (!day) return null;
 
   return (
@@ -85,24 +88,26 @@ export default function Overlay({
       className={`${styles.wrapper} ${activity.penalty ? styles.penalty : ''}`}
       initial="initial"
       animate={show ? 'animate' : 'initial'}
-      variants={wrapper}
+      variants={wrapperVariants}
       transition={{ damping: 3 }}
     >
       <motion.div variants={content} className={styles.content}>
-        <div className={styles['outer-icon-wrapper']}>
-          <div className={styles['icon-wrapper']}>
-            {percentage !== undefined && (
-              <ActivityProgress
-                percentage={percentage}
-                penalty={activity.penalty}
-              />
-            )}
-            <div className={styles.icon}>
-              <FontAwesomeIcon icon={activity.icon as IconName} />
+        {query && (
+          <div className={styles['outer-icon-wrapper']}>
+            <div className={styles['icon-wrapper']}>
+              {percentage !== undefined && (
+                <ActivityProgress
+                  percentage={percentage}
+                  penalty={activity.penalty}
+                />
+              )}
+              <div className={styles.icon}>
+                <FontAwesomeIcon icon={activity.icon as IconName} />
+              </div>
             </div>
+            <p>{getActivityCount(activity)}</p>
           </div>
-          <p>{getActivityCount(activity)}</p>
-        </div>
+        )}
         <div className={styles.time}>
           {activity.countMode === 'minutes' ? (
             <>

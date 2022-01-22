@@ -2,12 +2,15 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr auto;
   background-color: $white;
   border: $border;
   border-radius: $border-radius;
   position: relative;
   overflow: hidden;
+
+  @media screen and (min-width: $phone) {
+    grid-template-columns: 1fr auto;
+  }
 
   .content {
     cursor: pointer;
@@ -16,7 +19,11 @@
     align-items: center;
     align-content: center;
     gap: $spacing3;
-    padding: $spacing4 $spacing4;
+    padding: $spacing3;
+
+    @media screen and (min-width: $phone) {
+      padding: $spacing4;
+    }
 
     .icon-wrapper {
       background-color: $green-light;
@@ -49,7 +56,23 @@
         text-overflow: ellipsis;
         overflow: hidden;
       }
+
+      h3 {
+        font-size: $font-paragraph;
+
+        @media screen and (min-width: $phone) {
+          font-size: $font-h3;
+        }
+      }
     }
+  }
+
+  .mobile-bar {
+    height: 15px;
+    width: 100%;
+    background-color: $green;
+    border-bottom: $border;
+    transition: 0.2s;
   }
 
   .bar {
@@ -67,7 +90,8 @@
   }
 
   &.penalty {
-    .bar {
+    .bar,
+    .mobile-bar {
       background-color: $red;
     }
 

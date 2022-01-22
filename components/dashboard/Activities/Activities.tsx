@@ -55,8 +55,10 @@ function ConditionalActivitiesWrapper({
 }
 
 // Reorder the cards when there are 3 items to start the first card in the left bottom
-const getThreeItemClasses = (items: any[], i = 0) =>
-  items.length === 3
+const getThreeItemClasses = (items: any[], i = 0, query = true) =>
+  query
+    ? ''
+    : items.length === 3
     ? i === 0
       ? styles['bottom-right']
       : i === 2
@@ -72,6 +74,8 @@ export default function Activities() {
   useEffect(() => setMounted(true), []);
 
   const { data: day } = useGetDay(new Date());
+
+  const query = useMediaQ('min', 768);
 
   // Grab activities from the daily snapshot to use the values that where used that day
   const activities = day?.activities?.map((activitySnapshot) => {
@@ -94,7 +98,10 @@ export default function Activities() {
           {goals.map(
             (goal, i) =>
               !!goal && (
-                <div className={getThreeItemClasses(goals, i)} key={goal._id}>
+                <div
+                  className={getThreeItemClasses(goals, i, query)}
+                  key={goal._id}
+                >
                   <ActivityCard activity={goal} canEdit />
                 </div>
               )
@@ -107,7 +114,7 @@ export default function Activities() {
             (penalty, i) =>
               !!penalty && (
                 <div
-                  className={getThreeItemClasses(penalties, i)}
+                  className={getThreeItemClasses(penalties, i, query)}
                   key={penalty._id}
                 >
                   <ActivityCard activity={penalty} canEdit />

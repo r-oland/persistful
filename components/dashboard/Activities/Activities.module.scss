@@ -15,3 +15,52 @@
     gap: $spacing4;
   }
 }
+
+.mobile-wrapper {
+  display: grid;
+  align-items: end;
+  align-content: end;
+  gap: $spacing4;
+
+  .items {
+    display: grid;
+    align-items: end;
+    align-self: end;
+    gap: $spacing4;
+    overflow: auto;
+  }
+
+  .mobile-activities {
+    display: grid;
+    gap: $spacing4;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .toggle {
+    display: grid;
+    gap: $spacing2;
+    grid-template-columns: auto auto;
+    justify-content: center;
+
+    .activity,
+    .penalty {
+      width: 8px;
+      height: 8px;
+      border-radius: 100%;
+      border: 1px solid $green;
+    }
+
+    .activity {
+      background-color: $green;
+    }
+  }
+}
+
+.bottom-right {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.bottom-left {
+  grid-row: 2;
+}

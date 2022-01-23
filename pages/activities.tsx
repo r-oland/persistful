@@ -1,9 +1,10 @@
 // Components==============
-import LeftSidebar from 'components/activities/LeftSidebar/LeftSidebar';
-import React, { createContext, useMemo, useState } from 'react';
 import styles from 'components/activities/activities.module.scss';
 import EditView from 'components/activities/EditView/EditView';
+import LeftSidebar from 'components/activities/LeftSidebar/LeftSidebar';
 import TopBar from 'components/activities/TopBar/TopBar';
+import { useMediaQ } from 'hooks/useMediaQ';
+import React, { createContext, useMemo, useState } from 'react';
 // =========================
 
 type ActivitiesContextType = {
@@ -21,13 +22,15 @@ export default function Activities() {
     [selectedActivity]
   );
 
+  const query = useMediaQ('min', 1024);
+
   return (
     <ActivitiesContext.Provider value={memorizedValues}>
       <div className={styles.wrapper}>
-        <TopBar />
+        {query && <TopBar />}
         <div className={styles.content}>
           <LeftSidebar />
-          <EditView key={selectedActivity} />
+          {query && <EditView key={selectedActivity} />}
         </div>
       </div>
     </ActivitiesContext.Provider>

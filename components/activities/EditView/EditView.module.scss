@@ -7,65 +7,75 @@
   padding-top: $spacing11;
   justify-content: center;
 
+  .element {
+    width: 550px;
+
+    @media screen and (min-width: $desktop-large) {
+      width: 700px;
+    }
+  }
+}
+
+.content {
+  width: 100%;
+  display: grid;
+  gap: $spacing5;
+
+  p,
+  b {
+    font-size: $font-small;
+  }
+
+  b {
+    display: block;
+    margin-bottom: $spacing2;
+  }
+
+  .description {
+    margin-bottom: $spacing1;
+  }
+
   .inactive {
     opacity: 0.4;
     pointer-events: none;
   }
 
-  .element {
-    width: 700px;
-  }
-
-  .content {
-    width: 100%;
+  .icon-input {
     display: grid;
+    grid-template-columns: auto 1fr;
     gap: $spacing4;
 
-    p,
-    b {
-      font-size: $font-small;
+    input {
+      padding: 0 $spacing4;
     }
+  }
 
-    b {
-      display: block;
-      margin-bottom: $spacing2;
-    }
+  .preview-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
 
-    .description {
-      margin-bottom: $spacing1;
-    }
-
-    .icon-input {
+    .column-2 {
+      width: 190px;
       display: grid;
-      grid-template-columns: auto 1fr;
-      gap: $spacing4;
+      gap: 2px;
+      justify-self: end;
 
-      input {
-        padding: 0 $spacing4;
-      }
-    }
-
-    .preview-wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-
-      .column-1 {
+      @media screen and (min-width: $phone) {
         width: 225px;
-        display: grid;
-        gap: 2px;
       }
     }
+  }
 
-    .pattern-wrapper {
-      display: grid;
-      gap: $spacing3;
-    }
+  .pattern-wrapper {
+    display: grid;
+    gap: $spacing3;
+  }
 
-    .buttons {
-      display: grid;
-      justify-content: end;
-      grid-auto-flow: column;
-      gap: $spacing4;
-    }
+  .buttons {
+    display: grid;
+    justify-content: end;
+    grid-auto-flow: column;
+    margin-top: $spacing4;
+    gap: $spacing4;
   }
 }

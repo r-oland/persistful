@@ -3,6 +3,9 @@
 .wrapper {
   .content {
     display: grid;
-    grid-template-columns: auto 1fr;
+
+    @media screen and (min-width: $desktop) {
+      grid-template-columns: auto 1fr;
+    }
   }
 }

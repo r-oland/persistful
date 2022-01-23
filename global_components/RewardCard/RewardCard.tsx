@@ -17,10 +17,10 @@ function ConditionalLink({
   link,
   children,
 }: {
-  link: string;
+  link?: string;
   children: JSX.Element;
 }) {
-  if (link.includes('http' || 'https'))
+  if (link && link.includes('http' || 'https'))
     return (
       <a href={link} target="_blank" rel="noreferrer">
         {children}
@@ -62,7 +62,7 @@ export default function RewardCard({
                 )}
               </div>
               {isCompleted ? (
-                <ConditionalLink link={reward.productLink}>
+                <ConditionalLink link={reward?.productLink}>
                   <Button
                     color="green"
                     onClick={() => completeReward.mutate(reward._id)}

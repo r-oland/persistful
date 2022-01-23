@@ -4,7 +4,7 @@
   display: grid;
   align-items: center;
   grid-template-columns: 1fr auto;
-  padding: 0 $spacing6;
+  padding: 0 $spacing5;
 
   @media screen and (min-width: $tablet) {
     padding: 0 $spacing11;

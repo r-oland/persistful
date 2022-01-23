@@ -72,6 +72,12 @@ export default async function handler(
 
       res.status(200).send(result);
     }
+
+    if (req.method === 'GET') {
+      const result = await rewards.findOne({ _id });
+
+      res.status(200).send(result);
+    }
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

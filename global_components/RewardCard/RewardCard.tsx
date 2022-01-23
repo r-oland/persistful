@@ -5,7 +5,9 @@ import HardShadow from 'global_components/HardShadow/HardShadow';
 import Shape from 'global_components/Shape/Shape';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
+import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/image';
+import { useRouter } from 'next/router';
 import React from 'react';
 import styles from './RewardCard.module.scss';
 import { shapes } from './shapes';
@@ -36,6 +38,8 @@ export default function RewardCard({
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const completeReward = useCompleteReward();
+  const query = useMediaQ('min', 768);
+  const { push } = useRouter();
 
   const completedCycles = useGetRewardCycles(reward);
   const isCompleted = completedCycles >= reward.totalCycles;
@@ -67,7 +71,12 @@ export default function RewardCard({
                   </Button>
                 </ConditionalLink>
               ) : (
-                <Button color="white" onClick={() => setModalIsOpen(true)}>
+                <Button
+                  color="white"
+                  onClick={() =>
+                    query ? setModalIsOpen(true) : push(`/reward/${reward._id}`)
+                  }
+                >
                   View
                 </Button>
               )}

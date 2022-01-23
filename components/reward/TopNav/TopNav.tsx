@@ -1,5 +1,5 @@
 // Components==============
-import { faChevronLeft } from '@fortawesome/pro-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import TopNavWrapper from 'global_components/LayoutWrappers/TopNavWrapper/TopNavWrapper';
 import { useRouter } from 'next/router';
@@ -14,8 +14,8 @@ export default function TopNav() {
     <TopNavWrapper>
       <div className={styles.wrapper}>
         <div className={styles.back} onClick={() => push('/')}>
-          <FontAwesomeIcon icon={faChevronLeft} />
-          <p>Back</p>
+          <FontAwesomeIcon icon={faArrowLeft} />
+          <p>Dashboard</p>
         </div>
       </div>
     </TopNavWrapper>

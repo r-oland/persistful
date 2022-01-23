@@ -90,10 +90,15 @@ export default function Content({
 
   return (
     <form className={styles.wrapper} onSubmit={handleSave}>
+      {!query && (
+        <Image src="/images/carrot.svg" width={203} height={146} alt="carrot" />
+      )}
       <div className={styles.top}>
-        <h3 className={styles.title}>
-          What do you wan't to dangle to the end of your stick?
-        </h3>
+        <div>
+          <h3 className={styles.title}>
+            What do you wan't to dangle to the end of your stick?
+          </h3>
+        </div>
         <p className={styles.description}>
           Wether it be a fancy new piece of equipment, a new book or a nice
           thick carrot, we all like treating ourself from time to time. Let
@@ -147,8 +152,17 @@ export default function Content({
             />
           </div>
         </div>
-        <div />
-        <Image src="/images/carrot.svg" width={203} height={146} alt="carrot" />
+        {query && (
+          <>
+            <div />
+            <Image
+              src="/images/carrot.svg"
+              width={203}
+              height={146}
+              alt="carrot"
+            />
+          </>
+        )}
       </div>
       <div className={styles.bottom}>
         <div className={styles['progress-circle']}>

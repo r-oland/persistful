@@ -63,7 +63,10 @@
 
   .middle {
     display: grid;
-    grid-template-columns: 1fr 100px auto 40px;
+
+    @media screen and (min-width: $tablet) {
+      grid-template-columns: 1fr 100px auto 40px;
+    }
 
     .left {
       display: grid;
@@ -74,15 +77,20 @@
 
   .bottom {
     display: grid;
-    grid-auto-flow: column;
-    justify-content: space-between;
     align-items: end;
+    gap: $spacing4;
+
+    @media screen and (min-width: $phone) {
+      justify-content: space-between;
+      grid-auto-flow: column;
+    }
 
     .progress-circle {
       display: grid;
       grid-auto-flow: column;
       align-items: center;
       gap: $spacing4;
+      justify-self: start;
 
       p {
         font-size: $font-large;
@@ -98,6 +106,7 @@
       display: grid;
       gap: $spacing4;
       grid-auto-flow: column;
+      justify-self: end;
     }
   }
 }

@@ -24,12 +24,12 @@ export default function SideBar() {
               setModalIsOpen={setRewardModalIsOpen}
             />
           ) : (
-            <NewRewardCard />
+            <NewRewardCard setModalIsOpen={setRewardModalIsOpen} />
           )}
         </div>
       </SideBarWrapper>
       <AnimatePresence>
-        {rewardModalIsOpen && activeReward && (
+        {rewardModalIsOpen && (
           <RewardModal
             setModalIsOpen={setRewardModalIsOpen}
             reward={activeReward}

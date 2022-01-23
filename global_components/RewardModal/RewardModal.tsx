@@ -15,6 +15,7 @@ import Modal from 'global_components/Modal/Modal';
 import Slider from 'global_components/Slider/Slider';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
 import { useCounter } from 'hooks/useCounter';
+import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import Image from 'next/image';
 import React, { useState } from 'react';
 import styles from './RewardModal.module.scss';
@@ -38,8 +39,8 @@ export default function RewardModal({
   const productLink = saveObject?.productLink || reward?.productLink || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
   const image = localImage || reward?.image || '';
-  const completedCycles = reward?.completedCycles || 0;
-  const minSlider = reward?.completedCycles ? reward.completedCycles + 1 : 1;
+  const completedCycles = useGetRewardCycles(reward);
+  const minSlider = completedCycles + 1;
   const maxSlider = 120;
 
   const totalCounter = useCounter({ valueTo: totalCycles });
@@ -160,7 +161,7 @@ export default function RewardModal({
             >
               {reward ? (
                 <p className={styles.counter}>
-                  {reward.completedCycles}/{totalCounter}
+                  {completedCycles}/{totalCounter}
                 </p>
               ) : (
                 <h3>{totalCounter}</h3>

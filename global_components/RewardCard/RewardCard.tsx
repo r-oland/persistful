@@ -4,6 +4,7 @@ import Button from 'global_components/Button/Button';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import Shape from 'global_components/Shape/Shape';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
+import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import Image from 'next/image';
 import React from 'react';
 import styles from './RewardCard.module.scss';
@@ -35,7 +36,9 @@ export default function RewardCard({
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const completeReward = useCompleteReward();
-  const isCompleted = reward.completedCycles >= reward.totalCycles;
+
+  const completedCycles = useGetRewardCycles(reward);
+  const isCompleted = completedCycles >= reward.totalCycles;
 
   return (
     <HardShadow stretch>
@@ -71,9 +74,7 @@ export default function RewardCard({
             </div>
             <SmallProgressCircle
               percentage={
-                isCompleted
-                  ? 100
-                  : (100 / reward.totalCycles) * reward.completedCycles
+                isCompleted ? 100 : (100 / reward.totalCycles) * completedCycles
               }
               color={isCompleted ? 'green' : 'black'}
               large
@@ -91,9 +92,7 @@ export default function RewardCard({
                   />
                 </svg>
                 <p className={styles.count}>
-                  {isCompleted
-                    ? 0
-                    : reward.totalCycles - reward.completedCycles}
+                  {isCompleted ? 0 : reward.totalCycles - completedCycles}
                 </p>
               </div>
               <p className={styles['cycles-left']}>Cycles left</p>

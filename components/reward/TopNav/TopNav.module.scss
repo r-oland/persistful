@@ -1,0 +1,20 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  align-items: center;
+  padding: 0 $spacing5;
+
+  .back {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: start;
+    align-items: center;
+    gap: $spacing2;
+
+    cursor: pointer;
+    p {
+      font-weight: $weight-bold;
+    }
+  }
+}

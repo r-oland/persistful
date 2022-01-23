@@ -1,0 +1,11 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+
+  .content {
+    padding: $spacing7 $spacing5 $spacing5;
+    overflow: auto;
+    height: calc($app-height - 50px - 65px);
+  }
+}

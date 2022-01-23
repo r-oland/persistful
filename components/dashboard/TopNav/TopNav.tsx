@@ -82,15 +82,17 @@ export default function TopNav() {
               ref={ref}
             >
               <FontAwesomeIcon icon={faFlame} />
-              <div
-                className={`${styles.counter} ${
-                  activeReward?.totalCycles === completedCycles
-                    ? styles.completed
-                    : ''
-                }`}
-              >
-                <p>{activeReward ? completedCycles : 0}</p>
-              </div>
+              {!!activeReward && (
+                <div
+                  className={`${styles.counter} ${
+                    activeReward?.totalCycles === completedCycles
+                      ? styles.completed
+                      : ''
+                  }`}
+                >
+                  <p>{activeReward ? completedCycles : 0}</p>
+                </div>
+              )}
             </div>
             <AnimatePresence>
               {rewardTooltipIsOpen && (

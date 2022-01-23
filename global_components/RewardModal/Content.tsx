@@ -36,8 +36,12 @@ export default function Content({
   const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
   const [localImage, setLocalImage] = useState('');
 
-  const name = saveObject?.name || reward?.name || '';
-  const productLink = saveObject?.productLink || reward?.productLink || '';
+  const name =
+    saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
+  const productLink =
+    saveObject.productLink !== undefined
+      ? saveObject?.productLink
+      : reward?.productLink || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
   const image = localImage || reward?.image || '';
   const completedCycles = useGetRewardCycles(reward);

@@ -50,7 +50,9 @@ export default function RewardCard({
                 <p className={styles.title}>
                   {isCompleted ? 'Nice work!' : reward.name}
                 </p>
-                <p className={styles.description}>That was impressive</p>
+                {isCompleted && (
+                  <p className={styles.description}>That was impressive</p>
+                )}
               </div>
               {isCompleted ? (
                 <ConditionalLink link={reward.productLink}>

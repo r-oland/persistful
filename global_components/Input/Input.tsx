@@ -9,12 +9,14 @@ export default function Input({
   onChange,
   placeholder,
   color = 'green',
+  required = true,
 }: {
   type?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   placeholder: string;
   color?: 'red' | 'green';
+  required?: boolean;
 }) {
   return (
     <div className={`${styles.wrapper} ${styles[color]}`}>
@@ -23,7 +25,7 @@ export default function Input({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        required
+        required={required}
       />
       <div className={styles.bar} />
     </div>

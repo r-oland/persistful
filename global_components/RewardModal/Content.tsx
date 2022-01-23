@@ -39,7 +39,7 @@ export default function Content({
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
   const productLink =
-    saveObject.productLink !== undefined
+    saveObject?.productLink !== undefined
       ? saveObject?.productLink
       : reward?.productLink || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
@@ -141,6 +141,7 @@ export default function Content({
                 }))
               }
               placeholder="https://vegtablemarket.com/bjc"
+              required={false}
             />
           </div>
           <div>

@@ -6,7 +6,7 @@ import styles from './Slider.module.scss';
 
 export default function Slider({
   initialValue,
-  handleRelease,
+  onChange,
   penalty,
   min,
   max,
@@ -14,7 +14,7 @@ export default function Slider({
   step = 5,
 }: {
   initialValue: number;
-  handleRelease: (value: number) => void;
+  onChange: (value: number) => void;
   penalty?: boolean;
   min: number;
   max: number;
@@ -27,7 +27,7 @@ export default function Slider({
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const currentPosition = parseInt(e.target.value);
     setSliderPosition(currentPosition);
-
+    onChange(currentPosition);
     setValue(currentPosition);
   }
 
@@ -46,7 +46,6 @@ export default function Slider({
         value={sliderPosition}
         className={styles.slider}
         onChange={handleChange}
-        onPointerUp={() => handleRelease(value)}
       />
       <p
         style={{

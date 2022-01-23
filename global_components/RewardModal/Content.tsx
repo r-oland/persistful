@@ -146,7 +146,7 @@ export default function Content({
               max={maxSlider}
               min={minSlider}
               step={1}
-              handleRelease={(value) =>
+              onChange={(value) =>
                 setSaveObject((prev) => ({ ...prev, totalCycles: value }))
               }
             />

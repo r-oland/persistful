@@ -2,11 +2,12 @@
 import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import HardShadow from 'global_components/HardShadow/HardShadow';
+import { useMediaQ } from 'hooks/useMediaQ';
 import React from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
 import { getActivityPercentage } from 'utils/getActivityPercentage';
-import ActivityProgress from './ActivityProgress/ActivityProgress';
 import styles from './ActivityCard.module.scss';
+import ActivityProgress from './ActivityProgress/ActivityProgress';
 import EditableActivityCard from './EditableActivityCard';
 // =========================
 
@@ -25,6 +26,8 @@ export default function ActivityCard({
   disableAnimations?: boolean;
   activities?: ActivityEntity[];
 }) {
+  const query = useMediaQ('min', 525);
+
   if (canEdit) return <EditableActivityCard activity={activity} />;
 
   const percentage = getActivityPercentage(activity, activities);
@@ -42,6 +45,7 @@ export default function ActivityCard({
           } ${selected ? styles.selected : ''}`}
           onClick={onClick}
         >
+          {!query && <div className={styles['mobile-bar']} />}
           <div className={styles.content}>
             <div className={styles['icon-wrapper']}>
               {percentage !== undefined && (
@@ -59,6 +63,7 @@ export default function ActivityCard({
               <h3>{getActivityCount(activity)}</h3>
             </div>
           </div>
+          {query && <div className={styles.bar} />}
           <div className={styles.bar} />
         </div>
       </HardShadow>

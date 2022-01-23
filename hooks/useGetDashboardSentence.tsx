@@ -33,7 +33,10 @@ export default function useGetDashboardSentence() {
     // 3: streak = 2 - 2.99
     [`Holy shit ${name}, you're killing it! 🔪`],
     // 4: streak = > 3
-    [`Hey hey, I'm proud of you but don't over do it buddy.`],
+    [
+      `Hey hey, I'm proud of you but don't over do it buddy.`,
+      'My god, bit of an overachiever are we?',
+    ],
   ];
 
   const array = sentences[index];

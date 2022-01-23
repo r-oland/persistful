@@ -1,0 +1,16 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+
+  .content {
+    display: grid;
+    align-content: start;
+    height: calc($app-height - 50px - 65px);
+    padding: $spacing7 $spacing5 $spacing5;
+
+    @media screen and (min-width: $tablet) {
+      height: calc($app-height - 50px);
+    }
+  }
+}

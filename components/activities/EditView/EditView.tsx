@@ -219,7 +219,7 @@ export default function EditView() {
                       initialValue={
                         saveObject?.countCalc || localActivity.countCalc
                       }
-                      handleRelease={handleCountCalcChange}
+                      onChange={handleCountCalcChange}
                       penalty={penaltyMode}
                       min={10}
                       max={120}

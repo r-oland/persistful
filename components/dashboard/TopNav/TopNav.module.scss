@@ -40,6 +40,10 @@
       top: -3px;
       left: 9px;
 
+      &.completed {
+        background-color: $green;
+      }
+
       p {
         color: $white;
         font-size: $font-tiny;

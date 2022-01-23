@@ -5,8 +5,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { AnimatePresence, motion } from 'framer-motion';
 import TopNavWrapper from 'global_components/LayoutWrappers/TopNavWrapper/TopNavWrapper';
+import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import RewardModal from 'global_components/RewardModal/RewardModal';
+import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useRef, useState } from 'react';
 import { framerFade } from 'utils/framerAnimations';
@@ -20,7 +22,7 @@ function RewardTooltip({
   setModalIsOpen,
   buttonRef,
 }: {
-  activeReward: RewardEntity;
+  activeReward?: RewardEntity;
   setTooltipIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   buttonRef: React.RefObject<HTMLDivElement>;
@@ -34,7 +36,11 @@ function RewardTooltip({
 
   return (
     <motion.div {...framerFade} className={styles['reward-tooltip']} ref={ref}>
-      <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
+      {activeReward ? (
+        <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
+      ) : (
+        <NewRewardCard setModalIsOpen={setModalIsOpen} />
+      )}
     </motion.div>
   );
 }
@@ -51,6 +57,14 @@ export default function TopNav() {
   const [rewardTooltipIsOpen, setRewardTooltipIsOpen] = useState(false);
 
   const { data: activeReward } = useGetActiveReward();
+
+  const totalCompleted = useGetRewardCycles(activeReward);
+
+  const completedCycles = activeReward
+    ? totalCompleted > activeReward.totalCycles
+      ? activeReward?.totalCycles
+      : totalCompleted
+    : 0;
 
   return (
     <>
@@ -70,16 +84,16 @@ export default function TopNav() {
               <FontAwesomeIcon icon={faFlame} />
               <div
                 className={`${styles.counter} ${
-                  activeReward?.totalCycles === activeReward?.completedCycles
+                  activeReward?.totalCycles === completedCycles
                     ? styles.completed
                     : ''
                 }`}
               >
-                <p>{activeReward ? activeReward.completedCycles : 0}</p>
+                <p>{activeReward ? completedCycles : 0}</p>
               </div>
             </div>
             <AnimatePresence>
-              {activeReward && rewardTooltipIsOpen && (
+              {rewardTooltipIsOpen && (
                 <RewardTooltip
                   activeReward={activeReward}
                   setTooltipIsOpen={setRewardTooltipIsOpen}
@@ -92,7 +106,7 @@ export default function TopNav() {
         </div>
       </TopNavWrapper>
       <AnimatePresence>
-        {rewardModalIsOpen && activeReward && (
+        {rewardModalIsOpen && (
           <RewardModal
             setModalIsOpen={setRewardModalIsOpen}
             reward={activeReward}

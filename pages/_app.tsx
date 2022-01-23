@@ -1,5 +1,6 @@
 // Components==============
 import Auth from 'global_components/Auth/Auth';
+import GlobalTodayStreakContextWrapper from 'global_components/GlobalTodayStreakContextWrapper';
 import Layout from 'global_components/Layout/Layout';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { NextPage } from 'next';
@@ -35,12 +36,12 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
     <SessionProvider session={pageProps.session}>
       <QueryClientProvider client={queryClient}>
         <Auth noAuth={Component.noAuth}>
-          <>
+          <GlobalTodayStreakContextWrapper>
             <Layout noLayout={Component.noLayout}>
               <Component {...pageProps} />
             </Layout>
             <ReactQueryDevtools initialIsOpen={false} />
-          </>
+          </GlobalTodayStreakContextWrapper>
         </Auth>
       </QueryClientProvider>
     </SessionProvider>

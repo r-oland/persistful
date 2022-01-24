@@ -1,0 +1,27 @@
+{
+  "name": "Persistful",
+  "short_name": "Persistful",
+  "icons": [
+    {
+      "src": "/logo/logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo/logo@2x.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo/logo@3x.png",
+      "sizes": "576x576",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#18e597",
+  "background_color": "#18e597",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait"
+}

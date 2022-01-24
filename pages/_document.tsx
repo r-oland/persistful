@@ -32,7 +32,7 @@ class MyDocument extends Document {
           <meta name="msapplication-tap-highlight" content="no" />
           <meta name="theme-color" content={color} />
 
-          <link rel="apple-touch-icon" href="/logo/touch-icon-iphone.png" />
+          <link rel="apple-touch-icon" href="/logo/apple-touch-icon.png" />
           <link
             rel="icon"
             type="image/png"

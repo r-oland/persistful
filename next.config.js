@@ -1,12 +1,15 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 /** @type {import('next').NextConfig} */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const withPWA = require('next-pwa');
+const runtimeCaching = require('next-pwa/cache');
 
 module.exports = withPWA({
   reactStrictMode: true,
   pwa: {
-    dest: 'public/serviceWorker',
+    dest: 'public',
     disable: process.env.NODE_ENV === 'development',
+    runtimeCaching,
+    buildExcludes: [/middleware-manifest\.json$/],
   },
   images: {
     domains: ['storage.googleapis.com'],

@@ -39,7 +39,7 @@
     top: $spacing10;
 
     .inside {
-      width: 180px;
+      width: 190px;
       height: 120px;
       background-color: $white;
       border: $border;
@@ -59,6 +59,7 @@
         font-size: $font-paragraph;
         gap: $spacing4;
         overflow: auto;
+        height: 103px;
 
         .active {
           color: $green;

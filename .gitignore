@@ -37,8 +37,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 
-# storage folder
-public/storage
+# public folder
+public/serviceWorker
 
 # Google cloud key
 storage-key.json

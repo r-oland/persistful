@@ -6,6 +6,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 const title = 'Persistful';
 const description = 'A reward based habit tracking app';
 const color = '#18E597';
+const colorLight = '#e8fcf5';
 const domain = 'https://persistful.com';
 
 class MyDocument extends Document {
@@ -30,8 +31,12 @@ class MyDocument extends Document {
           <meta name="msapplication-config" content="/logo/browserconfig.xml" />
           <meta name="msapplication-TileColor" content={color} />
           <meta name="msapplication-tap-highlight" content="no" />
-          <meta name="theme-color" content="#e8fcf5" />
-
+          <meta name="theme-color" media="(max-width: 767px)" content={color} />
+          <meta
+            name="theme-color"
+            media="(min-width: 768px)"
+            content={colorLight}
+          />
           <link rel="apple-touch-icon" href="/logo/apple-touch-icon.png" />
           <link
             rel="icon"

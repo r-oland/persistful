@@ -16,9 +16,15 @@ import { fontawesomeHelper } from 'utils/fontawesomeHelper';
 fontawesomeHelper();
 
 export const queryClient = new QueryClient({
-  // get fresh data after 15 mins of use -> in case someone left their tab open
+  // get fresh data after 10 mins of use -> in case someone left their tab open
   defaultOptions: {
-    queries: { staleTime: 15 * 1000 * 60, refetchOnWindowFocus: 'always' },
+    queries: {
+      staleTime: 10 * 1000 * 60,
+      refetchOnWindowFocus:
+        process.env.NODE_ENV === 'production' ? 'always' : true,
+      refetchOnReconnect:
+        process.env.NODE_ENV === 'production' ? 'always' : true,
+    },
   },
 });
 

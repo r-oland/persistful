@@ -11,6 +11,7 @@
     gap: $spacing7;
     align-content: start;
     grid-template-rows: auto auto 1fr;
+    max-width: 1350px;
 
     .title-wrapper {
       text-align: center;

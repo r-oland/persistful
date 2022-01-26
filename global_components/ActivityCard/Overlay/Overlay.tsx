@@ -2,7 +2,6 @@
 import { IconName } from '@fortawesome/fontawesome-svg-core';
 import { faCheck, faMinus, faPlus } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
 import { motion } from 'framer-motion';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { useState } from 'react';
@@ -19,19 +18,19 @@ const content = {
 };
 
 export default function Overlay({
-  show,
-  hide,
+  handleAdd,
   activity,
   percentage,
   day,
 }: {
-  show: boolean;
-  hide: (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => void;
+  handleAdd: (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    value: number
+  ) => void;
   activity: ActivityEntity;
   percentage?: number;
   day?: DayEntity;
 }) {
-  const { mutate } = useUpdateActivityCount();
   const [negativeDirection, setNegativeDirection] = useState(false);
   const [hourState, setHourState] = useState(0);
   const [minuteState, setMinuteState] = useState(0);
@@ -87,7 +86,8 @@ export default function Overlay({
     <motion.div
       className={`${styles.wrapper} ${activity.penalty ? styles.penalty : ''}`}
       initial="initial"
-      animate={show ? 'animate' : 'initial'}
+      animate="animate"
+      exit="initial"
       variants={wrapperVariants}
       transition={{ damping: 3 }}
     >
@@ -148,15 +148,9 @@ export default function Overlay({
           </div>
           <div
             className={styles.add}
-            onClick={(e) => {
-              hide(e);
-
-              mutate({
-                id: day._id,
-                activityId: activity._id,
-                value: activity.countMode === 'times' ? times : time,
-              });
-            }}
+            onClick={(e) =>
+              handleAdd(e, activity.countMode === 'times' ? times : time)
+            }
           >
             <FontAwesomeIcon icon={faCheck} />
           </div>

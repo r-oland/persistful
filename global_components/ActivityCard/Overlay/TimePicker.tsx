@@ -1,6 +1,6 @@
 // Components==============
 import { motion, useAnimation, useMotionValue } from 'framer-motion';
-import React, { Fragment, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styles from './Overlay.module.scss';
 // =========================
 
@@ -73,15 +73,9 @@ export default function TimePicker({
         setTimeout(() => controls.start({ y: getNearestValue() }), delay());
       }}
     >
-      {amountOfValues.map((index) => (
-        <Fragment key={index}>
-          {values.map((val) => (
-            <p key={val} style={{ height: gap }}>
-              {val}
-            </p>
-          ))}
-        </Fragment>
-      ))}
+      <p style={{ lineHeight: `${gap}px` }}>
+        {amountOfValues.map(() => values.map((val) => `${val} `))}
+      </p>
     </motion.div>
   );
 }

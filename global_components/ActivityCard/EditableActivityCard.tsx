@@ -2,6 +2,8 @@
 import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
+import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
+import { AnimatePresence } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
@@ -42,6 +44,7 @@ export default function EditableActivityCard({
 }) {
   const { data: day } = useGetDay(new Date());
   const [displayOverlay, setDisplayOverlay] = useState(false);
+  const updateActivityCount = useUpdateActivityCount();
 
   const query = useMediaQ('min', 525);
 
@@ -93,17 +96,27 @@ export default function EditableActivityCard({
           </div>
         </div>
         {query && <div className={styles.bar} />}
-        <Overlay
-          show={displayOverlay}
-          hide={(e) => {
-            e.stopPropagation();
-            setDisplayOverlay(false);
-          }}
-          activity={activity}
-          percentage={percentage}
-          day={day}
-          key={key}
-        />
+        <AnimatePresence>
+          {displayOverlay && (
+            <Overlay
+              handleAdd={(e, value) => {
+                e.stopPropagation();
+
+                updateActivityCount
+                  .mutateAsync({
+                    id: day._id,
+                    activityId: activity._id,
+                    value,
+                  })
+                  .then(() => setDisplayOverlay(false));
+              }}
+              activity={activity}
+              percentage={percentage}
+              day={day}
+              key={key}
+            />
+          )}
+        </AnimatePresence>
       </div>
     </ConditionalWrapper>
   );

@@ -41,5 +41,5 @@ export default function GlobalTodayStreakContextWrapper({
 }) {
   const session = useSession();
   if (session.status === 'authenticated') return <Context>{children}</Context>;
-  return children;
+  return <>{children}</>;
 }

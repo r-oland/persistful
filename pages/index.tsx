@@ -7,6 +7,7 @@ import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import ValidateEffect from 'global_components/ValidateEffect';
 import useGetDashboardSentence from 'hooks/useGetDashboardSentence';
 import { useMediaQ } from 'hooks/useMediaQ';
+import Head from 'next/head';
 import React from 'react';
 // =========================
 
@@ -18,22 +19,27 @@ export default function Dashboard() {
   const sentence = useGetDashboardSentence();
 
   return (
-    <div className={styles.wrapper}>
-      {!query && <TopNav />}
-      <div className={styles.content}>
-        <div className={styles['title-wrapper']}>
-          <h1 className={styles.title}>{sentence}</h1>
-        </div>
-        <div className={styles.top}>
-          <div className={styles['progress-wrapper']}>
-            <ProgressCircle />
+    <>
+      <Head>
+        <title>Dashboard</title>
+      </Head>
+      <div className={styles.wrapper}>
+        {!query && <TopNav />}
+        <div className={styles.content}>
+          <div className={styles['title-wrapper']}>
+            <h1 className={styles.title}>{sentence}</h1>
           </div>
-          {desktopQuery && <div className={styles.graph} />}
+          <div className={styles.top}>
+            <div className={styles['progress-wrapper']}>
+              <ProgressCircle />
+            </div>
+            {desktopQuery && <div className={styles.graph} />}
+          </div>
+          <Activities />
         </div>
-        <Activities />
+        {query && <SideBar />}
+        <ValidateEffect />
       </div>
-      {query && <SideBar />}
-      <ValidateEffect />
-    </div>
+    </>
   );
 }

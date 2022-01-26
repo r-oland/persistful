@@ -1,7 +1,15 @@
 // Components==============
+import Head from 'next/head';
 import React from 'react';
 // =========================
 
 export default function overview() {
-  return <div />;
+  return (
+    <>
+      <Head>
+        <title>Overview</title>
+      </Head>
+      <div />
+    </>
+  );
 }

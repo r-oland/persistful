@@ -4,6 +4,7 @@ import EditView from 'components/activities/EditView/EditView';
 import LeftSidebar from 'components/activities/LeftSidebar/LeftSidebar';
 import TopBar from 'components/activities/TopBar/TopBar';
 import { useMediaQ } from 'hooks/useMediaQ';
+import Head from 'next/head';
 import React, { createContext, useMemo, useState } from 'react';
 // =========================
 
@@ -25,14 +26,19 @@ export default function Activities() {
   const query = useMediaQ('min', 1024);
 
   return (
-    <ActivitiesContext.Provider value={memorizedValues}>
-      <div className={styles.wrapper}>
-        {query && <TopBar />}
-        <div className={styles.content}>
-          <LeftSidebar />
-          {query && <EditView key={selectedActivity} />}
+    <>
+      <Head>
+        <title>Activities</title>
+      </Head>
+      <ActivitiesContext.Provider value={memorizedValues}>
+        <div className={styles.wrapper}>
+          {query && <TopBar />}
+          <div className={styles.content}>
+            <LeftSidebar />
+            {query && <EditView key={selectedActivity} />}
+          </div>
         </div>
-      </div>
-    </ActivitiesContext.Provider>
+      </ActivitiesContext.Provider>
+    </>
   );
 }

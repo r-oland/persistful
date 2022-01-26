@@ -1,6 +1,8 @@
 // Components==============
 import axios from 'axios';
+import { useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
+import { DashboardContext } from 'pages/index';
 // =========================
 
 export type UpdateActivityCountTypes = {
@@ -11,6 +13,7 @@ export type UpdateActivityCountTypes = {
 
 export default function useUpdateActivityCount() {
   const queryClient = useQueryClient();
+  const { setInvalidateActivitiesQuery } = useContext(DashboardContext);
 
   const mutation = useMutation(
     (data: UpdateActivityCountTypes) =>
@@ -18,7 +21,8 @@ export default function useUpdateActivityCount() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('days');
-        queryClient.invalidateQueries('activities');
+        // invalidate query after user has left dashboard page
+        setInvalidateActivitiesQuery(true);
       },
     }
   );

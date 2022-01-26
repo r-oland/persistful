@@ -8,18 +8,40 @@ import ValidateEffect from 'global_components/ValidateEffect';
 import useGetDashboardSentence from 'hooks/useGetDashboardSentence';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
-import React from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
+import { useQueryClient } from 'react-query';
 // =========================
 
+type DashboardContextType = {
+  setInvalidateActivitiesQuery: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const DashboardContext = createContext({} as DashboardContextType);
+
 export default function Dashboard() {
+  const [invalidateActivitiesQuery, setInvalidateActivitiesQuery] =
+    useState(false);
+
   const query = useMediaQ('min', 1500);
   // @ts-ignore
   const desktopQuery = useMediaQ('min', 1175);
 
+  const queryClient = useQueryClient();
   const sentence = useGetDashboardSentence();
 
+  // Invalidate query if user updated on of day activities and goes to another page
+  useEffect(
+    () => () => {
+      if (invalidateActivitiesQuery)
+        queryClient.invalidateQueries('activities');
+    },
+    [invalidateActivitiesQuery]
+  );
+
+  const value = useMemo(() => ({ setInvalidateActivitiesQuery }), []);
+
   return (
-    <>
+    <DashboardContext.Provider value={value}>
       <Head>
         <title>Dashboard</title>
       </Head>
@@ -40,6 +62,6 @@ export default function Dashboard() {
         {query && <SideBar />}
         <ValidateEffect />
       </div>
-    </>
+    </DashboardContext.Provider>
   );
 }

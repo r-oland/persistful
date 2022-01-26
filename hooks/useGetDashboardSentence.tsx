@@ -40,7 +40,7 @@ export default function useGetDashboardSentence() {
     // 1: streak = 0 -  0.99
     [
       'One small step for... oh whatever, keep going!',
-      `Starting out is the hardest pard, I'm proud of you ${name}!`,
+      `Starting out is the hardest part, I'm proud of you ${name}!`,
       hour >= 18
         ? "hey, you're trying! that's whats most important!"
         : 'Look at all that time you still got, keep pushing!',

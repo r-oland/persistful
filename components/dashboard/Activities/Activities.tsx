@@ -4,7 +4,7 @@ import useGetDay from 'actions/day/useGetDay';
 import ActivityCard from 'global_components/ActivityCard/ActivityCard';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styles from './Activities.module.scss';
 // =========================
 
@@ -82,11 +82,7 @@ const getThreeItemClasses = (items: any[], i = 0, query = true) =>
     : '';
 
 export default function Activities() {
-  // Only set activities on mount -> this is done this way so that the activities.get end point doesn't
-  // get called for every time that the activityCount get's updated (We don't use that data on this page)
-  const [mounted, setMounted] = useState(false);
-  const { data: activityEntities } = useGetActivities({ enabled: !mounted });
-  useEffect(() => setMounted(true), []);
+  const { data: activityEntities } = useGetActivities();
 
   const { data: day } = useGetDay(new Date());
 

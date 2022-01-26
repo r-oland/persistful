@@ -13,14 +13,17 @@ function Effect() {
   const { data: today, isLoading } = useGetDay(new Date());
   const addDay = useAddDay();
 
+  const lastValidationString = user
+    ? new Date(user.lastValidation).toLocaleDateString()
+    : undefined;
+  const todayString = new Date().toLocaleDateString();
+
   useEffect(() => {
     if (!user) return;
-    // set lastValidation when editing previous date
-    const lastValidation = new Date(user.lastValidation);
 
-    if (lastValidation.toLocaleDateString() !== new Date().toLocaleDateString())
-      validateStreaks.mutate();
-  }, [user?.lastValidation]);
+    // set lastValidation when editing previous date
+    if (lastValidationString !== todayString) validateStreaks.mutate();
+  }, [lastValidationString, todayString]);
 
   // if today's day entity doesn't exists yet, add it
   useEffect(() => {

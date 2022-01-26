@@ -27,6 +27,7 @@ module.exports = {
     'no-plusplus': 0,
     'no-underscore-dangle': 0,
     'no-console': 0,
+    'react/jsx-no-useless-fragment': 0,
     'react/require-default-props': 0,
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',

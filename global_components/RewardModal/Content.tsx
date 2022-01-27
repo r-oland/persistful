@@ -48,7 +48,7 @@ export default function Content({
   const minSlider = completedCycles + 1;
   const maxSlider = 120;
 
-  const totalCounter = useCounter({ valueTo: totalCycles });
+  const totalCounter = useCounter(totalCycles);
   const { push } = useRouter();
   const query = useMediaQ('min', 768);
 

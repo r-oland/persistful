@@ -14,6 +14,18 @@ import Circles from './Circles/Circles';
 import styles from './ProgressCircle.module.scss';
 // =========================
 
+function CounterTitle({ valueTo }: { valueTo: number }) {
+  const { todayStreak } = useContext(GlobalTodayStreakContext);
+  const progress = getProgress(todayStreak);
+  const counter = useCounter(valueTo);
+
+  return (
+    <h1 style={{ fontSize: progress[2] ? 35 : 40 }}>
+      {converMinutesToHours(counter)}
+    </h1>
+  );
+}
+
 export default function ProgressCircle() {
   const { data: user } = useGetUser();
   const { data: day } = useGetDay(new Date());
@@ -26,7 +38,6 @@ export default function ProgressCircle() {
   const penaltySum = getActivitySum(day?.activities?.filter((a) => a.penalty));
   const totalSum = Math.floor(persistfulSum - penaltySum);
   const valueTo = !day ? undefined : totalSum;
-  const counter = useCounter({ valueTo });
 
   const progress = getProgress(todayStreak);
 
@@ -34,9 +45,7 @@ export default function ProgressCircle() {
     <div className={styles.wrapper}>
       <Circles progress={progress} />
       <div className={styles.center}>
-        <h1 style={{ fontSize: progress[2] ? 35 : 40 }}>
-          {converMinutesToHours(counter)}
-        </h1>
+        {valueTo !== undefined && <CounterTitle valueTo={valueTo} />}
         <div className={styles.bottom}>
           <div className={styles.streak}>
             <FontAwesomeIcon icon={faFlame} />{' '}

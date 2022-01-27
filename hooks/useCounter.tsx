@@ -1,13 +1,13 @@
 import { useInterval } from 'hooks/useInterval';
 import { useEffect, useState } from 'react';
 
-export const useCounter = ({ valueTo }: { valueTo?: number }) => {
+export const useCounter = (valueTo: number) => {
   const [count, setCount] = useState(valueTo || 0);
 
   // prevent counter from starting on mount
   useEffect(() => {
     if (valueTo) setCount(valueTo);
-  }, [valueTo === undefined]);
+  }, []);
 
   // Be careful chaning this, right now 1 works because count > valueTo will never be true unless you
   // reverse direction. If you change it this won't be the case any more.
@@ -18,8 +18,6 @@ export const useCounter = ({ valueTo }: { valueTo?: number }) => {
 
   useInterval(
     () => {
-      if (valueTo === undefined) return;
-
       if (count < valueTo) {
         return setCount(count + increasePerInterval);
       }

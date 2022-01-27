@@ -16,25 +16,32 @@ export default async function handler(
 
     // Get user id
     const userId = session.user.uid;
+    const userActivities = await activities.find({ userId }).toArray();
 
     if (req.method === 'GET') {
-      const data = await activities.find({ userId }).toArray();
-
       // fetch activities
-      return res.status(200).send(data);
+      return res.status(200).send(userActivities);
     }
 
     if (req.method === 'POST') {
       const alreadyExists = await activities.findOne({
         name: req.body?.name,
+        penalty: req.body?.penalty,
         userId,
       });
+
+      // check if there are already 4 active penalties or activities
+      const already4Active =
+        userActivities
+          .filter((a) => a.status === 'active')
+          .filter((a) => (req.body.penalty ? a.penalty : !a.penalty)).length ===
+        4;
 
       // if activity already exists ignore rest of post action and set status to active
       if (alreadyExists) {
         activities.findOneAndUpdate(
-          { name: req.body?.name, userId },
-          { $set: { status: 'active' } }
+          { name: req.body?.name, penalty: req.body?.penalty, userId },
+          { $set: { status: already4Active ? 'inactive' : 'active' } }
         );
 
         return res
@@ -49,6 +56,7 @@ export default async function handler(
           userId,
           count: 0,
           createdAt: new Date(),
+          status: already4Active ? 'inactive' : 'active',
         })
         .then(async (r) => {
           // Add new activity entity to today's day entity

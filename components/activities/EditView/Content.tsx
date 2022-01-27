@@ -156,9 +156,24 @@ export default function Content({
     ? saveObject.countMode === 'times'
     : localActivity.countMode === 'times';
 
+  // check if there are already 4 active penalties or activities
+  const already4Active =
+    activities
+      ?.filter((a) => a.status === 'active')
+      .filter((a) => (penaltyMode ? a.penalty : !a.penalty)).length === 4;
+
+  const hideToggle = activity?.status === 'inactive' && already4Active;
+
   return (
     <div className={styles.content}>
-      <div>
+      {hideToggle && (
+        <p className={styles['inactive-message']}>
+          You can only have 4 active {penaltyMode ? 'penalties' : 'activities'}{' '}
+          at the same time. Set another {penaltyMode ? 'penalty' : 'activity'}{' '}
+          to inactive to be able to activate or edit this one.
+        </p>
+      )}
+      <div className={hideToggle ? styles.inactive : ''}>
         <b>
           {newActivity
             ? isToggled

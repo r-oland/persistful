@@ -11,9 +11,11 @@ import styles from './LeftSidebar.module.scss';
 
 function Activities({
   activities,
+  allActivities,
   query,
 }: {
   activities?: ActivityEntity[];
+  allActivities?: ActivityEntity[];
   query: boolean;
 }) {
   const { setSelectedActivity, selectedActivity } =
@@ -35,7 +37,7 @@ function Activities({
               query ? setSelectedActivity(a._id) : push(`/activity/${a._id}`)
             }
             selected={selectedActivity === a._id}
-            activities={activities}
+            activities={allActivities}
           />
         ))}
     </>
@@ -59,8 +61,16 @@ export default function LeftSidebar() {
       )}
       <div className={styles.content}>
         <NewActivity />
-        <Activities activities={activities} query={query} />
-        <Activities activities={penalties} query={query} />
+        <Activities
+          activities={activities}
+          allActivities={allActivities}
+          query={query}
+        />
+        <Activities
+          activities={penalties}
+          allActivities={allActivities}
+          query={query}
+        />
       </div>
     </div>
   );

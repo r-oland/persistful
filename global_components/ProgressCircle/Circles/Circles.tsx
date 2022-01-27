@@ -12,13 +12,18 @@ function Circle({ percentage, index }: { percentage: number; index: number }) {
   const fillPercentage = Math.abs(
     Math.ceil((circumference / 100) * (percentage - 100))
   );
+  const duration = 0.8;
 
   // only have delay on mount
   const [delay, setDelay] = useState(index * 0.15);
-  useEffect(() => setDelay(0), []);
+  useEffect(() => {
+    // prevent delay from being set to 0 while animating
+    const timeout = setTimeout(() => setDelay(0), duration * 1000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   const transition = {
-    duration: 0.8,
+    duration,
     delay,
   };
 

@@ -21,6 +21,10 @@
   display: grid;
   gap: $spacing5;
 
+  .inactive-message {
+    color: $red-dark;
+  }
+
   p,
   b {
     font-size: $font-small;

@@ -9,13 +9,46 @@ import React, { useContext } from 'react';
 import styles from './LeftSidebar.module.scss';
 // =========================
 
-export default function LeftSidebar() {
-  const { data: activities } = useGetActivities();
+function Activities({
+  activities,
+  query,
+}: {
+  activities?: ActivityEntity[];
+  query: boolean;
+}) {
   const { setSelectedActivity, selectedActivity } =
     useContext(ActivitiesContext);
 
   const { push } = useRouter();
+
+  if (!activities?.length) return <></>;
+
+  return (
+    <>
+      {activities
+        ?.filter((a) => a.status !== 'deleted')
+        .map((a) => (
+          <ActivityCard
+            activity={a}
+            key={a._id}
+            onClick={() =>
+              query ? setSelectedActivity(a._id) : push(`/activity/${a._id}`)
+            }
+            selected={selectedActivity === a._id}
+            activities={activities}
+          />
+        ))}
+    </>
+  );
+}
+
+export default function LeftSidebar() {
   const query = useMediaQ('min', 1024);
+
+  const { data: allActivities } = useGetActivities();
+
+  const activities = allActivities?.filter((a) => !a.penalty);
+  const penalties = allActivities?.filter((a) => a.penalty);
 
   return (
     <div className={styles.wrapper}>
@@ -26,19 +59,8 @@ export default function LeftSidebar() {
       )}
       <div className={styles.content}>
         <NewActivity />
-        {activities
-          ?.filter((a) => a.status !== 'deleted')
-          ?.map((a) => (
-            <ActivityCard
-              activity={a}
-              key={a._id}
-              onClick={() =>
-                query ? setSelectedActivity(a._id) : push(`/activity/${a._id}`)
-              }
-              selected={selectedActivity === a._id}
-              activities={activities}
-            />
-          ))}
+        <Activities activities={activities} query={query} />
+        <Activities activities={penalties} query={query} />
       </div>
     </div>
   );

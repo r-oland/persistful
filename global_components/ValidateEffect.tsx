@@ -19,11 +19,12 @@ function Effect() {
   const todayString = new Date().toLocaleDateString();
 
   useEffect(() => {
-    if (!user) return;
+    // Make sure new day is added before dispatching validate streak
+    if (!user || !today) return;
 
     // set lastValidation when editing previous date
     if (lastValidationString !== todayString) validateStreaks.mutate();
-  }, [lastValidationString, todayString]);
+  }, [lastValidationString, todayString, !!today]);
 
   // if today's day entity doesn't exists yet, add it
   useEffect(() => {

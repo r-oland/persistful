@@ -1,0 +1,21 @@
+@import 'styles/Variables';
+
+.mobile {
+  padding: $spacing7 $spacing5 $spacing5;
+
+  height: calc($app-height - 50px - 65px);
+
+  @media screen and (min-width: $tablet) {
+    height: calc($app-height - 50px);
+  }
+}
+
+.wrapper {
+  display: grid;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding-top: $spacing11;
+  overflow: auto;
+  height: calc($app-height - 181px);
+}

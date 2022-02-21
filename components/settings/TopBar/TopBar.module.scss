@@ -1,0 +1,47 @@
+@import 'styles/Variables';
+
+.mobile {
+  height: 50px;
+  background-color: $white;
+  border-bottom: 1px solid $grey-light;
+  padding: 0 $spacing5;
+  display: grid;
+  grid-auto-flow: column;
+  gap: $spacing6;
+  justify-content: start;
+
+  .sub-menu {
+    height: 49px;
+
+    &.active {
+      font-weight: $weight-bold;
+      border-bottom: 1px solid $green;
+    }
+  }
+}
+
+.wrapper {
+  display: grid;
+  height: 181px;
+  border-bottom: 1px solid $grey-light;
+  background-color: $white;
+  align-content: end;
+
+  .content {
+    display: grid;
+    grid-auto-flow: column;
+    padding-bottom: $spacing6;
+    max-width: 700px;
+    width: 100%;
+    justify-content: start;
+    gap: $spacing6;
+    margin: 0 auto;
+
+    .sub-menu {
+      &.active {
+        font-weight: $weight-bold;
+        @include underline;
+      }
+    }
+  }
+}

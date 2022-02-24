@@ -53,7 +53,7 @@ export default async function handler(
       },
     });
 
-    if (user?.rules.secondChange) {
+    if (yesterday?.rules.secondChange) {
       // get day before yesterday
       const dayBeforeYesterdayDate = new Date(
         new Date().getTime() - 48 * 60 * 60 * 1000
@@ -71,8 +71,8 @@ export default async function handler(
 
       // If daily goals weren't achieved, reset the streak
       if (
-        !getAchievedStreaks(yesterday, user) &&
-        !getAchievedStreaks(dayBeforeYesterday, user)
+        !getAchievedStreaks(yesterday) &&
+        !getAchievedStreaks(dayBeforeYesterday)
       )
         return await reset();
     } else {
@@ -80,7 +80,7 @@ export default async function handler(
       if (!yesterday) return await reset();
 
       // If daily goal wasn't achieved, reset the streak
-      if (!getAchievedStreaks(yesterday, user)) return await reset();
+      if (!getAchievedStreaks(yesterday)) return await reset();
     }
 
     //
@@ -110,8 +110,8 @@ export default async function handler(
 
         // if diff is > 1, you have missing days, this means that the streak is invalid so you should pick the day available
         if (differenceInDays > 1) {
-          // if there is a difference of 2 and second change mode is on, check if this can be ingored
-          if (differenceInDays === 2 && user?.rules.secondChange) {
+          // if there is a difference of 2 and second change mode is on, check if this can be ignored
+          if (differenceInDays === 2 && (day2 || day1)?.rules.secondChange) {
             // Check if there was a second change used in the last 7 days, if there wasn't set new second change date
             if (
               secondChangeUsed &&
@@ -130,7 +130,7 @@ export default async function handler(
             // If second change is not used yet, use it
             if (!secondChangeUsed) secondChangeUsed = date1;
             //  there is a gap, grab the next available & valid day as first day
-          } else if (getAchievedStreaks(day2, user)) firstDateAfterGap = date2;
+          } else if (getAchievedStreaks(day2)) firstDateAfterGap = date2;
         }
       }
     }
@@ -141,7 +141,7 @@ export default async function handler(
     // get index of item that did not achieve goal in order from newest to latest
     const DescendingDayEntities = sortOnCreatedAt(dayEntities, 'desc');
     const indexOfDateThatDidNotAchieveGoal = DescendingDayEntities.findIndex(
-      (d) => !getAchievedStreaks(d, user)
+      (d) => !getAchievedStreaks(d)
     );
 
     // get date of the item after that index item. (-1 because the array is reversed)
@@ -178,7 +178,7 @@ export default async function handler(
     let totalStreaks = 0;
 
     const bulkArray = generalStreakDays.map((day) => {
-      const sum = getAchievedStreaks(day, user);
+      const sum = getAchievedStreaks(day);
       totalStreaks = sum + totalStreaks;
 
       return {
@@ -200,7 +200,7 @@ export default async function handler(
 
     // total sum of all completed streak day cycles
     const total = generalStreakDays
-      .map((day) => getAchievedStreaks(day, user))
+      .map((day) => getAchievedStreaks(day))
       .reduce((prev, cur) => prev + cur);
 
     // update streak in user model
@@ -228,7 +228,7 @@ export default async function handler(
 
           return createdDate >= startDate;
         })
-        .map((day) => getAchievedStreaks(day, user));
+        .map((day) => getAchievedStreaks(day));
 
       const newValue = reducibleArr.length
         ? reducibleArr.reduce((prev, cur) => prev + cur) -

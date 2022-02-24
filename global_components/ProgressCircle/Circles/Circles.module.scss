@@ -40,6 +40,10 @@
   .progress {
     transform: rotate(-90deg);
     stroke: $green;
+
+    &.bonus {
+      stroke: $green-dark;
+    }
   }
 
   .stroke {

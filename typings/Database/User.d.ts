@@ -2,6 +2,7 @@ type RulesEntity = {
   dailyGoal: number;
   secondChange: boolean;
   prm: boolean;
+  bonusTime: number;
 };
 
 type UserEntity = {

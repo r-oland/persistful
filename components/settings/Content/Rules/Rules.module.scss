@@ -2,4 +2,19 @@
 
 .wrapper {
   display: grid;
+  gap: $spacing4;
+
+  .description {
+    margin-bottom: $spacing3;
+  }
+
+  strong,
+  p {
+    font-size: $font-small;
+  }
+
+  strong {
+    display: block;
+    margin-bottom: $spacing2;
+  }
 }

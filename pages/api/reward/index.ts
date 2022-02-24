@@ -49,8 +49,7 @@ export default async function handler(
         },
       });
 
-      const user = await users.findOne({ _id: objectUserId });
-      const dailyStreak = getAchievedStreaks(today, user);
+      const dailyStreak = getAchievedStreaks(today);
       //
 
       const data = await formDataParser(req);

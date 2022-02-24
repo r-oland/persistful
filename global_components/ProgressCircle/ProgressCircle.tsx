@@ -36,14 +36,28 @@ export default function ProgressCircle() {
     day?.activities?.filter((a) => !a.penalty)
   );
   const penaltySum = getActivitySum(day?.activities?.filter((a) => a.penalty));
-  const totalSum = Math.floor(persistfulSum - penaltySum);
+
+  const bonusTime = !penaltySum ? user?.rules.bonusTime || 0 : 0;
+  // mutate bonus time for getProgress function
+  const todayBonusTime = user?.rules.prm
+    ? bonusTime / (user?.rules.dailyGoal || 0)
+    : 0;
+
+  const totalSum = user
+    ? Math.floor(
+        user.rules.prm ? persistfulSum + bonusTime : persistfulSum - penaltySum
+      )
+    : 0;
+
   const valueTo = !day ? undefined : totalSum;
 
   const progress = getProgress(todayStreak);
+  const bonusProgress = getProgress(todayBonusTime);
 
   return (
     <div className={styles.wrapper}>
       <Circles progress={progress} />
+      <Circles progress={bonusProgress} bonus />
       <div className={styles.center}>
         {valueTo !== undefined && <CounterTitle valueTo={valueTo} />}
         <div className={styles.bottom}>

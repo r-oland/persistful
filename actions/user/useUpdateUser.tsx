@@ -19,7 +19,7 @@ export default function useUpdateUser() {
       onSuccess: () => {
         queryClient.invalidateQueries('user');
 
-        if (newUserData?.rules?.dailyGoal) {
+        if (newUserData?.rules) {
           queryClient.invalidateQueries('days');
         }
       },

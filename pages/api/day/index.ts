@@ -46,7 +46,7 @@ export default async function handler(
         activities: activitySnapshot,
         userId,
         createdAt: new Date(),
-        dailyGoal: user.rules.dailyGoal,
+        rules: user.rules,
       });
 
       return res.status(200).send(result);

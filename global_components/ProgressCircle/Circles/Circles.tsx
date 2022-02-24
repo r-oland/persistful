@@ -5,7 +5,15 @@ import { framerFade } from 'utils/framerAnimations';
 import styles from './Circles.module.scss';
 // =========================
 
-function Circle({ percentage, index }: { percentage: number; index: number }) {
+function Circle({
+  percentage,
+  index,
+  bonus,
+}: {
+  percentage: number;
+  index: number;
+  bonus?: boolean;
+}) {
   const strokeWidth = index === 0 ? 5 : index === 1 ? 6.5 : 8.5;
   const radius = 45;
   const circumference = Math.ceil(2 * Math.PI * radius);
@@ -50,39 +58,43 @@ function Circle({ percentage, index }: { percentage: number; index: number }) {
           : ''
       }`}
     >
-      <AnimatePresence>
-        {(index === 0 || percentage > 0) && (
-          <svg viewBox="0 0 100 100" className={styles.background}>
+      {!bonus && (
+        <>
+          <AnimatePresence>
+            {(index === 0 || percentage > 0) && (
+              <svg viewBox="0 0 100 100" className={styles.background}>
+                <motion.circle
+                  cx="50"
+                  cy="50"
+                  r={radius}
+                  className="circle"
+                  strokeWidth={strokeWidth}
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="transparent"
+                  {...framerFade}
+                />
+              </svg>
+            )}
+          </AnimatePresence>
+          <svg viewBox="0 0 100 100" className={styles.shadow}>
             <motion.circle
               cx="50"
               cy="50"
               r={radius}
-              className="circle"
               strokeWidth={strokeWidth}
+              fill="transparent"
+              strokeDashoffset={fillPercentage}
+              strokeDasharray={circumference}
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill="transparent"
-              {...framerFade}
+              variants={variants}
+              initial="hidden"
+              animate="show"
             />
           </svg>
-        )}
-      </AnimatePresence>
-      <svg viewBox="0 0 100 100" className={styles.shadow}>
-        <motion.circle
-          cx="50"
-          cy="50"
-          r={radius}
-          strokeWidth={strokeWidth}
-          fill="transparent"
-          strokeDashoffset={fillPercentage}
-          strokeDasharray={circumference}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          variants={variants}
-          initial="hidden"
-          animate="show"
-        />
-      </svg>
+        </>
+      )}
       <svg viewBox="0 0 100 100" className={styles.stroke}>
         <motion.circle
           cx="50"
@@ -99,7 +111,10 @@ function Circle({ percentage, index }: { percentage: number; index: number }) {
           animate="show"
         />
       </svg>
-      <svg viewBox="0 0 100 100" className={styles.progress}>
+      <svg
+        viewBox="0 0 100 100"
+        className={`${styles.progress} ${bonus ? styles.bonus : ''}`}
+      >
         <motion.circle
           cx="50"
           cy="50"
@@ -121,11 +136,17 @@ function Circle({ percentage, index }: { percentage: number; index: number }) {
   );
 }
 
-export default function Circles({ progress }: { progress: number[] }) {
+export default function Circles({
+  progress,
+  bonus,
+}: {
+  progress: number[];
+  bonus?: boolean;
+}) {
   return (
     <>
       {progress.map((percentage, i) => (
-        <Circle percentage={percentage} index={i} key={i} />
+        <Circle percentage={percentage} index={i} key={i} bonus={bonus} />
       ))}
     </>
   );

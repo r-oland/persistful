@@ -2,4 +2,18 @@
 
 .wrapper {
   display: grid;
+  gap: $spacing4;
+
+  .sub-title {
+    font-weight: $weight-bold;
+    font-size: $font-small;
+    margin-bottom: $spacing2;
+  }
+
+  .buttons {
+    display: grid;
+    gap: $spacing4;
+    grid-auto-flow: column;
+    justify-self: end;
+  }
 }

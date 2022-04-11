@@ -1,11 +1,9 @@
 // Components==============
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
-import { AnimatePresence, motion } from 'framer-motion';
 import Checkbox from 'global_components/Checkbox/Checkbox';
 import Slider from 'global_components/Slider/Slider';
 import React from 'react';
-import { framerFade } from 'utils/framerAnimations';
 import styles from './Rules.module.scss';
 // =========================
 
@@ -58,24 +56,22 @@ export default function Rules() {
           </p>
         </Checkbox>
       </div>
-      <AnimatePresence>
-        {rules.prm && (
-          <motion.div {...framerFade}>
-            <strong>Bonus time</strong>
-            <p className={styles.description}>
-              The amount of time that get's rewarded to you if you have avoided
-              all penalties.
-            </p>
-            <Slider
-              initialValue={rules.bonusTime}
-              onChange={(bonusTime) => updateRules({ bonusTime })}
-              min={10}
-              max={120}
-              time
-            />
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {rules.prm && (
+        <div>
+          <strong>Bonus time</strong>
+          <p className={styles.description}>
+            The amount of time that get's rewarded to you if you have avoided
+            all penalties.
+          </p>
+          <Slider
+            initialValue={rules.bonusTime}
+            onChange={(bonusTime) => updateRules({ bonusTime })}
+            min={10}
+            max={120}
+            time
+          />
+        </div>
+      )}
     </div>
   );
 }

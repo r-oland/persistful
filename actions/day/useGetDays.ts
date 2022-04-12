@@ -12,12 +12,18 @@ export default function useGetDays(
   endDate: Date,
   options?: UseQueryOptions<DayEntity[]>
 ) {
+  const key = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
+
   // convert to local time
   const dates = `${getLocalISOTime(startDate.getTime())} ${getLocalISOTime(
     endDate.getTime()
   )}`;
 
-  const query = useQuery<DayEntity[]>('days', () => getDays(dates), options);
+  const query = useQuery<DayEntity[]>(
+    ['days', key],
+    () => getDays(dates),
+    options
+  );
 
   return query;
 }

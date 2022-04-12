@@ -5,32 +5,13 @@
 
   .content {
     overflow: auto;
-    height: calc($app-height - 50px - 65px);
+    height: calc($app-height - 50px - 65px - 65px);
     padding: $spacing7 $spacing5 $spacing5;
     display: grid;
     gap: $spacing7;
     align-content: start;
-    grid-template-rows: auto auto 1fr;
+    grid-template-rows: auto 1fr;
     max-width: 1350px;
-
-    .title-wrapper {
-      text-align: center;
-
-      .title {
-        @include underline;
-        font-size: $font-h2;
-        justify-self: start;
-        background-color: $white;
-
-        @media screen and (min-width: $phone) {
-          font-size: $font-h1;
-        }
-      }
-
-      @media screen and (min-width: 1175px) {
-        text-align: initial;
-      }
-    }
 
     @media screen and (min-width: $tablet) {
       height: calc($app-height - 50px);

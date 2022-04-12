@@ -1,0 +1,68 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-auto-flow: column;
+
+  @media screen and (min-width: $tablet) {
+    gap: $spacing6;
+  }
+
+  .card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: $spacing4;
+    align-content: center;
+    align-items: center;
+    border-radius: $border-radius;
+    background-color: $white;
+    border-bottom: $border-light;
+    padding: $spacing3 $spacing5;
+
+    &:first-child {
+      border-right: $border-light;
+    }
+
+    @media screen and (min-width: $tablet) {
+      padding: $spacing4 $spacing5;
+      border: $border-light;
+    }
+
+    .icon {
+      display: grid;
+      width: 40px;
+      height: 40px;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+    }
+
+    .text-wrapper {
+      display: grid;
+      gap: 2px;
+
+      .name {
+        font-size: $font-extra-small;
+      }
+
+      .data {
+        font-size: $font-large;
+        font-weight: $weight-bold;
+      }
+    }
+
+    &.green {
+      .icon {
+        background-color: $green-light;
+        color: $green-dark;
+      }
+    }
+
+    &.red {
+      .icon {
+        background-color: $red-light;
+        color: $red-dark;
+      }
+    }
+  }
+}

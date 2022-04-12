@@ -34,11 +34,13 @@ export default function Content({
   setIsToggled,
   activity,
   handleSwitch,
+  setDeleteModalIsOpen,
 }: {
   isToggled: boolean;
   setIsToggled: React.Dispatch<React.SetStateAction<boolean>>;
   activity?: ActivityEntity;
   handleSwitch: (id: string) => void;
+  setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { data: activities } = useGetActivities();
   const updateActivity = useUpdateActivity();
@@ -126,17 +128,6 @@ export default function Content({
         handleSwitch(r.data?._id || r.data?.insertedId);
       }, 100);
     });
-  };
-
-  const handleDeleteActivity = () => {
-    if (!activity?._id) return;
-
-    updateActivity
-      .mutateAsync({
-        id: activity._id,
-        status: 'deleted',
-      })
-      .then(() => handleSwitch('new-activity'));
   };
 
   const handleSaveActivity = () => {
@@ -280,7 +271,7 @@ export default function Content({
           </Button>
         ) : (
           <>
-            <Button color="red" onClick={handleDeleteActivity}>
+            <Button color="red" onClick={() => setDeleteModalIsOpen(true)}>
               <FontAwesomeIcon icon={faTrash} /> Delete
             </Button>
             <Button

@@ -1,12 +1,12 @@
 import { getActivitySum } from 'utils/getActivitySum';
 
 // helper func that gets amount of achieved streaks
-export const getAchievedStreaks = (
+export const getDayAchievements = (
   day?: DayEntity | null,
   withDecimals?: boolean
 ) => {
-  if (!day) return 0;
-  if (!day.activities.length) return 0;
+  if (!day || !day.activities.length)
+    return { streak: 0, total: 0, bonusScore: 0 };
 
   // activities
   const totalPositive = getActivitySum(
@@ -25,13 +25,10 @@ export const getAchievedStreaks = (
     : totalPositive - totalNegative;
 
   const goal = day.rules.dailyGoal;
-  const streaks = withDecimals ? total / goal : Math.floor(total / goal);
+  const streaksResult = withDecimals ? total / goal : Math.floor(total / goal);
 
-  // prevent negative streaks
-  if (streaks < 0) return 0;
+  // prevent negative streaks && prevent streaks from going further then 3
+  const streak = streaksResult < 0 ? 0 : streaksResult > 3 ? 3 : streaksResult;
 
-  // prevent streaks from going further then 3
-  if (streaks > 3) return 3;
-
-  return streaks;
+  return { streak, total, bonusScore };
 };

@@ -1,6 +1,6 @@
-import { converMinutesToHours } from './convertMinutesToHours';
+import { convertMinutesToHours } from './convertMinutesToHours';
 
 export const getActivityCount = (activity: ActivityEntity) =>
   activity.countMode === 'minutes'
-    ? converMinutesToHours(activity.count)
+    ? convertMinutesToHours(activity.count)
     : `${Math.floor(activity.count)}x`;

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { addImageToStorage } from 'utils/addImageToStorage';
 import { checkAuth } from 'utils/checkAuth';
 import { formDataParser } from 'utils/formDataParser';
-import { getAchievedStreaks } from 'utils/getAchievedStreaks';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
 
 // disable the default body parser
@@ -49,7 +49,7 @@ export default async function handler(
         },
       });
 
-      const dailyStreak = getAchievedStreaks(today);
+      const dailyStreak = getDayAchievements(today).streak;
       //
 
       const data = await formDataParser(req);

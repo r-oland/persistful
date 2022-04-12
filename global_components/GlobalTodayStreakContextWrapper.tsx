@@ -2,7 +2,7 @@
 import useGetDay from 'actions/day/useGetDay';
 import { useSession } from 'next-auth/react';
 import React, { createContext, useMemo } from 'react';
-import { getAchievedStreaks } from 'utils/getAchievedStreaks';
+import { getDayAchievements } from 'utils/getDayAchievements';
 // =========================
 
 type GlobalTodayStreakContextType = {
@@ -17,7 +17,7 @@ export const GlobalTodayStreakContext = createContext(
 function Context({ children }: { children: React.ReactNode }) {
   const { data: day } = useGetDay(new Date());
 
-  const todayStreak = getAchievedStreaks(day, true);
+  const todayStreak = getDayAchievements(day, true).streak;
   const flatTodayStreak = Math.floor(todayStreak);
 
   const value = useMemo(

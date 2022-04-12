@@ -6,17 +6,54 @@ import {
   faTimesHexagon,
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useGetDays from 'actions/day/useGetDays';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React from 'react';
+import { convertMinutesToHours } from 'utils/convertMinutesToHours';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import styles from './Stats.module.scss';
 // =========================
 
 export default function Stats() {
   const query = useMediaQ('min', 1024);
 
+  // Get today's date using the JavaScript Date object.
+  const lastWeek = new Date();
+
+  // Change it so that it is 7 days in the past.
+  const pastDate = lastWeek.getDate() - 7;
+  lastWeek.setDate(pastDate);
+
+  const { data: days } = useGetDays(lastWeek, new Date());
+
+  const totalDays =
+    days
+      ?.map((d) => getDayAchievements(d).total)
+      .reduce((prev, cur) => prev + cur) || 0;
+
+  const average = totalDays / 7;
+
+  const penaltyDayCount = days?.filter((d) =>
+    d.activities.find((a) => a.penalty && a.count)
+  ).length;
+
+  const streaks = days
+    ?.map((d) => getDayAchievements(d).streak)
+    .reduce((prev, cur) => prev + cur);
+
   const mobileCards = [
-    { name: 'Average (week)', icon: faCalendarWeek, color: 'green', data: 0 },
-    { name: 'Total (week)', icon: faClock, color: 'green', data: 0 },
+    {
+      name: 'Average (week)',
+      icon: faCalendarWeek,
+      color: 'green',
+      data: convertMinutesToHours(average),
+    },
+    {
+      name: 'Total (week)',
+      icon: faClock,
+      color: 'green',
+      data: convertMinutesToHours(totalDays),
+    },
   ];
 
   const desktopCards = [
@@ -24,9 +61,14 @@ export default function Stats() {
       name: 'Penalty days (week)',
       icon: faTimesHexagon,
       color: 'red',
-      data: 0,
+      data: penaltyDayCount,
     },
-    { name: 'Streak count (week)', icon: faFlame, color: 'red', data: 0 },
+    {
+      name: 'Total streaks (week)',
+      icon: faFlame,
+      color: 'red',
+      data: streaks,
+    },
   ];
 
   const cards = query ? [...mobileCards, ...desktopCards] : mobileCards;

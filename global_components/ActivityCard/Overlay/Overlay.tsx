@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { useState } from 'react';
-import { converMinutesToHours } from 'utils/convertMinutesToHours';
+import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
 import ActivityProgress from '../ActivityProgress/ActivityProgress';
 import styles from './Overlay.module.scss';
@@ -43,7 +43,7 @@ export default function Overlay({
   const times = negativeDirection ? -timesState : timesState;
 
   // Get hours and minutes separately
-  const hoursAndMinutes = converMinutesToHours(activity.count)
+  const hoursAndMinutes = convertMinutesToHours(activity.count)
     .split(':')
     .map((string) => parseInt(string));
 

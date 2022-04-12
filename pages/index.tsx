@@ -2,10 +2,10 @@
 import Activities from 'components/dashboard/Activities/Activities';
 import styles from 'components/dashboard/Dashboard.module.scss';
 import SideBar from 'components/dashboard/SideBar/SideBar';
+import Stats from 'components/dashboard/Stats/Stats';
 import TopNav from 'components/dashboard/TopNav/TopNav';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import ValidateEffect from 'global_components/ValidateEffect';
-import useGetDashboardSentence from 'hooks/useGetDashboardSentence';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
@@ -25,9 +25,9 @@ export default function Dashboard() {
   const query = useMediaQ('min', 1500);
   // @ts-ignore
   const desktopQuery = useMediaQ('min', 1175);
+  const tabletQuery = useMediaQ('min', 768);
 
   const queryClient = useQueryClient();
-  const sentence = useGetDashboardSentence();
 
   // Invalidate query if user updated on of day activities and goes to another page
   useEffect(
@@ -47,10 +47,9 @@ export default function Dashboard() {
       </Head>
       <div className={styles.wrapper}>
         {!query && <TopNav />}
+        {!tabletQuery && <Stats />}
         <div className={styles.content}>
-          <div className={styles['title-wrapper']}>
-            <h1 className={styles.title}>{sentence}</h1>
-          </div>
+          {tabletQuery && <Stats />}
           <div className={styles.top}>
             <div className={styles['progress-wrapper']}>
               <ProgressCircle />

@@ -14,7 +14,7 @@ const getMinutes = (mins: number) => {
   return mins;
 };
 
-export const converMinutesToHours = (mins: number) => {
+export const convertMinutesToHours = (mins: number) => {
   const roundedMins = Math.floor(mins);
 
   const totalHours = roundedMins / 60;

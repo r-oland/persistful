@@ -1,6 +1,6 @@
 // Components==============
 import React, { useState } from 'react';
-import { converMinutesToHours } from 'utils/convertMinutesToHours';
+import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import styles from './Slider.module.scss';
 // =========================
 
@@ -52,7 +52,7 @@ export default function Slider({
           left: `calc(${percentage}% - ${offset}px)`,
         }}
       >
-        {time ? converMinutesToHours(value) : value}
+        {time ? convertMinutesToHours(value) : value}
       </p>
     </div>
   );

@@ -1,7 +1,7 @@
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
-import { getAchievedStreaks } from 'utils/getAchievedStreaks';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { getCollection } from 'utils/getMongo';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
@@ -71,8 +71,8 @@ export default async function handler(
 
       // If daily goals weren't achieved, reset the streak
       if (
-        !getAchievedStreaks(yesterday) &&
-        !getAchievedStreaks(dayBeforeYesterday)
+        !getDayAchievements(yesterday).streak &&
+        !getDayAchievements(dayBeforeYesterday).streak
       )
         return await reset();
     } else {
@@ -80,7 +80,7 @@ export default async function handler(
       if (!yesterday) return await reset();
 
       // If daily goal wasn't achieved, reset the streak
-      if (!getAchievedStreaks(yesterday)) return await reset();
+      if (!getDayAchievements(yesterday).streak) return await reset();
     }
 
     //
@@ -130,7 +130,7 @@ export default async function handler(
             // If second change is not used yet, use it
             if (!secondChangeUsed) secondChangeUsed = date1;
             //  there is a gap, grab the next available & valid day as first day
-          } else if (getAchievedStreaks(day2)) firstDateAfterGap = date2;
+          } else if (getDayAchievements(day2).streak) firstDateAfterGap = date2;
         }
       }
     }
@@ -141,7 +141,7 @@ export default async function handler(
     // get index of item that did not achieve goal in order from newest to latest
     const DescendingDayEntities = sortOnCreatedAt(dayEntities, 'desc');
     const indexOfDateThatDidNotAchieveGoal = DescendingDayEntities.findIndex(
-      (d) => !getAchievedStreaks(d)
+      (d) => !getDayAchievements(d).streak
     );
 
     // get date of the item after that index item. (-1 because the array is reversed)
@@ -178,7 +178,7 @@ export default async function handler(
     let totalStreaks = 0;
 
     const bulkArray = generalStreakDays.map((day) => {
-      const sum = getAchievedStreaks(day);
+      const sum = getDayAchievements(day).streak;
       totalStreaks = sum + totalStreaks;
 
       return {
@@ -200,7 +200,7 @@ export default async function handler(
 
     // total sum of all completed streak day cycles
     const total = generalStreakDays
-      .map((day) => getAchievedStreaks(day))
+      .map((day) => getDayAchievements(day).streak)
       .reduce((prev, cur) => prev + cur);
 
     // update streak in user model
@@ -228,7 +228,7 @@ export default async function handler(
 
           return createdDate >= startDate;
         })
-        .map((day) => getAchievedStreaks(day));
+        .map((day) => getDayAchievements(day).streak);
 
       const newValue = reducibleArr.length
         ? reducibleArr.reduce((prev, cur) => prev + cur) -

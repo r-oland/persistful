@@ -7,8 +7,8 @@ import useGetUser from 'actions/user/useGetUser';
 import { GlobalTodayStreakContext } from 'global_components/GlobalTodayStreakContextWrapper';
 import { useCounter } from 'hooks/useCounter';
 import React, { useContext } from 'react';
-import { converMinutesToHours } from 'utils/convertMinutesToHours';
-import { getActivitySum } from 'utils/getActivitySum';
+import { convertMinutesToHours } from 'utils/convertMinutesToHours';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { getProgress } from 'utils/getProgress';
 import Circles from './Circles/Circles';
 import styles from './ProgressCircle.module.scss';
@@ -21,7 +21,7 @@ function CounterTitle({ valueTo }: { valueTo: number }) {
 
   return (
     <h1 style={{ fontSize: progress[2] ? 35 : 40 }}>
-      {converMinutesToHours(counter)}
+      {convertMinutesToHours(counter)}
     </h1>
   );
 }
@@ -32,24 +32,14 @@ export default function ProgressCircle() {
 
   const { todayStreak, flatTodayStreak } = useContext(GlobalTodayStreakContext);
 
-  const persistfulSum = getActivitySum(
-    day?.activities?.filter((a) => !a.penalty)
-  );
-  const penaltySum = getActivitySum(day?.activities?.filter((a) => a.penalty));
+  const { total, bonusScore } = getDayAchievements(day);
 
-  const bonusTime = !penaltySum ? user?.rules.bonusTime || 0 : 0;
-  // mutate bonus time for getProgress function
-  const todayBonusTime = user?.rules.prm
-    ? bonusTime / (user?.rules.dailyGoal || 0)
+  const valueTo = !day ? undefined : total;
+
+  // Calculate percentage of bonus time over daily goal
+  const todayBonusTime = day?.rules.prm
+    ? bonusScore / (day?.rules.dailyGoal || 0)
     : 0;
-
-  const totalSum = user
-    ? Math.floor(
-        user.rules.prm ? persistfulSum + bonusTime : persistfulSum - penaltySum
-      )
-    : 0;
-
-  const valueTo = !day ? undefined : totalSum;
 
   const progress = getProgress(todayStreak);
   const bonusProgress = getProgress(todayBonusTime);
@@ -67,7 +57,7 @@ export default function ProgressCircle() {
           </div>
           <div className={styles.goal}>
             <FontAwesomeIcon icon={faBullseye} />{' '}
-            <p>{converMinutesToHours(user?.rules.dailyGoal || 0)}</p>
+            <p>{convertMinutesToHours(day?.rules.dailyGoal || 0)}</p>
           </div>
         </div>
       </div>

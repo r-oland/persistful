@@ -4,13 +4,15 @@ import useGetDay from 'actions/day/useGetDay';
 import useGetUser from 'actions/user/useGetUser';
 import useValidateStreaks from 'actions/user/useValidateStreaks';
 import { useSession } from 'next-auth/react';
-import React, { useEffect } from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useEffect } from 'react';
 // =========================
 
 function Effect() {
   const { data: user } = useGetUser();
   const validateStreaks = useValidateStreaks();
-  const { data: today, isLoading } = useGetDay(new Date());
+  const { activeDay } = useContext(DashboardContext);
+  const { data: day, isLoading } = useGetDay(activeDay);
   const addDay = useAddDay();
 
   const lastValidationString = user
@@ -20,18 +22,18 @@ function Effect() {
 
   useEffect(() => {
     // Make sure new day is added before dispatching validate streak
-    if (!user || !today) return;
+    if (!user || !day) return;
 
     // set lastValidation when editing previous date
     if (lastValidationString !== todayString) validateStreaks.mutate();
-  }, [lastValidationString, todayString, !!today]);
+  }, [lastValidationString, todayString, !!day]);
 
   // if today's day entity doesn't exists yet, add it
   useEffect(() => {
-    if (isLoading || !!today) return;
+    if (isLoading || !!day) return;
 
     addDay.mutate();
-  }, [!!today, isLoading]);
+  }, [!!day, isLoading]);
 
   return null;
 }

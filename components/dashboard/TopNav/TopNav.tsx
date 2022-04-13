@@ -1,6 +1,10 @@
 // Components==============
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
-import { faFlame } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faChevronLeft,
+  faChevronRight,
+  faFlame,
+} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -10,7 +14,8 @@ import RewardCard from 'global_components/RewardCard/RewardCard';
 import RewardModal from 'global_components/RewardModal/RewardModal';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import React, { useRef, useState } from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useRef, useState } from 'react';
 import { framerFade } from 'utils/framerAnimations';
 import { getMonthString } from 'utils/getMonthString';
 import styles from './TopNav.module.scss';
@@ -46,10 +51,11 @@ function RewardTooltip({
 }
 
 export default function TopNav() {
-  const today = new Date();
-  const day = today.getDate();
-  const month = getMonthString(today.getMonth());
-  const year = today.getUTCFullYear();
+  const { activeDay, setActiveDay } = useContext(DashboardContext);
+
+  const day = activeDay.getDate();
+  const month = getMonthString(activeDay.getMonth());
+  const year = activeDay.getUTCFullYear();
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -75,6 +81,29 @@ export default function TopNav() {
             <p>
               {day} {month} {year}
             </p>
+            <FontAwesomeIcon
+              icon={faChevronLeft}
+              onClick={() =>
+                setActiveDay((prev) => {
+                  const yesterdayDate = new Date(
+                    prev.getTime() - 24 * 60 * 60 * 1000
+                  );
+
+                  return yesterdayDate;
+                })
+              }
+            />
+            <FontAwesomeIcon
+              icon={faChevronRight}
+              onClick={() =>
+                setActiveDay((prev) => {
+                  const tomorrowDate = new Date(
+                    prev.getTime() + 24 * 60 * 60 * 1000
+                  );
+                  return tomorrowDate;
+                })
+              }
+            />
           </div>
           <div className={styles.reward}>
             <div

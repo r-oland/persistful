@@ -35,7 +35,7 @@ export default async function handler(
       if (rangeDates.length) return res.status(200).send(rangeDates);
 
       // else return nothing
-      return res.status(204).send({ message: 'No entities in this range' });
+      return res.status(200).send(undefined);
     }
   } catch (err: any) {
     console.error(err);

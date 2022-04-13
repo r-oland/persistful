@@ -3,11 +3,13 @@ import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
+import useUpdateUser from 'actions/user/useUpdateUser';
 import { AnimatePresence } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import React, { useEffect, useRef, useState } from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
 import { getActivityPercentage } from 'utils/getActivityPercentage';
 import styles from './ActivityCard.module.scss';
@@ -42,9 +44,12 @@ export default function EditableActivityCard({
 }: {
   activity: ActivityEntity;
 }) {
-  const { data: day } = useGetDay(new Date());
   const [displayOverlay, setDisplayOverlay] = useState(false);
   const updateActivityCount = useUpdateActivityCount();
+  const updateUser = useUpdateUser();
+
+  const { activeDay } = useContext(DashboardContext);
+  const { data: day } = useGetDay(activeDay);
 
   const query = useMediaQ('min', 525);
 
@@ -108,7 +113,16 @@ export default function EditableActivityCard({
                     activityId: activity._id,
                     value,
                   })
-                  .then(() => setDisplayOverlay(false));
+                  .then(() => {
+                    setDisplayOverlay(false);
+
+                    const todayStamp = new Date().toLocaleDateString();
+                    const activeDayStamp = activeDay.toLocaleDateString();
+
+                    // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
+                    if (todayStamp !== activeDayStamp)
+                      return updateUser.mutate({ lastValidation: activeDay });
+                  });
               }}
               activity={activity}
               percentage={percentage}

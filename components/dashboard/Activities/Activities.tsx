@@ -4,7 +4,8 @@ import useGetDay from 'actions/day/useGetDay';
 import ActivityCard from 'global_components/ActivityCard/ActivityCard';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React, { useRef, useState } from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useRef, useState } from 'react';
 import styles from './Activities.module.scss';
 // =========================
 
@@ -84,7 +85,8 @@ const getThreeItemClasses = (items: any[], i = 0, query = true) =>
 export default function Activities() {
   const { data: activityEntities } = useGetActivities();
 
-  const { data: day } = useGetDay(new Date());
+  const { activeDay } = useContext(DashboardContext);
+  const { data: day } = useGetDay(activeDay);
 
   const query = useMediaQ('min', 768);
 

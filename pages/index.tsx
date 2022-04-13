@@ -5,7 +5,7 @@ import SideBar from 'components/dashboard/SideBar/SideBar';
 import Stats from 'components/dashboard/Stats/Stats';
 import TopNav from 'components/dashboard/TopNav/TopNav';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
-import ValidateEffect from 'global_components/ValidateEffect';
+import ValidateEffect from 'components/dashboard/ValidateEffect';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
@@ -14,6 +14,8 @@ import { useQueryClient } from 'react-query';
 
 type DashboardContextType = {
   setInvalidateActivitiesQuery: React.Dispatch<React.SetStateAction<boolean>>;
+  activeDay: Date;
+  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
 };
 
 export const DashboardContext = createContext({} as DashboardContextType);
@@ -38,7 +40,12 @@ export default function Dashboard() {
     [invalidateActivitiesQuery]
   );
 
-  const value = useMemo(() => ({ setInvalidateActivitiesQuery }), []);
+  const [activeDay, setActiveDay] = useState(new Date());
+
+  const value = useMemo(
+    () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),
+    [activeDay]
+  );
 
   return (
     <DashboardContext.Provider value={value}>

@@ -41,11 +41,14 @@ export default async function handler(
       const user = await users.findOne({ _id });
       if (!user) return;
 
+      // get current active date from request
+      const activeDate = req.body as Date;
+
       // Add new day entity
       const result = await days.insertOne({
         activities: activitySnapshot,
         userId,
-        createdAt: new Date(),
+        createdAt: new Date(activeDate),
         rules: user.rules,
       });
 

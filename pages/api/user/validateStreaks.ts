@@ -89,9 +89,9 @@ export default async function handler(
 
     // Get all days except for today
     const dayEntitiesGetter = await days.find({ userId }).toArray();
-    const dayEntities = dayEntitiesGetter.filter(
-      (d, i) => i !== dayEntitiesGetter.length - 1
-    );
+    const dayEntities = dayEntitiesGetter
+      .filter((d, i) => i !== dayEntitiesGetter.length - 1)
+      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
 
     // First date after a gap is found in the day entities
     let firstDateAfterGap;

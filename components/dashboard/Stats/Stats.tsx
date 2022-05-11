@@ -20,8 +20,8 @@ export default function Stats() {
   // Get today's date using the JavaScript Date object.
   const lastWeek = new Date();
 
-  // Change it so that it is 7 days in the past.
-  const pastDate = lastWeek.getDate() - 7;
+  // Change it so that it is 6 days in the past. -> not 7 because today also counts
+  const pastDate = lastWeek.getDate() - 6;
   lastWeek.setDate(pastDate);
 
   const { data: days } = useGetDays(lastWeek, new Date());
@@ -61,7 +61,7 @@ export default function Stats() {
       name: 'Penalty days (week)',
       icon: faTimesHexagon,
       color: 'red',
-      data: penaltyDayCount,
+      data: `${penaltyDayCount} / ${days?.length}`,
     },
     {
       name: 'Total streaks (week)',

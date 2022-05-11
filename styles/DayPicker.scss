@@ -1,0 +1,77 @@
+@import 'styles/Variables';
+
+:root {
+  --rdp-cell-size: 29.5px;
+  --rdp-accent-color: #18e597;
+  --rdp-background-color: #e8fcf5;
+  /* Outline border for focused elements */
+  --rdp-outline: none;
+  /* Outline border for focused and selected elements */
+  --rdp-outline-selected: none;
+}
+
+.rdp {
+  margin: 0;
+  margin-left: -11px;
+
+  .rdp-nav {
+    margin-right: $spacing1;
+
+    button {
+      border-radius: 0;
+      transition: 0.2s;
+      color: $black;
+      svg {
+        width: 14px;
+        height: 14px;
+      }
+
+      &:hover {
+        color: $green-dark;
+        &:disabled {
+          color: $black;
+        }
+      }
+
+      &:hover,
+      &:focus {
+        background-color: initial;
+      }
+    }
+  }
+
+  .rdp-day_today {
+    color: $green;
+  }
+
+  .rdp-caption_label {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: $spacing2;
+    font-size: $font-paragraph;
+    @include underline;
+  }
+
+  .rdp-head_cell {
+    font-size: $font-small;
+    text-transform: initial;
+    color: $grey;
+    font-weight: $weight-semi-bold;
+  }
+
+  .rdp-day {
+    font-weight: $weight-bold;
+    font-size: $font-small;
+    border-radius: $border-radius;
+  }
+
+  .rdp-cell {
+    padding: 5px 8px;
+  }
+
+  .rdp-day_selected {
+    transition: 0.2s;
+    color: $white;
+    box-shadow: -3px 3px 0px $black;
+  }
+}

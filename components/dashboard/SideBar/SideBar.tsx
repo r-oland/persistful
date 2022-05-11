@@ -1,6 +1,7 @@
 // Components==============
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { AnimatePresence } from 'framer-motion';
+import Calendar from 'global_components/Calendar/Calendar';
 import SideBarWrapper from 'global_components/LayoutWrappers/SideBarWrapper/SideBarWrapper';
 import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
@@ -17,15 +18,18 @@ export default function SideBar() {
     <>
       <SideBarWrapper>
         <div className={styles.wrapper}>
-          <h3 className={styles.title}>Next reward</h3>
-          {activeReward ? (
-            <RewardCard
-              reward={activeReward}
-              setModalIsOpen={setRewardModalIsOpen}
-            />
-          ) : (
-            <NewRewardCard setModalIsOpen={setRewardModalIsOpen} />
-          )}
+          <Calendar />
+          <div>
+            <h3 className={styles.title}>Next reward</h3>
+            {activeReward ? (
+              <RewardCard
+                reward={activeReward}
+                setModalIsOpen={setRewardModalIsOpen}
+              />
+            ) : (
+              <NewRewardCard setModalIsOpen={setRewardModalIsOpen} />
+            )}
+          </div>
         </div>
       </SideBarWrapper>
       <AnimatePresence>

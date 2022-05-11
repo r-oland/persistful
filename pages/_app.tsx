@@ -7,10 +7,13 @@ import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import React from 'react';
+import 'react-day-picker/dist/style.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
 import { fontawesomeHelper } from 'utils/fontawesomeHelper';
+import 'styles/DayPicker.scss';
+
 // =========================
 
 fontawesomeHelper();

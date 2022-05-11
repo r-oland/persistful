@@ -40,7 +40,7 @@ export default function Dashboard() {
     [invalidateActivitiesQuery]
   );
 
-  const [activeDay, setActiveDay] = useState(new Date());
+  const [activeDay, setActiveDay] = useState<Date>(new Date());
 
   const value = useMemo(
     () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),

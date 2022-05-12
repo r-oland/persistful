@@ -1,7 +1,7 @@
 // Components==============
 import { faArrowLeft } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import TopNavWrapper from 'global_components/LayoutWrappers/TopNavWrapper/TopNavWrapper';
+import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import { useRouter } from 'next/router';
 import React from 'react';
 import styles from './TopNav.module.scss';

@@ -1,5 +1,5 @@
 // Components==============
-import TopNavWrapper from 'global_components/LayoutWrappers/TopNavWrapper/TopNavWrapper';
+import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { settingsContext, SettingSelectedType } from 'pages/settings';
 import React, { useContext } from 'react';

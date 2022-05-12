@@ -87,8 +87,15 @@ export default async function handler(
     // * Now it's clear that there is a streak, so we need to calculate it. *
     //
 
-    // Get all days except for today
-    const dayEntitiesGetter = await days.find({ userId }).toArray();
+    // Get all days except for today (today is calculated in front end)
+    const dayEntitiesGetter = await days
+      .find({
+        userId,
+        // exclude today
+        createdAt: { $lt: new Date(new Date().setUTCHours(0, 0, 0, 0)) },
+      })
+      .toArray();
+
     const dayEntities = dayEntitiesGetter
       .filter((d, i) => i !== dayEntitiesGetter.length - 1)
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());

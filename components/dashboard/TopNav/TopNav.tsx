@@ -4,55 +4,27 @@ import { faFlame } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { format } from 'date-fns';
-import { AnimatePresence, motion } from 'framer-motion';
-import TopNavWrapper from 'global_components/LayoutWrappers/TopNavWrapper/TopNavWrapper';
-import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
-import RewardCard from 'global_components/RewardCard/RewardCard';
+import { AnimatePresence } from 'framer-motion';
+import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import RewardModal from 'global_components/RewardModal/RewardModal';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
-import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import { useMediaQ } from 'hooks/useMediaQ';
 import { DashboardContext } from 'pages';
-import React, { useContext, useRef, useState } from 'react';
-import { framerFade } from 'utils/framerAnimations';
+import React, { useContext, useEffect, useState } from 'react';
+import Items from './Items/Items';
 import styles from './TopNav.module.scss';
 // =========================
 
-function RewardTooltip({
-  activeReward,
-  setTooltipIsOpen,
-  setModalIsOpen,
-  buttonRef,
-}: {
-  activeReward?: RewardEntity;
-  setTooltipIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  buttonRef: React.RefObject<HTMLDivElement>;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-
-  useOnClickOutside({
-    refs: [ref, buttonRef],
-    handler: () => setTooltipIsOpen(false),
-  });
-
-  return (
-    <motion.div {...framerFade} className={styles['reward-tooltip']} ref={ref}>
-      {activeReward ? (
-        <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
-      ) : (
-        <NewRewardCard setModalIsOpen={setModalIsOpen} />
-      )}
-    </motion.div>
-  );
-}
+export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
 
 export default function TopNav() {
   const { activeDay } = useContext(DashboardContext);
 
-  const ref = useRef<HTMLDivElement>(null);
-
+  const [selected, setSelected] = useState<TopNavSelectedOption>('none');
   const [rewardModalIsOpen, setRewardModalIsOpen] = useState(false);
-  const [rewardTooltipIsOpen, setRewardTooltipIsOpen] = useState(false);
+
+  // @ts-ignore
+  const query = useMediaQ('min', 825);
 
   const { data: activeReward } = useGetActiveReward();
 
@@ -64,43 +36,51 @@ export default function TopNav() {
       : totalCompleted
     : 0;
 
+  useEffect(() => {
+    if (selected === 'bar' && !query) return setSelected('none');
+    if (selected === 'calendar' || (selected === 'streak' && query))
+      return setSelected('none');
+  }, [query]);
+
   return (
     <>
       <TopNavWrapper>
-        <div className={styles.wrapper}>
-          <div className={styles.date}>
+        <div
+          className={styles.wrapper}
+          onClick={query ? () => setSelected('bar') : undefined}
+          style={{
+            cursor: query && selected === 'none' ? 'pointer' : 'default',
+          }}
+        >
+          <div className={styles.date} onClick={() => setSelected('calendar')}>
             <FontAwesomeIcon icon={faCalendarDay} />
             <p>{format(activeDay, 'dd MMMM yyyy')}</p>
           </div>
-          <div className={styles.reward}>
-            <div
-              onClick={() => setRewardTooltipIsOpen((prev) => !prev)}
-              ref={ref}
-            >
-              <FontAwesomeIcon icon={faFlame} />
-              {!!activeReward && (
-                <div
-                  className={`${styles.counter} ${
-                    activeReward?.totalCycles === completedCycles
-                      ? styles.completed
-                      : ''
-                  }`}
-                >
-                  <p>{activeReward ? completedCycles : 0}</p>
-                </div>
-              )}
-            </div>
-            <AnimatePresence>
-              {rewardTooltipIsOpen && (
-                <RewardTooltip
-                  activeReward={activeReward}
-                  setTooltipIsOpen={setRewardTooltipIsOpen}
-                  setModalIsOpen={setRewardModalIsOpen}
-                  buttonRef={ref}
-                />
-              )}
-            </AnimatePresence>
+          <div className={styles.reward} onClick={() => setSelected('streak')}>
+            <FontAwesomeIcon icon={faFlame} />
+            {!!activeReward && (
+              <div
+                className={`${styles.counter} ${
+                  activeReward?.totalCycles === completedCycles
+                    ? styles.completed
+                    : ''
+                }`}
+              >
+                <p>{activeReward ? completedCycles : 0}</p>
+              </div>
+            )}
           </div>
+          <AnimatePresence>
+            {selected !== 'none' && (
+              <Items
+                activeReward={activeReward}
+                selected={selected}
+                setSelected={setSelected}
+                rewardModalIsOpen={rewardModalIsOpen}
+                setRewardModalIsOpen={setRewardModalIsOpen}
+              />
+            )}
+          </AnimatePresence>
         </div>
       </TopNavWrapper>
       <AnimatePresence>

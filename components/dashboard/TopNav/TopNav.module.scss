@@ -3,8 +3,10 @@
 .wrapper {
   display: grid;
   align-items: center;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: auto auto;
+  justify-content: space-between;
   padding: 0 $spacing5;
+  position: relative;
 
   @media screen and (min-width: $tablet) {
     padding: 0 $spacing11;
@@ -51,18 +53,6 @@
         font-size: $font-tiny;
         font-weight: $weight-semi-bold;
       }
-    }
-
-    .reward-tooltip {
-      width: 365px;
-      padding: $spacing6;
-      border: 1px solid $grey-light;
-      border-radius: $border-radius;
-      position: absolute;
-      z-index: 10;
-      top: $spacing7;
-      right: 0;
-      background-color: $white;
     }
   }
 }

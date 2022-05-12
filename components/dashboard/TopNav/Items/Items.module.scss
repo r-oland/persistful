@@ -1,0 +1,41 @@
+@import 'styles/Variables';
+
+.wrapper {
+  position: absolute;
+  z-index: 10;
+  width: 100%;
+  padding: $spacing9 $spacing10;
+  border-bottom: $border-light;
+  top: 0;
+  left: 0;
+  background-color: $white;
+
+  &.bar {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: space-between;
+  }
+
+  &.streak,
+  &.calendar {
+    display: grid;
+    justify-content: center;
+  }
+
+  &.none {
+    display: grid;
+  }
+}
+
+.reward {
+  width: 300px;
+
+  .title {
+    margin-bottom: $spacing5;
+    text-align: center;
+
+    @media screen and (min-width: $tablet) {
+      text-align: initial;
+    }
+  }
+}

@@ -1,5 +1,6 @@
 // Components==============
-import React from 'react';
+import { useOnClickOutside } from 'hooks/useOnClickOutside';
+import React, { useRef, useState } from 'react';
 import styles from './Input.module.scss';
 // =========================
 
@@ -10,6 +11,7 @@ export default function Input({
   placeholder,
   color = 'green',
   required = true,
+  onClickOutside,
 }: {
   type?: string;
   value: string;
@@ -17,13 +19,29 @@ export default function Input({
   placeholder: string;
   color?: 'red' | 'green';
   required?: boolean;
+  onClickOutside?: (e: any) => void;
 }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useOnClickOutside({
+    refs: [ref],
+    handler: (e) => {
+      setIsEditing(false);
+      if (onClickOutside) onClickOutside(e);
+    },
+    condition: !!onClickOutside && isEditing,
+  });
+
   return (
-    <div className={`${styles.wrapper} ${styles[color]}`}>
+    <div className={`${styles.wrapper} ${styles[color]}`} ref={ref}>
       <input
         type={type}
         value={value}
-        onChange={onChange}
+        onChange={(e) => {
+          setIsEditing(true);
+          onChange(e);
+        }}
         placeholder={placeholder}
         required={required}
       />

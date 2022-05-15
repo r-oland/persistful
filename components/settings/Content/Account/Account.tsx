@@ -1,5 +1,5 @@
 // Components==============
-import { faSave, faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
+import { faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
@@ -27,25 +27,23 @@ export default function Account() {
   };
 
   return (
-    <form className={styles.wrapper} onSubmit={handleSubmit}>
+    <div className={styles.wrapper}>
       <div>
-        <p className={styles['sub-title']}>First name</p>
+        <strong>First name</strong>
         <Input
           value={name}
           onChange={(e) =>
             setSaveObject((prev) => ({ ...prev, firstName: e.target.value }))
           }
           placeholder="Don Joe"
+          onClickOutside={handleSubmit}
         />
       </div>
       <div className={styles.buttons}>
         <Button color="red" onClick={() => signOut()}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </Button>
-        <Button color="green" submit>
-          <FontAwesomeIcon icon={faSave} /> Save
-        </Button>
       </div>
-    </form>
+    </div>
   );
 }

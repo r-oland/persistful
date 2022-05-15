@@ -4,9 +4,13 @@
   display: grid;
   gap: $spacing4;
 
-  .sub-title {
-    font-weight: $weight-bold;
+  strong,
+  p {
     font-size: $font-small;
+  }
+
+  strong {
+    display: block;
     margin-bottom: $spacing2;
   }
 

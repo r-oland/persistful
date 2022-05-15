@@ -2,7 +2,6 @@ import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
-import { getDifferenceInDays } from 'utils/getDifferenceInDays';
 import { getCollection } from 'utils/getMongo';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
@@ -66,7 +65,7 @@ export default async function handler(
         },
       });
 
-      // If there is no entry from yesterday or the day before that reset the streak
+      // If there is no entry from yesterday and the day before that reset the streak
       if (!yesterday && !dayBeforeYesterday) return await reset();
 
       // If daily goals weren't achieved, reset the streak
@@ -96,67 +95,52 @@ export default async function handler(
       })
       .toArray();
 
-    const dayEntities = dayEntitiesGetter
-      .filter((d, i) => i !== dayEntitiesGetter.length - 1)
-      .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
+    const dayEntities = sortOnCreatedAt([...dayEntitiesGetter], 'asc');
 
-    // First date after a gap is found in the day entities
-    let firstDateAfterGap;
-    let secondChangeUsed;
+    const descendingDayEntities = sortOnCreatedAt(
+      [...dayEntitiesGetter],
+      'desc'
+    );
 
-    // Check if there are any gaps in between dates;
-    for (let i = 0; i < dayEntities.length; i++) {
-      const day1 = dayEntities?.[i];
-      const day2 = dayEntities?.[i + 1];
-      const date1 = day1?.createdAt;
-      // if day2 doesn't exist we can assume it's the current date (because we filtered it earlier)
-      const date2 = day2?.createdAt || new Date();
+    // // First date after a gap is found in the day entities
+    // let firstDateAfterGap;
 
-      if (date2 && date1) {
-        const differenceInDays = getDifferenceInDays(date1, date2);
+    // // Check if there are any gaps in between dates;
+    // for (let i = 0; i < dayEntities.length; i++) {
+    //   const day1 = dayEntities?.[i];
+    //   const day2 = dayEntities?.[i + 1];
+    //   const date1 = setHours(day1.createdAt, 12);
+    //   // if day2 doesn't exist we can assume it's the current date (because we filtered it earlier)
+    //   const date2 = setHours(day2?.createdAt || new Date(), 12);
 
-        // if diff is > 1, you have missing days, this means that the streak is invalid so you should pick the day available
-        if (differenceInDays > 1) {
-          // if there is a difference of 2 and second change mode is on, check if this can be ignored
-          if (differenceInDays === 2 && (day2 || day1)?.rules.secondChange) {
-            // Check if there was a second change used in the last 7 days, if there wasn't set new second change date
-            if (
-              secondChangeUsed &&
-              getDifferenceInDays(secondChangeUsed, date1) >= 7
-            )
-              secondChangeUsed = date1;
+    //   if (!date2 || !date1) return;
 
-            // if second change was already used and the week isn't over, set first date after gap
-            if (
-              secondChangeUsed &&
-              getDifferenceInDays(secondChangeUsed, date1) !== 0 &&
-              getDifferenceInDays(secondChangeUsed, date1) < 7
-            )
-              firstDateAfterGap = date2;
+    //   const hourDifference = differenceInHours(date1, date2);
 
-            // If second change is not used yet, use it
-            if (!secondChangeUsed) secondChangeUsed = date1;
-            //  there is a gap, grab the next available & valid day as first day
-          } else if (getDayAchievements(day2).streak) firstDateAfterGap = date2;
-        }
-      }
-    }
+    //   console.log(date1, date2, hourDifference);
+
+    //   // Their are missing days. Check if day 2 has a streak, if it does set it as the first valid day
+    //   if (hourDifference > 24 && getDayAchievements(day2).streak) {
+    //     firstDateAfterGap = date2;
+    //   }
+    // }
 
     // The first day entity post
     const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
     // get index of item that did not achieve goal in order from newest to latest
-    const DescendingDayEntities = sortOnCreatedAt(dayEntities, 'desc');
-    const indexOfDateThatDidNotAchieveGoal = DescendingDayEntities.findIndex(
+    const indexOfDateThatDidNotAchieveGoal = descendingDayEntities.findIndex(
       (d) => !getDayAchievements(d).streak
     );
 
     // get date of the item after that index item. (-1 because the array is reversed)
     const dateThatDidNotAchieveGoal =
-      DescendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
+      descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
 
     // all possible dates of first item
-    const dates = [firstDate, dateThatDidNotAchieveGoal, firstDateAfterGap];
+    const dates = [firstDate, dateThatDidNotAchieveGoal];
+
+    console.log(dates);
 
     //  sort all dates and grab the most recent one
     const startDateGeneralStreak =
@@ -166,20 +150,18 @@ export default async function handler(
       )[0] || new Date();
 
     // day entities that are used for calculating the general streak
-    const generalStreakDays = sortOnCreatedAt(dayEntities, 'asc').filter(
-      (d) => {
-        // Equalize hours to make sure that same days match
-        const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
-        const startDate = new Date(startDateGeneralStreak).setUTCHours(
-          12,
-          0,
-          0,
-          0
-        );
+    const generalStreakDays = dayEntities.filter((d) => {
+      // Equalize hours to make sure that same days match
+      const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
+      const startDate = new Date(startDateGeneralStreak).setUTCHours(
+        12,
+        0,
+        0,
+        0
+      );
 
-        return createdDate >= startDate;
-      }
-    );
+      return createdDate >= startDate;
+    });
 
     // generate array for bulk write
     let totalStreaks = 0;
@@ -222,7 +204,7 @@ export default async function handler(
           ? activeReward.createdAt
           : startDateGeneralStreak;
 
-      const reducibleArr = sortOnCreatedAt(dayEntities, 'asc')
+      const reducibleArr = dayEntities
         .filter((d) => {
           // Equalize hours to make sure that same days match
           const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
@@ -258,7 +240,7 @@ export default async function handler(
       );
     }
 
-    return res.status(200).send({ messsage: 'streaks updated' });
+    return res.status(200).send({ message: 'streaks updated' });
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

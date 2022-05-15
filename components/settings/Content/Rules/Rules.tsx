@@ -34,8 +34,8 @@ export default function Rules() {
           time
         />
       </div>
-      {/* <div>
-        <strong>Second chance</strong>
+      <div>
+        <strong>Second chance mode</strong>
         <Checkbox
           initialValue={rules.secondChange}
           onClick={(secondChange) => updateRules({ secondChange })}
@@ -44,7 +44,7 @@ export default function Rules() {
             You're allowed to miss 1 day a weak without breaking your streak.
           </p>
         </Checkbox>
-      </div> */}
+      </div>
       <div>
         <strong>Positive reinforcement mode</strong>
         <Checkbox

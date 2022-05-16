@@ -13,6 +13,4 @@ type DayEntity = {
   createdAt: Date;
   // For persisting history
   rules: RulesEntity;
-  streakCount?: number;
-  //
 };

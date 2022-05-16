@@ -190,30 +190,6 @@ export default async function handler(
       return createdDate >= startDate;
     });
 
-    // generate array for bulk write
-    let totalStreaks = 0;
-
-    const bulkArray = generalStreakDays.map((day) => {
-      const sum = getDayAchievements(day).streak;
-      totalStreaks = sum + totalStreaks;
-
-      return {
-        updateOne: {
-          filter: {
-            _id: day._id,
-          },
-          update: {
-            $set: {
-              streakCount: totalStreaks,
-            },
-          },
-        },
-      };
-    });
-
-    // add streakCount to each day for history persistance
-    await days.bulkWrite(bulkArray);
-
     // total sum of all completed streak day cycles
     const total = generalStreakDays
       .map((day) => getDayAchievements(day).streak)

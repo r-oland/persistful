@@ -1,3 +1,4 @@
+import { differenceInDays, differenceInHours } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
@@ -102,45 +103,76 @@ export default async function handler(
       'desc'
     );
 
-    // // First date after a gap is found in the day entities
-    // let firstDateAfterGap;
-
-    // // Check if there are any gaps in between dates;
-    // for (let i = 0; i < dayEntities.length; i++) {
-    //   const day1 = dayEntities?.[i];
-    //   const day2 = dayEntities?.[i + 1];
-    //   const date1 = setHours(day1.createdAt, 12);
-    //   // if day2 doesn't exist we can assume it's the current date (because we filtered it earlier)
-    //   const date2 = setHours(day2?.createdAt || new Date(), 12);
-
-    //   if (!date2 || !date1) return;
-
-    //   const hourDifference = differenceInHours(date1, date2);
-
-    //   console.log(date1, date2, hourDifference);
-
-    //   // Their are missing days. Check if day 2 has a streak, if it does set it as the first valid day
-    //   if (hourDifference > 24 && getDayAchievements(day2).streak) {
-    //     firstDateAfterGap = date2;
-    //   }
-    // }
-
     // The first day entity post
     const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
-    // get index of item that did not achieve goal in order from newest to latest
+    // array of new dates that will be stored in user object
+    let secondChanceDates: Date[] = [];
+
+    // get index of item that did not achieve goal
     const indexOfDateThatDidNotAchieveGoal = descendingDayEntities.findIndex(
-      (d) => !getDayAchievements(d).streak
+      (d, i) => {
+        const noStreak = !getDayAchievements(d).streak;
+
+        // The first entity where the streak wasn't achieved
+        if (!d?.rules.secondChange) return noStreak;
+
+        /* 
+          handle second change 
+        */
+
+        // the day has a streak so it can be ignored
+        if (!noStreak) return false;
+
+        const dayBeforeNoStreakDay = descendingDayEntities[i + 1];
+
+        const date1 = new Date(d.createdAt.setUTCHours(12, 0, 0, 0));
+        const date2 = new Date(
+          dayBeforeNoStreakDay?.createdAt.setUTCHours(12, 0, 0, 0)
+        );
+
+        if (!date2 || !date1) return false;
+
+        const hourDifference = differenceInHours(date1, date2);
+
+        // Day has no streak and the day before it also has no streak
+        if (hourDifference > 24) return false;
+
+        // Check if date was used in the secondChanceDates array
+        const dateAlreadyHadASecondChange = !!secondChanceDates?.find(
+          (date) =>
+            date.toLocaleDateString() === d.createdAt.toLocaleDateString()
+        );
+
+        // Day used a second change in the past
+        if (dateAlreadyHadASecondChange) return false;
+
+        const secondChanceWasUsedLastWeek = secondChanceDates.length
+          ? !!secondChanceDates.find(
+              (scd) => differenceInDays(scd, d.createdAt) < 7
+            )
+          : // No second change dates have been used at all
+            false;
+
+        // Day before no streak day has a streak and can use secondChange
+        if (!secondChanceWasUsedLastWeek) {
+          // add new secondChange entity to array
+          secondChanceDates = [...secondChanceDates, d.createdAt];
+
+          // second change is used for this date -> it can be skipped
+          return false;
+        }
+
+        // No conditions met -> Day has no streak and could not use a second change
+        return true;
+      }
     );
 
-    // get date of the item after that index item. (-1 because the array is reversed)
-    const dateThatDidNotAchieveGoal =
+    const dateAfterDateThatDidNotAchieveGoal =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
 
     // all possible dates of first item
-    const dates = [firstDate, dateThatDidNotAchieveGoal];
-
-    console.log(dates);
+    const dates = [firstDate, dateAfterDateThatDidNotAchieveGoal];
 
     //  sort all dates and grab the most recent one
     const startDateGeneralStreak =

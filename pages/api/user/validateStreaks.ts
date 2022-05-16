@@ -32,7 +32,10 @@ export default async function handler(
 
     // Helper func that resets streaks
     const reset = async () => {
-      await users.updateOne({ _id }, { $set: { streak: 0 } });
+      await users.updateOne(
+        { _id },
+        { $set: { streak: 0, lastSecondChance: undefined } }
+      );
       if (activeReward)
         await rewards.updateOne(
           { _id: activeRewardId },
@@ -137,15 +140,6 @@ export default async function handler(
         // Day has no streak and the day before it also has no streak
         if (hourDifference > 24) return false;
 
-        // Check if date was used in the secondChanceDates array
-        const dateAlreadyHadASecondChange = !!secondChanceDates?.find(
-          (date) =>
-            date.toLocaleDateString() === d.createdAt.toLocaleDateString()
-        );
-
-        // Day used a second change in the past
-        if (dateAlreadyHadASecondChange) return false;
-
         const secondChanceWasUsedLastWeek = secondChanceDates.length
           ? !!secondChanceDates.find(
               (scd) => differenceInDays(scd, d.createdAt) < 7
@@ -162,10 +156,17 @@ export default async function handler(
           return false;
         }
 
-        // No conditions met -> Day has no streak and could not use a second change
+        // No conditions met -> dayBeforeNoStreakDay has a streak but could not use a second change
         return true;
       }
     );
+
+    // Get last second chance entity (can be undefined)
+    const lastSecondChance =
+      secondChanceDates?.[(secondChanceDates?.length || 0) - 1];
+
+    // Set last second chance in user object so it can be displayed in the front end
+    await users.updateOne({ _id }, { $set: { lastSecondChance } });
 
     const dateAfterDateThatDidNotAchieveGoal =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;

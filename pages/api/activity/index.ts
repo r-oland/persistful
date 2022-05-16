@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getCollection } from 'utils/getMongo';
+import { setDateTime } from 'utils/setDateTime';
 
 export default async function handler(
   req: NextApiRequest,
@@ -61,8 +62,8 @@ export default async function handler(
         .then(async (r) => {
           // Add new activity entity to today's day entity
           const days = await getCollection<DayEntity>('days');
-          const start = new Date(new Date().setUTCHours(0, 0, 0, 0));
-          const end = new Date(new Date().setUTCHours(23, 59, 59, 999));
+          const start = setDateTime(new Date(), 'start');
+          const end = setDateTime(new Date(), 'end');
 
           const today = await days.findOne({
             userId: session.user.uid,

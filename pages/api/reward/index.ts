@@ -5,6 +5,7 @@ import { checkAuth } from 'utils/checkAuth';
 import { formDataParser } from 'utils/formDataParser';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
+import { setDateTime } from 'utils/setDateTime';
 
 // disable the default body parser
 export const config = {
@@ -44,8 +45,8 @@ export default async function handler(
       const today = await days.findOne({
         userId,
         createdAt: {
-          $gte: new Date(new Date().setUTCHours(0, 0, 0, 0)),
-          $lt: new Date(new Date().setUTCHours(23, 59, 59, 999)),
+          $gte: setDateTime(new Date(), 'start'),
+          $lt: setDateTime(new Date(), 'end'),
         },
       });
 

@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
+import { setDateTime } from 'utils/setDateTime';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
 export default async function handler(
@@ -48,8 +49,8 @@ export default async function handler(
     const yesterday = await days.findOne({
       userId,
       createdAt: {
-        $gte: new Date(yesterdayDate.setUTCHours(0, 0, 0, 0)),
-        $lt: new Date(yesterdayDate.setUTCHours(23, 59, 59, 999)),
+        $gte: setDateTime(yesterdayDate, 'start'),
+        $lt: setDateTime(yesterdayDate, 'end'),
       },
     });
 
@@ -61,8 +62,8 @@ export default async function handler(
       const dayBeforeYesterday = await days.findOne({
         userId,
         createdAt: {
-          $gte: new Date(dayBeforeYesterdayDate.setUTCHours(0, 0, 0, 0)),
-          $lt: new Date(dayBeforeYesterdayDate.setUTCHours(23, 59, 59, 999)),
+          $gte: setDateTime(dayBeforeYesterdayDate, 'start'),
+          $lt: setDateTime(dayBeforeYesterdayDate, 'end'),
         },
       });
 
@@ -92,7 +93,7 @@ export default async function handler(
       .find({
         userId,
         // exclude today
-        createdAt: { $lt: new Date(new Date().setUTCHours(0, 0, 0, 0)) },
+        createdAt: { $lt: setDateTime(new Date(), 'start') },
       })
       .toArray();
 
@@ -126,10 +127,8 @@ export default async function handler(
 
         const dayBeforeNoStreakDay = descendingDayEntities[i + 1];
 
-        const date1 = new Date(d.createdAt.setUTCHours(12, 0, 0, 0));
-        const date2 = new Date(
-          dayBeforeNoStreakDay?.createdAt.setUTCHours(12, 0, 0, 0)
-        );
+        const date1 = setDateTime(d.createdAt, 'middle');
+        const date2 = setDateTime(dayBeforeNoStreakDay?.createdAt, 'middle');
 
         if (!date2 || !date1) return false;
 
@@ -184,13 +183,8 @@ export default async function handler(
     // day entities that are used for calculating the general streak
     const generalStreakDays = dayEntities.filter((d) => {
       // Equalize hours to make sure that same days match
-      const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
-      const startDate = new Date(startDateGeneralStreak).setUTCHours(
-        12,
-        0,
-        0,
-        0
-      );
+      const createdDate = setDateTime(d.createdAt, 'middle');
+      const startDate = setDateTime(startDateGeneralStreak, 'middle');
 
       return createdDate >= startDate;
     });
@@ -239,13 +233,8 @@ export default async function handler(
       const reducibleArr = dayEntities
         .filter((d) => {
           // Equalize hours to make sure that same days match
-          const createdDate = new Date(d.createdAt).setUTCHours(12, 0, 0, 0);
-          const startDate = new Date(startDateRewardStreak).setUTCHours(
-            12,
-            0,
-            0,
-            0
-          );
+          const createdDate = setDateTime(d.createdAt, 'middle');
+          const startDate = setDateTime(startDateRewardStreak, 'middle');
 
           return createdDate >= startDate;
         })

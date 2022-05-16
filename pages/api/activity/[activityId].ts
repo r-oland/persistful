@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getCollection } from 'utils/getMongo';
+import { setDateTime } from 'utils/setDateTime';
 
 export default async function handler(
   req: NextApiRequest,
@@ -28,8 +29,8 @@ export default async function handler(
       // Also update changes in today's day entity
       if (data?.penalty !== undefined || data?.countMode || data?.countCalc) {
         const days = await getCollection<DayEntity>('days');
-        const start = new Date(new Date().setUTCHours(0, 0, 0, 0));
-        const end = new Date(new Date().setUTCHours(23, 59, 59, 999));
+        const start = setDateTime(new Date(), 'start');
+        const end = setDateTime(new Date(), 'end');
 
         const today = await days.findOne({
           userId: session.user.uid,

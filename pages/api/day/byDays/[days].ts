@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCollection } from 'utils/getMongo';
 import { checkAuth } from 'utils/checkAuth';
+import { setDateTime } from 'utils/setDateTime';
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,8 +24,8 @@ export default async function handler(
       const startDate = dates.split(' ')[0];
       const endDate = dates.split(' ')[1];
 
-      const start = new Date(new Date(startDate).setUTCHours(0, 0, 0, 0));
-      const end = new Date(new Date(endDate).setUTCHours(23, 59, 59, 999));
+      const start = setDateTime(new Date(startDate), 'start');
+      const end = setDateTime(new Date(endDate), 'end');
 
       // get range day entities
       const rangeDates = await days

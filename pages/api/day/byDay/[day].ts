@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getCollection } from 'utils/getMongo';
 import { checkAuth } from 'utils/checkAuth';
+import { setDateTime } from 'utils/setDateTime';
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,8 +21,8 @@ export default async function handler(
     if (req.method === 'GET') {
       const date = req.query.day as string;
 
-      const start = new Date(new Date(date).setUTCHours(0, 0, 0, 0));
-      const end = new Date(new Date(date).setUTCHours(23, 59, 59, 999));
+      const start = setDateTime(new Date(date), 'start');
+      const end = setDateTime(new Date(date), 'end');
 
       // get todays day entity if it already exists
       const today = await days.findOne({

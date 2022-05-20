@@ -57,7 +57,7 @@ export default async function handler(
       },
     });
 
-    if (yesterday?.rules.secondChange) {
+    if (user?.rules.secondChange) {
       // get day before yesterday
       const dayBeforeYesterdayDate = new Date(
         new Date().getTime() - 48 * 60 * 60 * 1000
@@ -112,6 +112,8 @@ export default async function handler(
 
     // array of new dates that will be stored in user object
     let secondChanceDates: Date[] = [];
+    // Can be used if multiple dates in a row are missing
+    let nextItemShouldBreakStreak = false;
 
     // get index of item that did not achieve goal
     const indexOfDateThatDidNotAchieveGoal = descendingDayEntities.findIndex(
@@ -125,8 +127,15 @@ export default async function handler(
           handle second change 
         */
 
-        // the day has a streak so it can be ignored
-        if (!noStreak) return false;
+        // true ? This is the next item, so break
+        if (nextItemShouldBreakStreak) return true;
+
+        const secondChanceWasUsedLastWeek = secondChanceDates.length
+          ? !!secondChanceDates.find(
+              (scd) => differenceInDays(scd, d.createdAt) < 7
+            )
+          : // No second change dates have been used at all
+            false;
 
         const dayBeforeNoStreakDay = descendingDayEntities[i + 1];
 
@@ -137,15 +146,41 @@ export default async function handler(
 
         const hourDifference = differenceInHours(date1, date2);
 
+        //  There is a gap of 1 day or more. We know for certain that the previous day has no streak (it doesn't exist).
+        if (hourDifference >= 48) {
+          // Check if the current day DOES have a streak. If it does, a second chance can be used
+          if (noStreak) return true;
+
+          // There is a gap of more then 1 day. We don't even have to check if second chance can be applied.
+          if (hourDifference > 48) {
+            // We should not return true here, but on the next iteration. This day has achieved it's streak.
+            nextItemShouldBreakStreak = true;
+            return false;
+          }
+
+          if (!secondChanceWasUsedLastWeek) {
+            // We have to calculate the previous day because the day entity does not exists
+            const previousDate = new Date(
+              new Date(d.createdAt).getTime() - 24 * 60 * 60 * 1000
+            );
+
+            // add new secondChange entity to array
+            secondChanceDates = [...secondChanceDates, previousDate];
+
+            // second change is used for this date -> it can be skipped
+            return false;
+          }
+
+          return true;
+        }
+
+        // the day has a streak so it can be ignored
+        if (!noStreak) return false;
+
+        // From this point we are safe to assume that the day does not have a streak
+
         // Day has no streak and the day before it also has no streak
         if (hourDifference > 24) return false;
-
-        const secondChanceWasUsedLastWeek = secondChanceDates.length
-          ? !!secondChanceDates.find(
-              (scd) => differenceInDays(scd, d.createdAt) < 7
-            )
-          : // No second change dates have been used at all
-            false;
 
         // Day before no streak day has a streak and can use secondChange
         if (!secondChanceWasUsedLastWeek) {

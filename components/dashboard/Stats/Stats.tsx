@@ -11,18 +11,15 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import React from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
+import { getPastDay } from 'utils/getPastDay';
 import styles from './Stats.module.scss';
 // =========================
 
 export default function Stats() {
   const query = useMediaQ('min', 1024);
 
-  // Get today's date using the JavaScript Date object.
-  const lastWeek = new Date();
-
   // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const pastDate = lastWeek.getDate() - 6;
-  lastWeek.setDate(pastDate);
+  const lastWeek = getPastDay(new Date(), 6);
 
   const { data: days } = useGetDays(lastWeek, new Date());
 

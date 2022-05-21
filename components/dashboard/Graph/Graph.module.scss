@@ -63,8 +63,7 @@
           text-overflow: ellipsis;
           font-size: $font-small;
           box-shadow: inset 0 -7px 0px 0px $green-light;
-          width: max-content;
-          margin: 0 auto;
+          text-align: center;
         }
 
         &.penalty {

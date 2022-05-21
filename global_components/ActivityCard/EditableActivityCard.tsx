@@ -69,8 +69,6 @@ export default function EditableActivityCard({
 
   const percentage = getActivityPercentage(activity, day?.activities);
 
-  if (!day) return null;
-
   const inactiveWithCount = activity.status !== 'active' && activity.count;
 
   return (
@@ -102,7 +100,7 @@ export default function EditableActivityCard({
         </div>
         {query && <div className={styles.bar} />}
         <AnimatePresence>
-          {displayOverlay && (
+          {displayOverlay && day && (
             <Overlay
               handleAdd={(e, value) => {
                 e.stopPropagation();

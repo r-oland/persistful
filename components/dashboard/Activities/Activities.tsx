@@ -5,7 +5,7 @@ import ActivityCard from 'global_components/ActivityCard/ActivityCard';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { DashboardContext } from 'pages';
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import styles from './Activities.module.scss';
 // =========================
 
@@ -63,7 +63,7 @@ function ConditionalActivitiesWrapper({
   if (query)
     return (
       <ElementContainer color={color}>
-        <div className={styles.activities}> {children}</div>
+        <div className={styles.activities}>{children}</div>
       </ElementContainer>
     );
 
@@ -83,6 +83,10 @@ const getThreeItemClasses = (items: any[], i = 0, query = true) =>
     : '';
 
 export default function Activities() {
+  const [displayActivities, setDisplayActivities] = useState<ActivityEntity[]>(
+    []
+  );
+
   const { data: activityEntities } = useGetActivities();
 
   const { activeDay } = useContext(DashboardContext);
@@ -90,19 +94,29 @@ export default function Activities() {
 
   const query = useMediaQ('min', 768);
 
-  // Grab activities from the daily snapshot to use the values that where used that day
-  const activities = day?.activities?.map((activitySnapshot) => {
-    const activity = activityEntities
-      // filter inactive activities without count
-      ?.filter((a) => a.status === 'active' || activitySnapshot.count)
-      ?.find((a) => a._id === activitySnapshot._id);
-    // Overwrite values with snapshot if they differ from current activity
-    if (activity) return { ...activity, ...activitySnapshot };
-    return undefined;
-  });
+  const goals = displayActivities?.filter((a) => !a?.penalty);
+  const penalties = displayActivities?.filter((a) => a?.penalty);
 
-  const goals = activities?.filter((a) => !a?.penalty);
-  const penalties = activities?.filter((a) => a?.penalty);
+  // set display data in a state so it doesn't return undefined values while switching days
+  useEffect(() => {
+    if (day && activityEntities?.length) {
+      // Grab activities from the daily snapshot to use the values that where used that day
+      const activities = day?.activities
+        ?.map((activitySnapshot) => {
+          const activity = activityEntities
+            // filter inactive activities without count
+            ?.filter((a) => a.status === 'active' || activitySnapshot.count)
+            ?.find((a) => a._id === activitySnapshot._id);
+          // Overwrite values with snapshot if they differ from current activity
+          if (activity) return { ...activity, ...activitySnapshot };
+          return undefined;
+        })
+        .filter((exists) => exists);
+
+      // @ts-ignore
+      if (activities) setDisplayActivities(activities);
+    }
+  }, [JSON.stringify(day), !!activityEntities?.length]);
 
   return (
     <ConditionalWrapper twoItems={!!(goals?.length && penalties?.length)}>

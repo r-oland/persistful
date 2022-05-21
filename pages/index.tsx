@@ -10,6 +10,7 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import Graph from 'components/dashboard/Graph/Graph';
 // =========================
 
 type DashboardContextType = {
@@ -61,7 +62,7 @@ export default function Dashboard() {
             <div className={styles['progress-wrapper']}>
               <ProgressCircle />
             </div>
-            {desktopQuery && <div className={styles.graph} />}
+            {desktopQuery && <Graph />}
           </div>
           <Activities />
         </div>

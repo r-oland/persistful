@@ -5,7 +5,8 @@ import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDays from 'actions/day/useGetDays';
 import { motion } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
-import React, { useEffect, useState } from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useEffect, useState } from 'react';
 import { framerFade } from 'utils/framerAnimations';
 import { getActivitySum } from 'utils/getActivitySum';
 import { getPastDay } from 'utils/getPastDay';
@@ -15,15 +16,17 @@ import styles from './Graph.module.scss';
 type ActivitiesSum = { _id: string; count: number }[];
 
 export default function Graph() {
+  const { activeDay } = useContext(DashboardContext);
+
   const [activitySums, setActivitySums] = useState<ActivitiesSum>([]);
 
   const lines = Array.from(Array(5).keys());
 
   // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(new Date(), 6);
+  const lastWeek = getPastDay(activeDay, 6);
 
   const { data: activityEntities } = useGetActivities();
-  const { data: days } = useGetDays(lastWeek, new Date());
+  const { data: days } = useGetDays(lastWeek, activeDay);
 
   useEffect(() => {
     if (!days?.length) return;

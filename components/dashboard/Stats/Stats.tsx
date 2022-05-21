@@ -8,7 +8,8 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDays from 'actions/day/useGetDays';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React from 'react';
+import { DashboardContext } from 'pages';
+import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getPastDay } from 'utils/getPastDay';
@@ -16,12 +17,21 @@ import styles from './Stats.module.scss';
 // =========================
 
 export default function Stats() {
+  const [displayData, setDisplayData] = useState({
+    average: '0:00',
+    total: '0:00',
+    penaltyDays: '0 / 0',
+    streaks: 0,
+  });
+
+  const { activeDay } = useContext(DashboardContext);
+
   const query = useMediaQ('min', 1024);
 
   // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(new Date(), 6);
+  const lastWeek = getPastDay(activeDay, 6);
 
-  const { data: days } = useGetDays(lastWeek, new Date());
+  const { data: days } = useGetDays(lastWeek, activeDay);
 
   const totalDays =
     days
@@ -34,22 +44,34 @@ export default function Stats() {
     d.activities.find((a) => a.penalty && a.count)
   ).length;
 
-  const streaks = days
-    ?.map((d) => getDayAchievements(d).streak)
-    .reduce((prev, cur) => prev + cur);
+  const streaks =
+    days
+      ?.map((d) => getDayAchievements(d).streak)
+      .reduce((prev, cur) => prev + cur) || 0;
+
+  // set display data in a state so it doesn't return undefined values while switching days
+  useEffect(() => {
+    if (days)
+      setDisplayData({
+        average: convertMinutesToHours(average),
+        total: convertMinutesToHours(totalDays),
+        penaltyDays: `${penaltyDayCount} / ${days?.length}`,
+        streaks,
+      });
+  }, [JSON.stringify(days)]);
 
   const mobileCards = [
     {
       name: 'Average (week)',
       icon: faCalendarWeek,
       color: 'green',
-      data: convertMinutesToHours(average),
+      data: displayData.average,
     },
     {
       name: 'Total (week)',
       icon: faClock,
       color: 'green',
-      data: convertMinutesToHours(totalDays),
+      data: displayData.total,
     },
   ];
 
@@ -58,13 +80,13 @@ export default function Stats() {
       name: 'Penalty days (week)',
       icon: faTimesHexagon,
       color: 'red',
-      data: `${penaltyDayCount} / ${days?.length}`,
+      data: displayData.penaltyDays,
     },
     {
       name: 'Total streaks (week)',
       icon: faFlame,
       color: 'red',
-      data: streaks,
+      data: displayData.streaks,
     },
   ];
 

@@ -1,0 +1,64 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-auto-rows: 1fr auto;
+  gap: $spacing2;
+  align-items: end;
+
+  .graph {
+    height: 100%;
+    background-color: $green-light;
+    border: $border;
+    display: grid;
+    align-content: space-between;
+    justify-items: center;
+
+    .top {
+      height: 18px;
+      width: 100%;
+      background-color: $green;
+      font-size: $font-extra-small;
+      color: $white;
+      font-weight: $weight-semi-bold;
+      display: grid;
+      justify-content: center;
+      align-items: center;
+      border-bottom: $border;
+    }
+
+    .icon {
+      color: $green;
+      margin-bottom: $spacing2;
+    }
+  }
+
+  p {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: $font-small;
+    box-shadow: inset 0 -7px 0px 0px $green-light;
+    text-align: center;
+    width: max-content;
+    margin: 0 auto;
+  }
+
+  &.penalty {
+    .graph {
+      background-color: $red-light;
+    }
+
+    p {
+      box-shadow: inset 0 -7px 0px 0px $red-light;
+    }
+
+    .icon {
+      color: $red;
+    }
+
+    .top {
+      background-color: $red;
+    }
+  }
+}

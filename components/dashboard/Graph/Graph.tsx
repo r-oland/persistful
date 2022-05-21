@@ -1,15 +1,11 @@
 // Components==============
-import { IconName } from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDays from 'actions/day/useGetDays';
-import { motion } from 'framer-motion';
-import HardShadow from 'global_components/HardShadow/HardShadow';
 import { DashboardContext } from 'pages';
 import React, { useContext, useEffect, useState } from 'react';
-import { framerFade } from 'utils/framerAnimations';
 import { getActivitySum } from 'utils/getActivitySum';
 import { getPastDay } from 'utils/getPastDay';
+import Column from './Column/Column';
 import styles from './Graph.module.scss';
 // =========================
 
@@ -69,13 +65,7 @@ export default function Graph() {
       if (activity) return { ...activity, ...activitySum };
       return undefined;
     })
-    .filter((exists) => exists);
-
-  const total =
-    activities.map((a) => a?.count || 0).reduce((prev, cur) => prev + cur, 0) ||
-    0;
-
-  const highestCount = Math.max(...activities.map((a) => a?.count || 0)) || 0;
+    .filter((exists) => exists) as ActivityEntity[];
 
   return (
     <div className={styles.wrapper}>
@@ -91,47 +81,16 @@ export default function Graph() {
           className={styles.graphs}
           style={{ gridTemplateColumns: `repeat(${activities.length}, 1fr)` }}
         >
-          {activities.map((activity) => {
-            if (!activity) return <></>;
-
-            const maxHeight = 229;
-            const renderPercentage = (100 / highestCount) * activity.count || 0;
-            const percentage = Math.round((100 / total) * activity.count) || 0;
-
-            const calcHeight = (maxHeight / 100) * renderPercentage;
-            const height = calcHeight < 20 ? 19 : calcHeight;
-
-            return (
-              <div
-                className={`${styles.column} ${
-                  activity.penalty ? styles.penalty : ''
-                }`}
-                key={activity._id}
-              >
-                <HardShadow stretch>
-                  <motion.div
-                    className={styles.graph}
-                    animate={{ height }}
-                    initial={{ height: 19 }}
-                    transition={{ duration: 0.8 }}
-                    key={activity._id}
-                  >
-                    <div className={styles.top}>{percentage}%</div>
-                    {calcHeight > 50 && (
-                      <motion.div
-                        className={styles.icon}
-                        {...framerFade}
-                        transition={{ duration: 0.8 }}
-                      >
-                        <FontAwesomeIcon icon={activity.icon as IconName} />
-                      </motion.div>
-                    )}
-                  </motion.div>
-                </HardShadow>
-                <p>{activity.name}</p>
-              </div>
-            );
-          })}
+          {activities.map(
+            (activity) =>
+              activity && (
+                <Column
+                  key={activity._id}
+                  activities={activities}
+                  activity={activity}
+                />
+              )
+          )}
         </div>
       </div>
     </div>

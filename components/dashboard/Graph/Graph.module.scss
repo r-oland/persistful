@@ -1,0 +1,21 @@
+@import 'styles/Variables';
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+  background-color: $white;
+  border: 1px solid $grey-light;
+  padding: $spacing8;
+
+  .content {
+    position: relative;
+
+    .line {
+      background-color: $grey-light;
+      height: 1px;
+      position: absolute;
+      left: 0;
+      width: 100%;
+    }
+  }
+}

@@ -75,7 +75,7 @@ export default function Graph() {
     activities.map((a) => a?.count || 0).reduce((prev, cur) => prev + cur, 0) ||
     0;
 
-  const highestCount = Math.max(...activities.map((a) => a?.count || 0));
+  const highestCount = Math.max(...activities.map((a) => a?.count || 0)) || 0;
 
   return (
     <div className={styles.wrapper}>
@@ -95,7 +95,7 @@ export default function Graph() {
             if (!activity) return <></>;
 
             const maxHeight = 229;
-            const renderPercentage = (100 / highestCount) * activity.count;
+            const renderPercentage = (100 / highestCount) * activity.count || 0;
             const percentage = Math.round((100 / total) * activity.count) || 0;
 
             const calcHeight = (maxHeight / 100) * renderPercentage;

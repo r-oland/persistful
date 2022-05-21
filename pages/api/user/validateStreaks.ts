@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
+import { getPastDay } from 'utils/getPastDay';
 import { setDateTime } from 'utils/setDateTime';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
@@ -48,7 +49,7 @@ export default async function handler(
     const days = await getCollection<DayEntity>('days');
 
     // get yesterday
-    const yesterdayDate = new Date(new Date().getTime() - 24 * 60 * 60 * 1000);
+    const yesterdayDate = getPastDay(new Date(), 1);
     const yesterday = await days.findOne({
       userId,
       createdAt: {
@@ -59,9 +60,7 @@ export default async function handler(
 
     if (user?.rules.secondChange) {
       // get day before yesterday
-      const dayBeforeYesterdayDate = new Date(
-        new Date().getTime() - 48 * 60 * 60 * 1000
-      );
+      const dayBeforeYesterdayDate = getPastDay(new Date(), 2);
       const dayBeforeYesterday = await days.findOne({
         userId,
         createdAt: {
@@ -160,9 +159,7 @@ export default async function handler(
 
           if (!secondChanceWasUsedLastWeek) {
             // We have to calculate the previous day because the day entity does not exists
-            const previousDate = new Date(
-              new Date(d.createdAt).getTime() - 24 * 60 * 60 * 1000
-            );
+            const previousDate = getPastDay(new Date(d.createdAt), 1);
 
             // add new secondChange entity to array
             secondChanceDates = [...secondChanceDates, previousDate];

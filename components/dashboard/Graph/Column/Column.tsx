@@ -3,7 +3,8 @@ import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { motion } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { framerFade } from 'utils/framerAnimations';
 import styles from './Column.module.scss';
 // =========================
@@ -15,6 +16,8 @@ export default function Column({
   activity: ActivityEntity;
   activities: ActivityEntity[];
 }) {
+  const [displayPercentage, setDisplayPercentage] = useState(false);
+
   const columnRef = useRef<HTMLDivElement>(null);
 
   const total =
@@ -42,8 +45,16 @@ export default function Column({
           transition={{ duration: 0.8 }}
           key={activity._id}
           ref={columnRef}
+          onHoverStart={() => setDisplayPercentage(true)}
+          onHoverEnd={() => setDisplayPercentage(false)}
         >
-          <div className={styles.top}>{percentage}%</div>
+          <div className={styles.top}>
+            {displayPercentage
+              ? `${percentage}%`
+              : !activity.count
+              ? '-'
+              : convertMinutesToHours(activity.count)}
+          </div>
           {calcHeight > 50 && (
             <motion.div
               className={styles.icon}

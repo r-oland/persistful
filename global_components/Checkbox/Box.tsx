@@ -8,12 +8,14 @@ import styles from './Checkbox.module.scss';
 export default function Box({
   penalty,
   children,
+  onClick,
 }: {
   penalty?: boolean;
   children: React.ReactNode;
+  onClick: () => void;
 }) {
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} onClick={onClick}>
       <div className={`${styles.checkbox} ${penalty ? styles.penalty : ''}`}>
         <FontAwesomeIcon icon={faDice} size="sm" />
       </div>

@@ -1,11 +1,11 @@
 // Components==============
 import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import React, { useRef, useState } from 'react';
-import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { framerFade } from 'utils/framerAnimations';
+import { getActivityCount } from 'utils/getActivityCount';
 import styles from './Column.module.scss';
 // =========================
 
@@ -53,17 +53,20 @@ export default function Column({
               ? `${percentage}%`
               : !activity.count
               ? '-'
-              : convertMinutesToHours(activity.count)}
+              : getActivityCount(activity, true)}
           </div>
-          {calcHeight > 50 && (
-            <motion.div
-              className={styles.icon}
-              {...framerFade}
-              transition={{ duration: 0.8 }}
-            >
-              <FontAwesomeIcon icon={activity.icon as IconName} />
-            </motion.div>
-          )}
+          <AnimatePresence>
+            {calcHeight > 50 && (
+              <motion.div
+                className={styles.icon}
+                {...framerFade}
+                exit={{ opacity: 0, transition: { duration: 0.4, delay: 0 } }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+              >
+                <FontAwesomeIcon icon={activity.icon as IconName} />
+              </motion.div>
+            )}
+          </AnimatePresence>
         </motion.div>
       </HardShadow>
       <p style={{ maxWidth: columnRef.current?.clientWidth }}>

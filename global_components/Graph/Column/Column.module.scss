@@ -5,6 +5,11 @@
   grid-auto-rows: 1fr auto;
   gap: $spacing2;
   align-items: end;
+  min-width: 45px;
+
+  @media screen and (min-width: $tablet) {
+    min-width: 60px;
+  }
 
   .graph {
     height: 100%;
@@ -15,25 +20,29 @@
     justify-items: center;
 
     .top {
-      height: 18px;
+      height: 12px;
       width: 100%;
       background-color: $green;
       font-size: $font-extra-small;
       color: $white;
-      font-weight: $weight-semi-bold;
       display: grid;
       justify-content: center;
       align-items: center;
       border-bottom: $border;
-    }
 
-    .icon {
-      color: $green;
-      margin-bottom: $spacing2;
+      @media screen and (min-width: $tablet) {
+        height: 18px;
+        font-weight: $weight-semi-bold;
+      }
     }
   }
 
-  p {
+  .icon {
+    color: $green;
+    margin-bottom: $spacing2;
+  }
+
+  .name {
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
@@ -44,12 +53,28 @@
     margin: 0 auto;
   }
 
+  .mobile-values {
+    display: grid;
+    gap: $spacing1;
+    justify-content: center;
+    justify-items: center;
+
+    .value {
+      font-size: $font-extra-small;
+      font-weight: $weight-semi-bold;
+    }
+
+    .icon {
+      margin-bottom: 0;
+    }
+  }
+
   &.penalty {
     .graph {
       background-color: $red-light;
     }
 
-    p {
+    .name {
       box-shadow: inset 0 -7px 0px 0px $red-light;
     }
 

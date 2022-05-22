@@ -1,16 +1,16 @@
 // Components==============
 import Activities from 'components/dashboard/Activities/Activities';
 import styles from 'components/dashboard/Dashboard.module.scss';
+import Graph from 'components/dashboard/Graph/Graph';
 import SideBar from 'components/dashboard/SideBar/SideBar';
-import Stats from 'components/dashboard/Stats/Stats';
-import TopNav from 'components/dashboard/TopNav/TopNav';
-import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import ValidateEffect from 'components/dashboard/ValidateEffect';
+import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
+import DashboardStats from 'global_components/Stats/DashboardStats';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import Graph from 'components/dashboard/Graph/Graph';
 // =========================
 
 type DashboardContextType = {
@@ -54,13 +54,15 @@ export default function Dashboard() {
         <title>Dashboard</title>
       </Head>
       <div className={styles.wrapper}>
-        {!query && <TopNav />}
-        {!tabletQuery && <Stats />}
+        {!query && (
+          <GeneralTopNav activeDay={activeDay} setActiveDay={setActiveDay} />
+        )}
+        {!tabletQuery && <DashboardStats />}
         <div className={styles.content}>
-          {tabletQuery && <Stats />}
+          {tabletQuery && <DashboardStats />}
           <div className={styles.top}>
             <div className={styles['progress-wrapper']}>
-              <ProgressCircle />
+              <ProgressCircle activeDay={activeDay} />
             </div>
             {desktopQuery && <Graph />}
           </div>

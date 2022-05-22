@@ -1,4 +1,5 @@
 // Components==============
+import { motion } from 'framer-motion';
 import React from 'react';
 import styles from './Shape.module.scss';
 // =========================
@@ -24,10 +25,20 @@ export default function Shape({
 
   if (shape === 'circle')
     return (
-      <div className={`${styles.circle} ${styles[color]}`} style={style} />
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.08 }}
+        className={`${styles.circle} ${styles[color]}`}
+        style={style}
+      />
     );
 
   return (
-    <div className={`${styles.triangle} ${styles[color]}`} style={style} />
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 0.08 }}
+      className={`${styles.triangle} ${styles[color]}`}
+      style={style}
+    />
   );
 }

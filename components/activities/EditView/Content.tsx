@@ -14,6 +14,7 @@ import Slider from 'global_components/Slider/Slider';
 import Toggle from 'global_components/Toggle/Toggle';
 import React, { useState } from 'react';
 import { framerFade } from 'utils/framerAnimations';
+import { generatePattern } from 'utils/generatePattern';
 import styles from './EditView.module.scss';
 import IconSelector from './IconSelector/IconSelector';
 // =========================
@@ -26,7 +27,6 @@ const defaultValues = {
   countMode: 'minutes',
   countCalc: 30,
   icon: 'book-spells',
-  enablePattern: false,
 } as ActivityEntity;
 
 export default function Content({
@@ -117,7 +117,13 @@ export default function Content({
   const handleEnablePatternChange = (enablePattern: boolean) =>
     setSaveObject((prev) => ({
       ...prev,
-      enablePattern,
+      pattern: enablePattern ? generatePattern() : undefined,
+    }));
+
+  const handleRandomizePattern = () =>
+    setSaveObject((prev) => ({
+      ...prev,
+      pattern: generatePattern(),
     }));
 
   const handleAddActivity = () => {
@@ -241,15 +247,19 @@ export default function Content({
           <b>Pattern</b>
           <div className={styles['pattern-wrapper']}>
             <Checkbox
-              initialValue={localActivity.enablePattern}
+              initialValue={!!localActivity.pattern}
               penalty={penaltyMode}
               onClick={handleEnablePatternChange}
             >
               <p>Enable</p>
             </Checkbox>
-            <Box penalty={penaltyMode}>
-              <p>Randomize</p>
-            </Box>
+            {!!(saveObject.pattern
+              ? saveObject.pattern
+              : localActivity.pattern) && (
+              <Box penalty={penaltyMode} onClick={handleRandomizePattern}>
+                <p>Randomize</p>
+              </Box>
+            )}
           </div>
         </div>
         <div className={styles['column-2']}>

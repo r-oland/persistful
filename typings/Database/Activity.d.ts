@@ -17,7 +17,6 @@ type ActivityEntity = {
   status: 'active' | 'inactive' | 'deleted';
   name: string;
   icon: string;
-  enablePattern: boolean;
   pattern?: PatternEntity[];
   count: number;
   countMode: 'minutes' | 'times';

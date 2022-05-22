@@ -9,6 +9,7 @@ import { getActivityPercentage } from 'utils/getActivityPercentage';
 import styles from './ActivityCard.module.scss';
 import ActivityProgress from './ActivityProgress/ActivityProgress';
 import EditableActivityCard from './EditableActivityCard';
+import Pattern from './Pattern/Pattern';
 // =========================
 
 export default function ActivityCard({
@@ -62,6 +63,12 @@ export default function ActivityCard({
               <p>{activity.name}</p>
               <h3>{getActivityCount(activity)}</h3>
             </div>
+            {!!activity.pattern && (
+              <Pattern
+                isPenalty={!!activity.penalty}
+                pattern={activity.pattern}
+              />
+            )}
           </div>
           {query && <div className={styles.bar} />}
           <div className={styles.bar} />

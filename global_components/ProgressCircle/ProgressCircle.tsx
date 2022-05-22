@@ -82,7 +82,7 @@ export default function ProgressCircle() {
         displayStreak,
         dailyGoal,
       });
-  }, [JSON.stringify(day)]);
+  }, [JSON.stringify(day), user?.streak]);
 
   return (
     <div className={styles.wrapper}>

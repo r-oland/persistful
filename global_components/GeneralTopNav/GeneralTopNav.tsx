@@ -5,21 +5,27 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { format } from 'date-fns';
 import { AnimatePresence } from 'framer-motion';
-import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import RewardModal from 'global_components/RewardModal/RewardModal';
+import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
-import { DashboardContext } from 'pages';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getPastDay } from 'utils/getPastDay';
 import Items from './Items/Items';
-import styles from './TopNav.module.scss';
+import styles from './GeneralTopNav.module.scss';
 // =========================
 
 export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
 
-export default function TopNav() {
-  const { activeDay } = useContext(DashboardContext);
-
+export default function GeneralTopNav({
+  activeDay,
+  setActiveDay,
+  overview,
+}: {
+  activeDay: Date;
+  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  overview?: boolean;
+}) {
   const [selected, setSelected] = useState<TopNavSelectedOption>('none');
   const [rewardModalIsOpen, setRewardModalIsOpen] = useState(false);
 
@@ -42,6 +48,8 @@ export default function TopNav() {
       return setSelected('none');
   }, [query]);
 
+  const lastWeek = getPastDay(activeDay, 6);
+
   return (
     <>
       <TopNavWrapper>
@@ -54,7 +62,14 @@ export default function TopNav() {
         >
           <div className={styles.date} onClick={() => setSelected('calendar')}>
             <FontAwesomeIcon icon={faCalendarDay} />
-            <p>{format(activeDay, 'dd MMMM yyyy')}</p>
+            <p>
+              {overview
+                ? `${format(lastWeek, 'dd MMM')} - ${format(
+                    activeDay,
+                    'dd MMM '
+                  )}`
+                : format(activeDay, 'dd MMMM yyyy')}
+            </p>
           </div>
           <div className={styles.reward} onClick={() => setSelected('streak')}>
             <FontAwesomeIcon icon={faFlame} />
@@ -78,6 +93,8 @@ export default function TopNav() {
                 setSelected={setSelected}
                 rewardModalIsOpen={rewardModalIsOpen}
                 setRewardModalIsOpen={setRewardModalIsOpen}
+                activeDay={activeDay}
+                setActiveDay={setActiveDay}
               />
             )}
           </AnimatePresence>

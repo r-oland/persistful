@@ -2,16 +2,14 @@
 import { faBullseye } from '@fortawesome/pro-regular-svg-icons';
 import { faFlame } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useGetDay from 'actions/day/useGetDay';
-import useGetUser from 'actions/user/useGetUser';
 import { useCounter } from 'hooks/useCounter';
-import { DashboardContext } from 'pages';
-import React, { useContext, useEffect, useState } from 'react';
+import React from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
-import { getDayAchievements } from 'utils/getDayAchievements';
 import { getProgress } from 'utils/getProgress';
 import Circles from './Circles/Circles';
 import styles from './ProgressCircle.module.scss';
+import { ProgressCircleTypes, useDayData } from './useDayData';
+import { useRangeData } from './useRangeData';
 // =========================
 
 function CounterTitle({
@@ -31,59 +29,11 @@ function CounterTitle({
   );
 }
 
-export default function ProgressCircle() {
-  const [displayData, setDisplayData] = useState({
-    progress: [0, 0, 0],
-    bonusProgress: [0, 0, 0],
-    total: 0,
-    streak: 0,
-    displayStreak: 0,
-    dailyGoal: '0:00',
-  });
-
-  const { data: user } = useGetUser();
-
-  const { activeDay } = useContext(DashboardContext);
-  const { data: day } = useGetDay(activeDay);
-
-  const { total, bonusScore, streak } = getDayAchievements(day, true);
-
-  const flatStreak = Math.floor(streak);
-
-  // Calculate percentage of bonus time over daily goal
-  const todayBonusTime = day?.rules?.prm
-    ? bonusScore / (day?.rules?.dailyGoal || 0)
-    : 0;
-
-  const progress = getProgress(streak);
-  const bonusProgress = getProgress(todayBonusTime);
-
-  const todayStamp = new Date().toLocaleDateString();
-  const activeDayStamp = activeDay.toLocaleDateString();
-
-  const displayStreak =
-    // if active day is today
-    todayStamp === activeDayStamp
-      ? // grab calculated total streak from user && add daily streak
-        (user?.streak || 0) + flatStreak
-      : // grab streak directly from day since it's invalidated on each update
-        flatStreak;
-
-  const dailyGoal = convertMinutesToHours(day?.rules?.dailyGoal || 0);
-
-  // set display data in a state so it doesn't return undefined values while switching days
-  useEffect(() => {
-    if (day)
-      setDisplayData({
-        progress,
-        bonusProgress,
-        total,
-        streak,
-        displayStreak,
-        dailyGoal,
-      });
-  }, [JSON.stringify(day), user?.streak]);
-
+function DisplayComponent({
+  displayData,
+}: {
+  displayData: ProgressCircleTypes;
+}) {
   return (
     <div className={styles.wrapper}>
       <Circles progress={displayData.progress} />
@@ -102,4 +52,29 @@ export default function ProgressCircle() {
       </div>
     </div>
   );
+}
+
+function DayComponent({ activeDay }: { activeDay: Date }) {
+  const displayData = useDayData(activeDay);
+
+  return <DisplayComponent displayData={displayData} />;
+}
+
+function RangeComponent({ range }: { range: Date[] }) {
+  const displayData = useRangeData(range);
+
+  return <DisplayComponent displayData={displayData} />;
+}
+
+export default function ProgressCircle({
+  activeDay,
+  range,
+}: {
+  activeDay?: Date;
+  range?: Date[];
+}) {
+  if (activeDay) return <DayComponent activeDay={activeDay} />;
+  if (range) return <RangeComponent range={range} />;
+
+  return <></>;
 }

@@ -4,9 +4,8 @@ import Calendar from 'global_components/Calendar/Calendar';
 import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import { DashboardContext } from 'pages';
-import React, { useContext, useEffect, useRef, useState } from 'react';
-import { TopNavSelectedOption } from '../TopNav';
+import React, { useEffect, useRef, useState } from 'react';
+import { TopNavSelectedOption } from '../GeneralTopNav';
 import styles from './Items.module.scss';
 // =========================
 
@@ -72,10 +71,16 @@ function Reward({
   );
 }
 
-function CalendarComp() {
+function CalendarComp({
+  activeDay,
+  setActiveDay,
+}: {
+  activeDay: Date;
+  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+}) {
   return (
     <motion.div variants={child}>
-      <Calendar />
+      <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
     </motion.div>
   );
 }
@@ -86,16 +91,18 @@ export default function Items({
   activeReward,
   rewardModalIsOpen,
   setRewardModalIsOpen,
+  activeDay,
+  setActiveDay,
 }: {
   selected: TopNavSelectedOption;
   setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
   activeReward?: RewardEntity;
   rewardModalIsOpen: boolean;
   setRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  activeDay: Date;
+  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
 }) {
   const ref = useRef(null);
-
-  const { activeDay } = useContext(DashboardContext);
 
   useOnClickOutside({
     refs: [ref],
@@ -128,7 +135,7 @@ export default function Items({
     >
       {selected === 'bar' ? (
         <>
-          <CalendarComp />
+          <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
           <Reward
             activeReward={activeReward}
             setModalIsOpen={setRewardModalIsOpen}
@@ -140,7 +147,7 @@ export default function Items({
           setModalIsOpen={setRewardModalIsOpen}
         />
       ) : selected === 'calendar' ? (
-        <CalendarComp />
+        <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
       ) : (
         <></>
       )}

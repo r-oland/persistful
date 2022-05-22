@@ -1,15 +1,18 @@
 // Components==============
 import useGetUser from 'actions/user/useGetUser';
 import { add } from 'date-fns';
-import { DashboardContext } from 'pages';
-import React, { useContext } from 'react';
+import React from 'react';
 import { DayPicker } from 'react-day-picker';
 import styles from './Calendar.module.scss';
 // =========================
 
-export default function Calendar() {
-  const { activeDay, setActiveDay } = useContext(DashboardContext);
-
+export default function Calendar({
+  activeDay,
+  setActiveDay,
+}: {
+  activeDay: Date;
+  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+}) {
   const { data: user } = useGetUser();
 
   const handleDayClick = (day: Date) => {

@@ -1,5 +1,6 @@
 // Components==============
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import OverviewStats from 'global_components/Stats/OverviewStats';
 import { useMediaQ } from 'hooks/useMediaQ';
@@ -43,6 +44,7 @@ export default function MobileOverview() {
               <ProgressCircle range={[lastWeek, activeDay]} />
             </div>
           </div>
+          <Graph range={[lastWeek, activeDay]} />
         </div>
       </div>
     </MobileOverviewContext.Provider>

@@ -1,7 +1,7 @@
 // Components==============
 import Activities from 'components/dashboard/Activities/Activities';
 import styles from 'components/dashboard/Dashboard.module.scss';
-import Graph from 'components/dashboard/Graph/Graph';
+import Graph from 'global_components/Graph/Graph';
 import SideBar from 'components/dashboard/SideBar/SideBar';
 import ValidateEffect from 'components/dashboard/ValidateEffect';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
@@ -11,6 +11,7 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
+import { getPastDay } from 'utils/getPastDay';
 // =========================
 
 type DashboardContextType = {
@@ -43,6 +44,9 @@ export default function Dashboard() {
 
   const [activeDay, setActiveDay] = useState<Date>(new Date());
 
+  // Change it so that it is 6 days in the past. -> not 7 because today also counts
+  const lastWeek = getPastDay(activeDay, 6);
+
   const value = useMemo(
     () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),
     [activeDay]
@@ -64,7 +68,7 @@ export default function Dashboard() {
             <div className={styles['progress-wrapper']}>
               <ProgressCircle activeDay={activeDay} />
             </div>
-            {desktopQuery && <Graph />}
+            {desktopQuery && <Graph range={[lastWeek, activeDay]} />}
           </div>
           <Activities />
         </div>

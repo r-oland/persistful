@@ -12,13 +12,14 @@
     align-content: start;
     grid-template-rows: auto 1fr;
     max-width: 1350px;
+    grid-template-columns: minmax(0, 1fr);
 
     @media screen and (min-width: $tablet) {
       height: calc($app-height - 50px);
       overflow: auto;
       padding: $spacing10 $spacing11 $spacing11;
       gap: $spacing9;
-      grid-template-rows: initial;
+      grid-template-rows: auto auto 1fr;
     }
 
     @media screen and (min-width: $desktop-extra-large) {

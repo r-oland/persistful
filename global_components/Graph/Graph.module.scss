@@ -1,0 +1,41 @@
+@import 'styles/Variables';
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+
+  @media screen and (min-width: $tablet) {
+    background-color: $white;
+    border: 1px solid $grey-light;
+    padding: $spacing8;
+  }
+
+  .content {
+    position: relative;
+    height: 100%;
+
+    .line {
+      display: none;
+
+      @media screen and (min-width: $tablet) {
+        display: block;
+        background-color: $grey-light;
+        height: 1px;
+        position: absolute;
+        left: 0;
+        width: 100%;
+      }
+    }
+
+    .graphs {
+      display: grid;
+      height: 100%;
+      gap: $spacing2;
+      overflow: auto;
+
+      @media screen and (min-width: $tablet) {
+        gap: $spacing5;
+      }
+    }
+  }
+}

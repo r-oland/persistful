@@ -1,28 +1,27 @@
 // Components==============
 import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDays from 'actions/day/useGetDays';
-import { DashboardContext } from 'pages';
-import React, { useContext, useEffect, useState } from 'react';
+import { useMediaQ } from 'hooks/useMediaQ';
+import React, { useEffect, useRef, useState } from 'react';
 import { getActivitySum } from 'utils/getActivitySum';
-import { getPastDay } from 'utils/getPastDay';
 import Column from './Column/Column';
 import styles from './Graph.module.scss';
 // =========================
 
 type ActivitiesSum = { _id: string; count: number }[];
 
-export default function Graph() {
-  const { activeDay } = useContext(DashboardContext);
-
+export default function Graph({ range }: { range: Date[] }) {
   const [activitySums, setActivitySums] = useState<ActivitiesSum>([]);
+  const [maxHeight, setMaxHeight] = useState(0);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const query = useMediaQ('min', 768);
 
   const lines = Array.from(Array(5).keys());
 
-  // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(activeDay, 6);
-
   const { data: activityEntities } = useGetActivities();
-  const { data: days } = useGetDays(lastWeek, activeDay);
+  const { data: days } = useGetDays(range[0], range[1]);
 
   useEffect(() => {
     if (!days?.length) return;
@@ -67,6 +66,19 @@ export default function Graph() {
     })
     .filter((exists) => exists) as ActivityEntity[];
 
+  // dirty solution that sets height based on space that is left
+  useEffect(() => {
+    // content below column
+    const bottomHeight = query ? 30 : 50;
+
+    if (ref.current?.clientHeight !== undefined) {
+      // if height < 180 -> graph height = 200
+      if (ref.current.clientHeight < 180) return setMaxHeight(200);
+
+      setMaxHeight(ref.current.clientHeight - bottomHeight);
+    }
+  }, [!!ref.current?.clientHeight]);
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.content}>
@@ -74,12 +86,17 @@ export default function Graph() {
           <div
             className={styles.line}
             key={line}
-            style={{ top: line * (233 / (lines.length - 1)) }}
+            style={{
+              top: line * (maxHeight / (lines.length - 1)),
+            }}
           />
         ))}
         <div
           className={styles.graphs}
-          style={{ gridTemplateColumns: `repeat(${activities.length}, 1fr)` }}
+          style={{
+            gridTemplateColumns: `repeat(${activities.length}, 1fr)`,
+          }}
+          ref={ref}
         >
           {activities.map(
             (activity) =>
@@ -88,6 +105,7 @@ export default function Graph() {
                   key={activity._id}
                   activities={activities}
                   activity={activity}
+                  maxHeight={maxHeight}
                 />
               )
           )}

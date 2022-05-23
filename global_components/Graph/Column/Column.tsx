@@ -24,8 +24,8 @@ export default function Column({
 
   const columnRef = useRef<HTMLDivElement>(null);
 
-  const query = useMediaQ('min', 768);
-  const columnHeight = query ? 19 : 12;
+  const query = useMediaQ('min', 525);
+  const columnHeight = 19;
 
   const total =
     activities.map((a) => a?.count || 0).reduce((prev, cur) => prev + cur, 0) ||
@@ -65,7 +65,7 @@ export default function Column({
           onHoverStart={() => setDisplayPercentage(true)}
           onHoverEnd={() => setDisplayPercentage(false)}
         >
-          <div className={styles.top}>{query && value}</div>
+          <div className={styles.top}>{value}</div>
           {query && (
             <AnimatePresence>
               {calcHeight > 50 && (
@@ -87,11 +87,8 @@ export default function Column({
           {activity.name}
         </p>
       ) : (
-        <div className={styles['mobile-values']}>
-          <div className={styles.icon}>
-            <FontAwesomeIcon icon={activity.icon as IconName} />
-          </div>
-          <p className={styles.value}>{value}</p>
+        <div className={`${styles['mobile-icon']} ${styles.icon}`}>
+          <FontAwesomeIcon icon={activity.icon as IconName} />
         </div>
       )}
     </div>

@@ -9,9 +9,9 @@ export const useCounter = (valueTo: number) => {
     if (valueTo) setCount(valueTo);
   }, []);
 
-  // Be careful chaning this, right now 1 works because count > valueTo will never be true unless you
-  // reverse direction. If you change it this won't be the case any more.
-  const increasePerInterval = 1;
+  const defaultIncrease = 3;
+
+  let increasePerInterval = defaultIncrease;
 
   // Delay time per interval, setting this to null wil stop the loop
   const delay = 15;
@@ -19,6 +19,8 @@ export const useCounter = (valueTo: number) => {
   useInterval(
     () => {
       if (count < valueTo) {
+        // prevent counter from going on for infinity
+        if (valueTo - count < defaultIncrease) increasePerInterval = 1;
         return setCount(count + increasePerInterval);
       }
 

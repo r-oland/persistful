@@ -1,7 +1,6 @@
 // Components==============
 import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDays from 'actions/day/useGetDays';
-import { useMediaQ } from 'hooks/useMediaQ';
 import React, { useEffect, useRef, useState } from 'react';
 import { getActivitySum } from 'utils/getActivitySum';
 import Column from './Column/Column';
@@ -15,8 +14,6 @@ export default function Graph({ range }: { range: Date[] }) {
   const [maxHeight, setMaxHeight] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
-
-  const query = useMediaQ('min', 768);
 
   const lines = Array.from(Array(5).keys());
 
@@ -69,13 +66,12 @@ export default function Graph({ range }: { range: Date[] }) {
   // dirty solution that sets height based on space that is left
   useEffect(() => {
     // content below column
-    const bottomHeight = query ? 30 : 50;
 
     if (ref.current?.clientHeight !== undefined) {
       // if height < 180 -> graph height = 200
       if (ref.current.clientHeight < 180) return setMaxHeight(200);
 
-      setMaxHeight(ref.current.clientHeight - bottomHeight);
+      setMaxHeight(ref.current.clientHeight - 30);
     }
   }, [!!ref.current?.clientHeight]);
 

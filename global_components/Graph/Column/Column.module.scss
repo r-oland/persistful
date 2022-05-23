@@ -7,7 +7,7 @@
   align-items: end;
   min-width: 45px;
 
-  @media screen and (min-width: $tablet) {
+  @media screen and (min-width: $phone) {
     min-width: 60px;
   }
 
@@ -20,7 +20,8 @@
     justify-items: center;
 
     .top {
-      height: 12px;
+      height: 18px;
+      font-weight: $weight-semi-bold;
       width: 100%;
       background-color: $green;
       font-size: $font-extra-small;
@@ -29,11 +30,6 @@
       justify-content: center;
       align-items: center;
       border-bottom: $border;
-
-      @media screen and (min-width: $tablet) {
-        height: 18px;
-        font-weight: $weight-semi-bold;
-      }
     }
   }
 
@@ -53,20 +49,10 @@
     margin: 0 auto;
   }
 
-  .mobile-values {
+  .mobile-icon {
+    margin-bottom: 0;
     display: grid;
-    gap: $spacing1;
     justify-content: center;
-    justify-items: center;
-
-    .value {
-      font-size: $font-extra-small;
-      font-weight: $weight-semi-bold;
-    }
-
-    .icon {
-      margin-bottom: 0;
-    }
   }
 
   &.penalty {

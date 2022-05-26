@@ -36,6 +36,16 @@
         font-size: $font-small;
         margin-top: $spacing1;
       }
+
+      .dates {
+        display: grid;
+        gap: $spacing1;
+
+        p,
+        strong {
+          font-size: $font-extra-small;
+        }
+      }
     }
 
     .bottom {

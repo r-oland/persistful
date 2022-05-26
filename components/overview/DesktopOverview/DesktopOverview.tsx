@@ -1,4 +1,5 @@
 // Components==============
+import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
@@ -13,6 +14,7 @@ import TopNav from './TopNav/TopNav';
 type DesktopOverviewContextType = {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  rewards: RewardEntity[];
 };
 
 export const DesktopOverviewContext = createContext(
@@ -27,7 +29,12 @@ export default function DesktopOverview() {
   const start = startOfMonth(activeDay);
   const end = endOfMonth(activeDay);
 
-  const value = useMemo(() => ({ activeDay, setActiveDay }), [activeDay]);
+  const { data: rewards } = useGetRewardsByDays(start, end, { retry: false });
+
+  const value = useMemo(
+    () => ({ activeDay, setActiveDay, rewards: rewards || [] }),
+    [activeDay, rewards?.length]
+  );
 
   return (
     <DesktopOverviewContext.Provider value={value}>

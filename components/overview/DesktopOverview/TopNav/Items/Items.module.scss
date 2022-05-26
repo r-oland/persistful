@@ -25,4 +25,14 @@
       text-align: initial;
     }
   }
+
+  .scroll-wrapper {
+    overflow: auto;
+    height: 218px;
+
+    .reward-wrapper {
+      display: grid;
+      gap: $spacing4;
+    }
+  }
 }

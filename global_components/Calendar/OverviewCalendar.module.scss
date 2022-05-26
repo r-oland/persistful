@@ -1,0 +1,19 @@
+@import 'styles/Variables';
+
+.wrapper {
+  position: relative;
+
+  .all-time {
+    position: absolute;
+    top: 5px;
+    right: 70px;
+    font-size: $font-small;
+    font-weight: $weight-semi-bold;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &.active {
+      color: $green;
+    }
+  }
+}

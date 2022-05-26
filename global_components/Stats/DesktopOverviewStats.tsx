@@ -10,7 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDays from 'actions/day/useGetDays';
 import { DesktopOverviewContext } from 'components/overview/DesktopOverview/DesktopOverview';
-import { endOfMonth, format, startOfMonth } from 'date-fns';
+import { format } from 'date-fns';
+import { timestamp } from 'global_components/Calendar/OverviewCalendar';
 import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
@@ -20,39 +21,33 @@ import styles from './Stats.module.scss';
 // =========================
 
 export default function DesktopOverviewStats() {
-  const { activeDay } = useContext(DesktopOverviewContext);
+  const { activeDay, range } = useContext(DesktopOverviewContext);
 
   const defaultState: {
     period: string;
     total: string;
     trackedDays: number;
+    totalDays: number;
     mostActive?: DailyActivityEntity;
   } = {
     period: format(activeDay, 'MMMM'),
     total: '0:00',
     trackedDays: 0,
+    totalDays: 0,
     mostActive: undefined,
   };
 
   const [displayData, setDisplayData] = useState(defaultState);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(
-    startOfMonth(activeDay),
-    endOfMonth(activeDay),
-    { retry: false }
-  );
+  const { data: days } = useGetDays(range[0], range[1], { retry: false });
 
   const { data: activityEntities } = useGetActivities();
 
-  const totalDays =
-    days
-      ?.map((d) => getDayAchievements(d).total)
-      .reduce((prev, cur) => prev + cur) || 0;
-
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
-    if (!days?.length) return setDisplayData(defaultState);
+    if (!days) return;
+    if (!days.length) return setDisplayData(defaultState);
 
     const activities: DailyActivityEntity[] = [];
 
@@ -79,13 +74,22 @@ export default function DesktopOverviewStats() {
 
     const mostActive = activities.sort((a, b) => b.count - a.count)?.[0];
 
+    const totalDays =
+      days
+        ?.map((d) => getDayAchievements(d).total)
+        .reduce((prev, cur) => prev + cur) || 0;
+
     return setDisplayData({
-      period: format(activeDay, 'MMMM'),
+      period:
+        range[0].getTime() === timestamp
+          ? 'All time'
+          : format(activeDay, 'MMMM'),
+      totalDays,
       trackedDays: days?.length || 0,
       mostActive,
       total: convertMinutesToHours(totalDays),
     });
-  }, [!!days?.length, activeDay.getTime()]);
+  }, [JSON.stringify(days)]);
 
   const cards = [
     {
@@ -97,7 +101,7 @@ export default function DesktopOverviewStats() {
     {
       name: 'Total',
       icon: faClock,
-      color: totalDays < 120 ? 'red' : 'green',
+      color: displayData.totalDays < 120 ? 'red' : 'green',
       data: displayData.total,
     },
     {
@@ -123,7 +127,10 @@ export default function DesktopOverviewStats() {
   ];
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)` }}
+    >
       {cards.map((card) => (
         <div
           key={card.name}

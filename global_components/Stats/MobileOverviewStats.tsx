@@ -58,7 +58,10 @@ export default function MobileOverviewStats() {
   ];
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)` }}
+    >
       {cards.map((card) => (
         <div
           key={card.name}

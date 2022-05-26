@@ -7,10 +7,8 @@ import Column from './Column/Column';
 import styles from './Graph.module.scss';
 // =========================
 
-type ActivitiesSum = { _id: string; count: number }[];
-
 export default function Graph({ range }: { range: Date[] }) {
-  const [activitySums, setActivitySums] = useState<ActivitiesSum>([]);
+  const [activitySums, setActivitySums] = useState<DailyActivityEntity[]>([]);
   const [maxHeight, setMaxHeight] = useState(0);
 
   const ref = useRef<HTMLDivElement>(null);
@@ -21,9 +19,9 @@ export default function Graph({ range }: { range: Date[] }) {
   const { data: days } = useGetDays(range[0], range[1]);
 
   useEffect(() => {
-    if (!days?.length) return;
+    if (!days?.length) return setActivitySums([]);
 
-    const activities: ActivitiesSum = [];
+    const activities: DailyActivityEntity[] = [];
 
     days.forEach((day) =>
       day.activities.forEach((activity) => {
@@ -43,7 +41,7 @@ export default function Graph({ range }: { range: Date[] }) {
         }
 
         // init item in array
-        return activities.push({ _id: activity._id, count: sum });
+        return activities.push({ ...activity, count: sum });
       })
     );
 

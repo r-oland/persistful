@@ -2,7 +2,7 @@
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
 import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
-import OverviewStats from 'global_components/Stats/OverviewStats';
+import MobileOverviewStats from 'global_components/Stats/MobileOverviewStats';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { createContext, useMemo, useState } from 'react';
 import { getPastDay } from 'utils/getPastDay';
@@ -36,9 +36,9 @@ export default function MobileOverview() {
           setActiveDay={setActiveDay}
           overview
         />
-        {!tabletQuery && <OverviewStats />}
+        {!tabletQuery && <MobileOverviewStats />}
         <div className={styles.content}>
-          {tabletQuery && <OverviewStats />}
+          {tabletQuery && <MobileOverviewStats />}
           <div className={styles.top}>
             <div className={styles['progress-wrapper']}>
               <ProgressCircle range={[lastWeek, activeDay]} />

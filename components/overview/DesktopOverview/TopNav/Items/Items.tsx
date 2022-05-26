@@ -4,9 +4,9 @@ import Calendar from 'global_components/Calendar/Calendar';
 import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { framerTopNavChild, framerTopNavParent } from 'utils/framerAnimations';
-import { TopNavSelectedOption } from '../GeneralTopNav';
+import { DesktopOverviewContext } from '../../DesktopOverview';
 import styles from './Items.module.scss';
 // =========================
 
@@ -29,13 +29,9 @@ function Reward({
   );
 }
 
-function CalendarComp({
-  activeDay,
-  setActiveDay,
-}: {
-  activeDay: Date;
-  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-}) {
+function CalendarComp() {
+  const { activeDay, setActiveDay } = useContext(DesktopOverviewContext);
+
   return (
     <motion.div variants={framerTopNavChild}>
       <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
@@ -44,29 +40,23 @@ function CalendarComp({
 }
 
 export default function Items({
-  selected,
-  setSelected,
   activeReward,
   rewardModalIsOpen,
   setRewardModalIsOpen,
-  activeDay,
-  setActiveDay,
+  setIsOpen,
 }: {
-  selected: TopNavSelectedOption;
-  setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
   activeReward?: RewardEntity;
   rewardModalIsOpen: boolean;
   setRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  activeDay: Date;
-  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+  const { activeDay } = useContext(DesktopOverviewContext);
+
   const ref = useRef(null);
 
   useOnClickOutside({
     refs: [ref],
-    handler: () => {
-      setSelected('none');
-    },
+    handler: () => setIsOpen(false),
   });
 
   const [key, setKey] = useState(0);
@@ -75,11 +65,11 @@ export default function Items({
     setKey(1);
     if (key === 0) return;
 
-    setSelected('none');
+    setIsOpen(false);
   }, [activeDay]);
 
   useEffect(() => {
-    if (rewardModalIsOpen) setSelected('none');
+    if (rewardModalIsOpen) setIsOpen(false);
   }, [rewardModalIsOpen]);
 
   return (
@@ -88,27 +78,14 @@ export default function Items({
       exit="hidden"
       animate="show"
       variants={framerTopNavParent}
-      className={`${styles.wrapper} ${styles[selected]}`}
+      className={`${styles.wrapper}`}
       ref={ref}
     >
-      {selected === 'bar' ? (
-        <>
-          <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
-          <Reward
-            activeReward={activeReward}
-            setModalIsOpen={setRewardModalIsOpen}
-          />
-        </>
-      ) : selected === 'streak' ? (
-        <Reward
-          activeReward={activeReward}
-          setModalIsOpen={setRewardModalIsOpen}
-        />
-      ) : selected === 'calendar' ? (
-        <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
-      ) : (
-        <></>
-      )}
+      <CalendarComp />
+      <Reward
+        activeReward={activeReward}
+        setModalIsOpen={setRewardModalIsOpen}
+      />
     </motion.div>
   );
 }

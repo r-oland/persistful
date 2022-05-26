@@ -15,7 +15,7 @@ const defaultValues = {
   trackedDays: 0,
 };
 
-export default function OverviewStats() {
+export default function MobileOverviewStats() {
   const [displayData, setDisplayData] = useState(defaultValues);
 
   const { activeDay } = useContext(MobileOverviewContext);
@@ -46,13 +46,13 @@ export default function OverviewStats() {
     {
       name: 'Tracked days',
       icon: faCheck,
-      color: 'green',
+      color: displayData.trackedDays <= 3 ? 'red' : 'green',
       data: displayData.trackedDays,
     },
     {
       name: 'Total',
       icon: faClock,
-      color: 'green',
+      color: totalDays < 120 ? 'red' : 'green',
       data: displayData.total,
     },
   ];

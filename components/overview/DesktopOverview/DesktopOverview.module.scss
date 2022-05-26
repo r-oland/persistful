@@ -2,4 +2,28 @@
 
 .wrapper {
   display: grid;
+
+  @media screen and (min-width: $desktop-extra-large) {
+    grid-template-columns: 1fr auto;
+  }
+
+  .content {
+    display: grid;
+    align-content: start;
+    max-width: 1350px;
+    height: calc($app-height - 50px);
+    overflow: auto;
+    padding: $spacing10 $spacing11 $spacing11;
+    gap: $spacing9;
+
+    @media screen and (min-width: $desktop-extra-large) {
+      padding-top: 90px;
+    }
+  }
+
+  .top {
+    display: grid;
+    gap: $spacing11;
+    grid-template-columns: 325px minmax(0, 1fr);
+  }
 }

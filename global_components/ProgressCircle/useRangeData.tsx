@@ -39,13 +39,18 @@ export const useRangeData = (range: Date[]) => {
 
   const total = Math.floor(totalDays / amountOfDays);
 
-  // calc streak
+  // Not rounded per day
   const streak =
+    days
+      ?.map((d) => getDayAchievements(d, true).streak)
+      .reduce((prev, cur) => prev + cur) || 0;
+
+  // Rounded per day
+  const displayStreak =
     days
       ?.map((d) => getDayAchievements(d).streak)
       .reduce((prev, cur) => prev + cur) || 0;
 
-  const displayStreak = Math.floor(streak);
   const averageStreak = streak / amountOfDays;
 
   // calc bonus time

@@ -3,7 +3,6 @@ import useGetUser from 'actions/user/useGetUser';
 import { add } from 'date-fns';
 import React from 'react';
 import { DayPicker } from 'react-day-picker';
-import styles from './Calendar.module.scss';
 // =========================
 
 export default function Calendar({
@@ -25,18 +24,16 @@ export default function Calendar({
     : undefined;
 
   return (
-    <div className={styles.wrapper}>
-      <DayPicker
-        selected={activeDay}
-        onDayClick={handleDayClick}
-        required
-        toDate={new Date()}
-        mode="single"
-        defaultMonth={activeDay}
-        weekStartsOn={1}
-        modifiers={modifiers}
-        modifiersClassNames={{ secondChance: 'rdp-second_chance' }}
-      />
-    </div>
+    <DayPicker
+      selected={activeDay}
+      onDayClick={handleDayClick}
+      required
+      toDate={new Date()}
+      mode="single"
+      defaultMonth={activeDay}
+      weekStartsOn={1}
+      modifiers={modifiers}
+      modifiersClassNames={{ secondChance: 'rdp-second_chance' }}
+    />
   );
 }

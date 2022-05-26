@@ -2,11 +2,8 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr 1fr;
 
   @media screen and (min-width: $tablet) {
-    grid-template-columns: initial;
-    grid-auto-flow: column;
     gap: $spacing6;
   }
 

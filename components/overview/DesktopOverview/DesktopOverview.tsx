@@ -5,7 +5,7 @@ import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import DesktopOverviewStats from 'global_components/Stats/DesktopOverviewStats';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React, { createContext, useMemo, useState } from 'react';
+import React, { createContext, useEffect, useMemo, useState } from 'react';
 import styles from './DesktopOverview.module.scss';
 import SideBar from './SideBar/SideBar';
 import TopNav from './TopNav/TopNav';
@@ -15,6 +15,8 @@ type DesktopOverviewContextType = {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
   rewards: RewardEntity[];
+  range: Date[];
+  setRange: React.Dispatch<React.SetStateAction<Date[]>>;
 };
 
 export const DesktopOverviewContext = createContext(
@@ -29,11 +31,25 @@ export default function DesktopOverview() {
   const start = startOfMonth(activeDay);
   const end = endOfMonth(activeDay);
 
-  const { data: rewards } = useGetRewardsByDays(start, end, { retry: false });
+  const [range, setRange] = useState([start, end]);
+
+  useEffect(() => {
+    setRange([start, end]);
+  }, [activeDay]);
+
+  const { data: rewards } = useGetRewardsByDays(range[0], range[1], {
+    retry: false,
+  });
 
   const value = useMemo(
-    () => ({ activeDay, setActiveDay, rewards: rewards || [] }),
-    [activeDay, rewards?.length]
+    () => ({
+      activeDay,
+      setActiveDay,
+      rewards: rewards || [],
+      range,
+      setRange,
+    }),
+    [rewards?.length, JSON.stringify(range)]
   );
 
   return (
@@ -44,9 +60,9 @@ export default function DesktopOverview() {
           <DesktopOverviewStats />
           <div className={styles.top}>
             <div>
-              <ProgressCircle range={[start, end]} />
+              <ProgressCircle range={range} />
             </div>
-            <Graph range={[start, end]} />
+            <Graph range={range} />
           </div>
         </div>
         {query && <SideBar />}

@@ -95,7 +95,10 @@ export default function DashboardStats() {
   const cards = query ? [...mobileCards, ...desktopCards] : mobileCards;
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)` }}
+    >
       {cards.map((card) => (
         <div
           key={card.name}

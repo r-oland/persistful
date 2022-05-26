@@ -16,8 +16,8 @@ export const shapes: PatternEntity[] = [
   {
     r: 95,
     shape: 'triangle',
-    size: 50,
+    size: 40,
     bottom: '0px',
-    left: '130px',
+    left: '160px',
   },
 ];

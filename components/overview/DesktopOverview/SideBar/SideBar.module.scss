@@ -22,6 +22,15 @@
       .title {
         margin-bottom: $spacing4;
       }
+
+      .reward-wrapper {
+        display: grid;
+        gap: $spacing4;
+      }
+
+      .no-rewards {
+        font-size: $font-small;
+      }
     }
   }
 }

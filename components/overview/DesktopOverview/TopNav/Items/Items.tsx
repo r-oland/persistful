@@ -1,7 +1,6 @@
 // Components==============
 import { motion } from 'framer-motion';
 import Calendar from 'global_components/Calendar/Calendar';
-import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -10,21 +9,21 @@ import { DesktopOverviewContext } from '../../DesktopOverview';
 import styles from './Items.module.scss';
 // =========================
 
-function Reward({
-  activeReward,
-  setModalIsOpen,
-}: {
-  activeReward?: RewardEntity;
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
-}) {
+function RewardsComp() {
+  const { rewards } = useContext(DesktopOverviewContext);
+
   return (
     <motion.div className={styles.reward} variants={framerTopNavChild}>
-      <h3 className={styles.title}>Next reward</h3>
-      {activeReward ? (
-        <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
-      ) : (
-        <NewRewardCard setModalIsOpen={setModalIsOpen} />
-      )}
+      <h3 className={styles.title}>
+        Earned reward{rewards.length > 1 ? 's' : ''}
+      </h3>
+      <div className={styles['scroll-wrapper']}>
+        <div className={styles['reward-wrapper']}>
+          {rewards.map((r) => (
+            <RewardCard reward={r} key={r._id} overview />
+          ))}
+        </div>
+      </div>
     </motion.div>
   );
 }
@@ -40,14 +39,8 @@ function CalendarComp() {
 }
 
 export default function Items({
-  activeReward,
-  rewardModalIsOpen,
-  setRewardModalIsOpen,
   setIsOpen,
 }: {
-  activeReward?: RewardEntity;
-  rewardModalIsOpen: boolean;
-  setRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const { activeDay } = useContext(DesktopOverviewContext);
@@ -68,10 +61,6 @@ export default function Items({
     setIsOpen(false);
   }, [activeDay]);
 
-  useEffect(() => {
-    if (rewardModalIsOpen) setIsOpen(false);
-  }, [rewardModalIsOpen]);
-
   return (
     <motion.div
       initial="hidden"
@@ -82,10 +71,7 @@ export default function Items({
       ref={ref}
     >
       <CalendarComp />
-      <Reward
-        activeReward={activeReward}
-        setModalIsOpen={setRewardModalIsOpen}
-      />
+      <RewardsComp />
     </motion.div>
   );
 }

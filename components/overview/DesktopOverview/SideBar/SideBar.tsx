@@ -2,7 +2,6 @@
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { AnimatePresence } from 'framer-motion';
 import Calendar from 'global_components/Calendar/Calendar';
-import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import RewardModal from 'global_components/RewardModal/RewardModal';
 import React, { useContext, useState } from 'react';
@@ -14,7 +13,9 @@ export default function SideBar() {
   const { data: activeReward } = useGetActiveReward();
   const [rewardModalIsOpen, setRewardModalIsOpen] = useState(false);
 
-  const { activeDay, setActiveDay } = useContext(DesktopOverviewContext);
+  const { activeDay, setActiveDay, rewards } = useContext(
+    DesktopOverviewContext
+  );
 
   return (
     <>
@@ -24,14 +25,20 @@ export default function SideBar() {
             <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
           </div>
           <div className={styles.reward}>
-            <h3 className={styles.title}>Next reward</h3>
-            {activeReward ? (
-              <RewardCard
-                reward={activeReward}
-                setModalIsOpen={setRewardModalIsOpen}
-              />
+            <h3 className={styles.title}>
+              Earned reward{rewards.length === 1 ? '' : 's'}
+            </h3>
+            {rewards.length ? (
+              <div className={styles['reward-wrapper']}>
+                {rewards.map((r) => (
+                  <RewardCard reward={r} key={r._id} overview />
+                ))}
+              </div>
             ) : (
-              <NewRewardCard setModalIsOpen={setRewardModalIsOpen} />
+              <p className={styles['no-rewards']}>
+                It seems that you did not earn any rewards during this period of
+                time.
+              </p>
             )}
           </div>
         </div>

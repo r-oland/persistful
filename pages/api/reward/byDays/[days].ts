@@ -30,6 +30,7 @@ export default async function handler(
       // get range reward entities
       const rangeRewards = await rewards
         .find({ userId, endDate: { $gte: start, $lt: end } })
+        .sort({ createdAt: -1 })
         .toArray();
 
       // if entities exist,fetch days

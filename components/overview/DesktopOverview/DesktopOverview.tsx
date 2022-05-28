@@ -9,6 +9,7 @@ import React, { createContext, useEffect, useMemo, useState } from 'react';
 import styles from './DesktopOverview.module.scss';
 import SideBar from './SideBar/SideBar';
 import TopNav from './TopNav/TopNav';
+import Weeks from './Weeks/Weeks';
 // =========================
 
 type DesktopOverviewContextType = {
@@ -64,6 +65,7 @@ export default function DesktopOverview() {
             </div>
             <Graph range={range} />
           </div>
+          <Weeks />
         </div>
         {query && <SideBar />}
       </div>

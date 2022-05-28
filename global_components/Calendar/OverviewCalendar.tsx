@@ -4,6 +4,7 @@ import { DesktopOverviewContext } from 'components/overview/DesktopOverview/Desk
 import { add, endOfMonth, startOfMonth } from 'date-fns';
 import React, { useContext } from 'react';
 import { DayPicker } from 'react-day-picker';
+import { setDateTime } from 'utils/setDateTime';
 import styles from './OverviewCalendar.module.scss';
 // =========================
 
@@ -25,7 +26,8 @@ export default function OverviewCalendar() {
 
   const { data: days } = useGetDays(start, end);
 
-  const trackedDays = days?.map((d) => new Date(d.createdAt)) || [];
+  const trackedDays =
+    days?.map((d) => setDateTime(new Date(d.createdAt), 'middle')) || [];
 
   const someTimeAgo = new Date(timestamp);
 

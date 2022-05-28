@@ -16,5 +16,5 @@ type UserEntity = {
   createdAt: Date;
   activeReward: string;
   lastValidation: Date;
-  lastSecondChance?: Date;
+  secondChanceDates?: Date[];
 };

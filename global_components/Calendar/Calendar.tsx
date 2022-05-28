@@ -19,9 +19,8 @@ export default function Calendar({
     setActiveDay(middleOfDay);
   };
 
-  const modifiers = user?.lastSecondChance
-    ? { secondChance: [new Date(user?.lastSecondChance)] }
-    : undefined;
+  const secondChance =
+    user?.secondChanceDates?.map((scd) => new Date(scd)) || [];
 
   return (
     <DayPicker
@@ -32,7 +31,7 @@ export default function Calendar({
       mode="single"
       defaultMonth={activeDay}
       weekStartsOn={1}
-      modifiers={modifiers}
+      modifiers={{ secondChance }}
       modifiersClassNames={{ secondChance: 'rdp-second_chance' }}
     />
   );

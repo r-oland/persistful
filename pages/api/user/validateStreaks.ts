@@ -35,7 +35,7 @@ export default async function handler(
     const reset = async () => {
       await users.updateOne(
         { _id },
-        { $set: { streak: 0, lastSecondChance: undefined } }
+        { $set: { streak: 0, secondChanceDates: undefined } }
       );
       if (activeReward)
         await rewards.updateOne(
@@ -57,37 +57,37 @@ export default async function handler(
         $lt: setDateTime(yesterdayDate, 'end'),
       },
     });
+    const yesterdayHasStreak = !!getDayAchievements(yesterday).streak;
+
+    // get day before yesterday
+    const dayBeforeYesterdayDate = getPastDay(new Date(), 2);
+    const dayBeforeYesterday = await days.findOne({
+      userId,
+      createdAt: {
+        $gte: setDateTime(dayBeforeYesterdayDate, 'start'),
+        $lt: setDateTime(dayBeforeYesterdayDate, 'end'),
+      },
+    });
+    const dayBeforeYesterdayHasStreak =
+      !!getDayAchievements(dayBeforeYesterday).streak;
 
     if (user?.rules.secondChange) {
-      // get day before yesterday
-      const dayBeforeYesterdayDate = getPastDay(new Date(), 2);
-      const dayBeforeYesterday = await days.findOne({
-        userId,
-        createdAt: {
-          $gte: setDateTime(dayBeforeYesterdayDate, 'start'),
-          $lt: setDateTime(dayBeforeYesterdayDate, 'end'),
-        },
-      });
-
       // If there is no entry from yesterday and the day before that reset the streak
       if (!yesterday && !dayBeforeYesterday) return await reset();
 
       // If daily goals weren't achieved, reset the streak
-      if (
-        !getDayAchievements(yesterday).streak &&
-        !getDayAchievements(dayBeforeYesterday).streak
-      )
+      if (!yesterdayHasStreak && !dayBeforeYesterdayHasStreak)
         return await reset();
     } else {
       // If there is no entry from yesterday reset the streak
       if (!yesterday) return await reset();
 
       // If daily goal wasn't achieved, reset the streak
-      if (!getDayAchievements(yesterday).streak) return await reset();
+      if (!yesterdayHasStreak) return await reset();
     }
 
     //
-    // * Now it's clear that there is a streak, so we need to calculate it. *
+    // * Now it's clear that there is a streak (unless yesterday was not filled in and can use a second chance), so we need to calculate it. *
     //
 
     // Get all days except for today (today is calculated in front end)
@@ -193,12 +193,30 @@ export default async function handler(
       }
     );
 
-    // Get last second chance entity (can be undefined)
-    const lastSecondChance =
-      secondChanceDates?.[(secondChanceDates?.length || 0) - 1];
+    // Their was no day created yesterday, but it might take advantage of the second chance rule
+    if (user?.rules.secondChange && !yesterday && dayBeforeYesterdayHasStreak) {
+      const lastSecondChanceUsed = secondChanceDates?.[0];
+
+      const yesterdayCanUseSecondChance =
+        !lastSecondChanceUsed ||
+        differenceInDays(
+          setDateTime(yesterdayDate, 'middle'),
+          lastSecondChanceUsed
+        ) >= 7;
+
+      // Can use second chance so add it to the array
+      if (yesterdayCanUseSecondChance)
+        secondChanceDates = [
+          setDateTime(yesterdayDate, 'middle'),
+          ...secondChanceDates,
+        ];
+
+      // can't use second chance so reset te entires streak
+      if (!yesterdayCanUseSecondChance) return await reset();
+    }
 
     // Set last second chance in user object so it can be displayed in the front end
-    await users.updateOne({ _id }, { $set: { lastSecondChance } });
+    await users.updateOne({ _id }, { $set: { secondChanceDates } });
 
     const dateAfterDateThatDidNotAchieveGoal =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
@@ -231,8 +249,8 @@ export default async function handler(
     await users.updateOne({ _id }, { $set: { streak: total } });
 
     if (activeReward && startDateGeneralStreak) {
-      // if genreal streak if going on for longer then the reward streak -> activeReward.created_at
-      // if genreal streak is later then the active reward -> start date general streak
+      // if general streak if going on for longer then the reward streak -> activeReward.created_at
+      // if general streak is later then the active reward -> start date general streak
       const startDateRewardStreak =
         new Date(startDateGeneralStreak).getTime() <
         new Date(activeReward.createdAt).getTime()

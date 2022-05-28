@@ -40,14 +40,16 @@ export default function DesktopOverviewStats() {
   const [displayData, setDisplayData] = useState(defaultState);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(range[0], range[1], { retry: false });
+  const { data: days, isLoading } = useGetDays(range[0], range[1], {
+    retry: false,
+  });
 
   const { data: activityEntities } = useGetActivities();
 
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
-    if (!days) return;
-    if (!days.length) return setDisplayData(defaultState);
+    if (!days && !isLoading) return setDisplayData(defaultState);
+    if (isLoading) return;
 
     const activities: DailyActivityEntity[] = [];
 
@@ -89,7 +91,7 @@ export default function DesktopOverviewStats() {
       mostActive,
       total: convertMinutesToHours(totalDays),
     });
-  }, [JSON.stringify(days)]);
+  }, [JSON.stringify(days), isLoading]);
 
   const cards = [
     {

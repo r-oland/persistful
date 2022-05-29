@@ -1,7 +1,9 @@
+import { addHours, endOfDay, startOfDay } from 'date-fns';
+
 export const setDateTime = (date: Date, time: 'start' | 'middle' | 'end') =>
   time === 'start'
-    ? new Date(date.setUTCHours(0, 0, 0, 0))
+    ? startOfDay(date)
     : time === 'end'
-    ? new Date(date.setUTCHours(23, 59, 59, 999))
+    ? endOfDay(date)
     : // time === 'middle'
-      new Date(date.setUTCHours(12, 0, 0, 0));
+      addHours(startOfDay(date), 12);

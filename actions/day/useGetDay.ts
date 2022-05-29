@@ -1,7 +1,7 @@
 // Components==============
 import axios from 'axios';
+import { formatISO } from 'date-fns';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { getLocalISOTime } from 'utils/getLocalISOTime';
 // =========================
 
 const getDay = async (date: string) =>
@@ -17,7 +17,7 @@ export default function useGetDay(
     ['days', key],
     () =>
       // convert to local time
-      getDay(getLocalISOTime(date.getTime())),
+      getDay(formatISO(date)),
     options
   );
 

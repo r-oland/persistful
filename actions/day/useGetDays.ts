@@ -1,7 +1,7 @@
 // Components==============
 import axios from 'axios';
+import { formatISO } from 'date-fns';
 import { useQuery, UseQueryOptions } from 'react-query';
-import { getLocalISOTime } from 'utils/getLocalISOTime';
 // =========================
 
 const getDays = async (date: string) =>
@@ -15,9 +15,7 @@ export default function useGetDays(
   const key = `${startDate.toLocaleDateString()} - ${endDate.toLocaleDateString()}`;
 
   // convert to local time
-  const dates = `${getLocalISOTime(startDate.getTime())} ${getLocalISOTime(
-    endDate.getTime()
-  )}`;
+  const dates = `${formatISO(startDate)} ${formatISO(endDate)}`;
 
   const query = useQuery<DayEntity[]>(
     ['days', key],

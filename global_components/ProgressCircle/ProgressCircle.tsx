@@ -60,21 +60,29 @@ function DayComponent({ activeDay }: { activeDay: Date }) {
   return <DisplayComponent displayData={displayData} />;
 }
 
-function RangeComponent({ range }: { range: Date[] }) {
-  const displayData = useRangeData(range);
+function RangeComponent({
+  days,
+  isLoading,
+}: {
+  days?: DayEntity[];
+  isLoading?: boolean;
+}) {
+  const displayData = useRangeData(days, isLoading);
 
   return <DisplayComponent displayData={displayData} />;
 }
 
 export default function ProgressCircle({
   activeDay,
-  range,
+  days,
+  isLoading,
 }: {
   activeDay?: Date;
-  range?: Date[];
+  days?: DayEntity[];
+  isLoading?: boolean;
 }) {
   if (activeDay) return <DayComponent activeDay={activeDay} />;
-  if (range) return <RangeComponent range={range} />;
 
-  return <></>;
+  // overview
+  return <RangeComponent days={days} isLoading={isLoading} />;
 }

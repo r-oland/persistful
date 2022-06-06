@@ -1,4 +1,5 @@
 // Components==============
+import useGetDays from 'actions/day/useGetDays';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
 import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
@@ -23,10 +24,15 @@ export default function MobileOverview() {
 
   const tabletQuery = useMediaQ('min', 768);
 
-  const value = useMemo(() => ({ activeDay, setActiveDay }), [activeDay]);
-
   // Change it so that it is 6 days in the past. -> not 7 because today also counts
   const lastWeek = getPastDay(activeDay, 6);
+
+  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
+  const { data: days, isLoading } = useGetDays(lastWeek, activeDay, {
+    retry: false,
+  });
+
+  const value = useMemo(() => ({ activeDay, setActiveDay }), [activeDay]);
 
   return (
     <MobileOverviewContext.Provider value={value}>
@@ -41,10 +47,10 @@ export default function MobileOverview() {
           {tabletQuery && <MobileOverviewStats />}
           <div className={styles.top}>
             <div className={styles['progress-wrapper']}>
-              <ProgressCircle range={[lastWeek, activeDay]} />
+              <ProgressCircle days={days || []} />
             </div>
           </div>
-          <Graph range={[lastWeek, activeDay]} />
+          <Graph days={days} isLoading={isLoading} />
         </div>
       </div>
     </MobileOverviewContext.Provider>

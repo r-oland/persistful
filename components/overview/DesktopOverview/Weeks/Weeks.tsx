@@ -1,5 +1,4 @@
 // Components==============
-import useGetDays from 'actions/day/useGetDays';
 import { endOfWeek, startOfWeek } from 'date-fns';
 import React, { useContext, useEffect, useState } from 'react';
 import { setDateTime } from 'utils/setDateTime';
@@ -9,10 +8,8 @@ import Week from './Week/Week';
 import styles from './Weeks.module.scss';
 // =========================
 
-export default function Weeks() {
-  const { range } = useContext(DesktopOverviewContext);
-
-  const { data: days, isLoading } = useGetDays(range[0], range[1]);
+export default function Weeks({ days }: { days?: DayEntity[] }) {
+  const { isLoading } = useContext(DesktopOverviewContext);
 
   const [weeksInRange, setWeeksInRange] = useState<DayEntity[][]>([]);
 
@@ -57,9 +54,11 @@ export default function Weeks() {
   return (
     <div className={styles.wrapper}>
       <h3>Weeks</h3>
-      {weeksInRange.map((week, i) => (
-        <Week week={week} key={i} />
-      ))}
+      <div className={styles.weeks}>
+        {weeksInRange.map((week, i) => (
+          <Week days={week} key={i} />
+        ))}
+      </div>
     </div>
   );
 }

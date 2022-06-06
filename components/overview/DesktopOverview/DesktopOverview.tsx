@@ -1,14 +1,13 @@
 // Components==============
+import useGetDays from 'actions/day/useGetDays';
 import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
 import { endOfMonth, startOfMonth } from 'date-fns';
-import Graph from 'global_components/Graph/Graph';
-import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
-import DesktopOverviewStats from 'global_components/Stats/DesktopOverviewStats';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import styles from './DesktopOverview.module.scss';
 import SideBar from './SideBar/SideBar';
 import TopNav from './TopNav/TopNav';
+import Week from './Weeks/Week/Week';
 import Weeks from './Weeks/Weeks';
 // =========================
 
@@ -18,6 +17,7 @@ type DesktopOverviewContextType = {
   rewards: RewardEntity[];
   range: Date[];
   setRange: React.Dispatch<React.SetStateAction<Date[]>>;
+  isLoading: boolean;
 };
 
 export const DesktopOverviewContext = createContext(
@@ -42,6 +42,11 @@ export default function DesktopOverview() {
     retry: false,
   });
 
+  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
+  const { data: days, isLoading } = useGetDays(range[0], range[1], {
+    retry: false,
+  });
+
   const value = useMemo(
     () => ({
       activeDay,
@@ -49,8 +54,9 @@ export default function DesktopOverview() {
       rewards: rewards || [],
       range,
       setRange,
+      isLoading,
     }),
-    [rewards?.length, JSON.stringify(range)]
+    [rewards?.length, JSON.stringify(range), isLoading]
   );
 
   return (
@@ -58,14 +64,8 @@ export default function DesktopOverview() {
       <div className={styles.wrapper}>
         {!query && <TopNav />}
         <div className={styles.content}>
-          <DesktopOverviewStats />
-          <div className={styles.top}>
-            <div>
-              <ProgressCircle range={range} />
-            </div>
-            <Graph range={range} />
-          </div>
-          <Weeks />
+          <Week days={days} sum />
+          <Weeks days={days} />
         </div>
         {query && <SideBar />}
       </div>

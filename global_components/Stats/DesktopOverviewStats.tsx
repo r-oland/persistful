@@ -8,7 +8,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActivities from 'actions/activity/useGetActivities';
-import useGetDays from 'actions/day/useGetDays';
 import { DesktopOverviewContext } from 'components/overview/DesktopOverview/DesktopOverview';
 import { format } from 'date-fns';
 import { timestamp } from 'global_components/Calendar/OverviewCalendar';
@@ -20,8 +19,14 @@ import { getDayAchievements } from 'utils/getDayAchievements';
 import styles from './Stats.module.scss';
 // =========================
 
-export default function DesktopOverviewStats() {
-  const { activeDay, range } = useContext(DesktopOverviewContext);
+export default function DesktopOverviewStats({
+  days,
+  isSum,
+}: {
+  days?: DayEntity[];
+  isSum?: boolean;
+}) {
+  const { activeDay, range, isLoading } = useContext(DesktopOverviewContext);
 
   const defaultState: {
     period: string;
@@ -38,11 +43,6 @@ export default function DesktopOverviewStats() {
   };
 
   const [displayData, setDisplayData] = useState(defaultState);
-
-  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days, isLoading } = useGetDays(range[0], range[1], {
-    retry: false,
-  });
 
   const { data: activityEntities } = useGetActivities();
 
@@ -79,13 +79,23 @@ export default function DesktopOverviewStats() {
     const totalDays =
       days
         ?.map((d) => getDayAchievements(d).total)
-        .reduce((prev, cur) => prev + cur) || 0;
+        .reduce((prev, cur) => prev + cur, 0) || 0;
+
+    const firstDay = format(
+      new Date(days![days!.length - 1].createdAt),
+      'dd MMM'
+    );
+    const lastDay = format(new Date(days![0].createdAt), 'dd MMM');
+
+    const weekPeriod =
+      firstDay === lastDay ? firstDay : `${firstDay} - ${lastDay}`;
 
     return setDisplayData({
-      period:
-        range[0].getTime() === timestamp
+      period: isSum
+        ? range[0].getTime() === timestamp
           ? 'All time'
-          : format(activeDay, 'MMMM'),
+          : format(activeDay, 'MMMM')
+        : weekPeriod,
       totalDays,
       trackedDays: days?.length || 0,
       mostActive,

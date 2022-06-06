@@ -1,13 +1,18 @@
 // Components==============
 import useGetActivities from 'actions/activity/useGetActivities';
-import useGetDays from 'actions/day/useGetDays';
 import React, { useEffect, useRef, useState } from 'react';
 import { getActivitySum } from 'utils/getActivitySum';
 import Column from './Column/Column';
 import styles from './Graph.module.scss';
 // =========================
 
-export default function Graph({ range }: { range: Date[] }) {
+export default function Graph({
+  days,
+  isLoading,
+}: {
+  days?: DayEntity[];
+  isLoading: boolean;
+}) {
   const [activitySums, setActivitySums] = useState<DailyActivityEntity[]>([]);
   const [maxHeight, setMaxHeight] = useState(0);
 
@@ -16,14 +21,14 @@ export default function Graph({ range }: { range: Date[] }) {
   const lines = Array.from(Array(5).keys());
 
   const { data: activityEntities } = useGetActivities();
-  const { data: days } = useGetDays(range[0], range[1]);
 
   useEffect(() => {
-    if (!days?.length) return setActivitySums([]);
+    if (isLoading) return;
+    if (!days?.length && !isLoading) return setActivitySums([]);
 
     const activities: DailyActivityEntity[] = [];
 
-    days.forEach((day) =>
+    days?.forEach((day) =>
       day.activities.forEach((activity) => {
         const sum = getActivitySum([activity]);
 
@@ -46,7 +51,7 @@ export default function Graph({ range }: { range: Date[] }) {
     );
 
     setActivitySums(activities);
-  }, [JSON.stringify(days)]);
+  }, [JSON.stringify(days), isLoading]);
 
   // Grab activities from the daily snapshot to use the values that where used that day
   const activities = activitySums

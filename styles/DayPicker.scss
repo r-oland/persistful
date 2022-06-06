@@ -77,6 +77,10 @@
     padding: 3.5px 8.5px;
   }
 
+  .rdp-current_week {
+    color: $green-dark;
+  }
+
   .rdp-day_selected {
     transition: 0.2s;
     color: $white;

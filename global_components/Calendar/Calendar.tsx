@@ -1,8 +1,9 @@
 // Components==============
 import useGetUser from 'actions/user/useGetUser';
-import { add } from 'date-fns';
+import { add, addDays } from 'date-fns';
 import React from 'react';
 import { DayPicker } from 'react-day-picker';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 // =========================
 
 export default function Calendar({
@@ -19,6 +20,12 @@ export default function Calendar({
     setActiveDay(middleOfDay);
   };
 
+  const { firstDay } = getStartEndWeek(activeDay);
+
+  const currentWeek = Array.from(Array(7).keys()).map((i) =>
+    addDays(firstDay, i)
+  );
+
   const secondChance =
     user?.secondChanceDates?.map((scd) => new Date(scd)) || [];
 
@@ -31,8 +38,11 @@ export default function Calendar({
       mode="single"
       defaultMonth={activeDay}
       weekStartsOn={1}
-      modifiers={{ secondChance }}
-      modifiersClassNames={{ secondChance: 'rdp-second_chance' }}
+      modifiers={{ secondChance, currentWeek }}
+      modifiersClassNames={{
+        secondChance: 'rdp-second_chance',
+        currentWeek: 'rdp-current_week',
+      }}
     />
   );
 }

@@ -10,17 +10,26 @@ import styles from './Week.module.scss';
 export default function Week({
   days,
   sum,
+  lastItem,
 }: {
   days?: DayEntity[];
   sum?: boolean;
+  lastItem?: boolean;
 }) {
   const { isLoading } = useContext(DesktopOverviewContext);
-  const [isOpenState, setIsOpenState] = useState();
+  const [isOpenState, setIsOpenState] = useState(false);
 
   const isOpen = sum ? true : isOpenState;
 
   return (
-    <div className={styles.wrapper}>
+    <div
+      className={styles.wrapper}
+      onClick={() => setIsOpenState((prev) => !prev)}
+      style={{
+        cursor: !sum ? 'pointer' : 'default',
+        marginBottom: isOpenState && !lastItem ? '2.5rem' : '',
+      }}
+    >
       <DesktopOverviewStats days={days} isSum={sum} />
       {isOpen && (
         <div className={styles.top}>

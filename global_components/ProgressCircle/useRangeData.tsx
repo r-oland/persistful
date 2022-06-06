@@ -1,5 +1,4 @@
 // Components==============
-import useGetDays from 'actions/day/useGetDays';
 import { useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
@@ -17,17 +16,8 @@ const defaultValues = {
 
 export type DayDataTypes = typeof defaultValues;
 
-export const useRangeData = (range: Date[]) => {
+export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
   const [displayData, setDisplayData] = useState(defaultValues);
-
-  const {
-    data: days,
-    isLoading,
-    isLoadingError,
-  } = useGetDays(range[0], range[1], {
-    // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-    retry: false,
-  });
 
   const amountOfDays = days?.length || 0;
 
@@ -35,7 +25,7 @@ export const useRangeData = (range: Date[]) => {
   const totalDays =
     days
       ?.map((d) => getDayAchievements(d, true).total)
-      .reduce((prev, cur) => prev + cur) || 0;
+      .reduce((prev, cur) => prev + cur, 0) || 0;
 
   const total = Math.floor(totalDays / amountOfDays);
 
@@ -43,13 +33,13 @@ export const useRangeData = (range: Date[]) => {
   const streak =
     days
       ?.map((d) => getDayAchievements(d, true).streak)
-      .reduce((prev, cur) => prev + cur) || 0;
+      .reduce((prev, cur) => prev + cur, 0) || 0;
 
   // Rounded per day
   const displayStreak =
     days
       ?.map((d) => getDayAchievements(d).streak)
-      .reduce((prev, cur) => prev + cur) || 0;
+      .reduce((prev, cur) => prev + cur, 0) || 0;
 
   const averageStreak = streak / amountOfDays;
 
@@ -61,7 +51,7 @@ export const useRangeData = (range: Date[]) => {
 
         return d.rules.prm ? bonusScore / (d.rules.dailyGoal || 0) : 0;
       })
-      .reduce((prev, cur) => prev + cur) || 0;
+      .reduce((prev, cur) => prev + cur, 0) || 0;
 
   const averageBonusTime = totalBonusTime / amountOfDays;
 
@@ -71,12 +61,17 @@ export const useRangeData = (range: Date[]) => {
 
   // calc daily goal
   const totalDailyGoal =
-    days?.map((d) => d.rules.dailyGoal).reduce((prev, cur) => prev + cur) || 0;
+    days?.map((d) => d.rules.dailyGoal).reduce((prev, cur) => prev + cur, 0) ||
+    0;
 
   const dailyGoal = convertMinutesToHours(totalDailyGoal / amountOfDays);
 
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
+    if (isLoading) return;
+    // if day doesn't exists in overview page -> reset data
+    if (!days?.length && !isLoading) return setDisplayData(defaultValues);
+
     if (days)
       return setDisplayData({
         progress,
@@ -86,10 +81,7 @@ export const useRangeData = (range: Date[]) => {
         displayStreak,
         dailyGoal,
       });
-
-    // if day doesn't exists in overview page -> reset data
-    if (!days && !isLoading) setDisplayData(defaultValues);
-  }, [range[0].getTime(), !!days, isLoadingError]);
+  }, [days?.[0].createdAt, isLoading]);
 
   return displayData;
 };

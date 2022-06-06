@@ -12,6 +12,7 @@ import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { getPastDay } from 'utils/getPastDay';
+import useGetDays from 'actions/day/useGetDays';
 // =========================
 
 type DashboardContextType = {
@@ -47,6 +48,11 @@ export default function Dashboard() {
   // Change it so that it is 6 days in the past. -> not 7 because today also counts
   const lastWeek = getPastDay(activeDay, 6);
 
+  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
+  const { data: days, isLoading } = useGetDays(lastWeek, activeDay, {
+    retry: false,
+  });
+
   const value = useMemo(
     () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),
     [activeDay]
@@ -68,7 +74,7 @@ export default function Dashboard() {
             <div className={styles['progress-wrapper']}>
               <ProgressCircle activeDay={activeDay} />
             </div>
-            {desktopQuery && <Graph range={[lastWeek, activeDay]} />}
+            {desktopQuery && <Graph days={days} isLoading={isLoading} />}
           </div>
           <Activities />
         </div>

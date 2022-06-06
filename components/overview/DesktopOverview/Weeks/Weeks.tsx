@@ -55,9 +55,16 @@ export default function Weeks({ days }: { days?: DayEntity[] }) {
     <div className={styles.wrapper}>
       <h3>Weeks</h3>
       <div className={styles.weeks}>
-        {weeksInRange.map((week, i) => (
-          <Week days={week} key={i} />
-        ))}
+        {weeksInRange.map(
+          (week, i) =>
+            !!week.length && (
+              <Week
+                days={week}
+                key={week[0]._id}
+                lastItem={weeksInRange.length - 1 === i}
+              />
+            )
+        )}
       </div>
     </div>
   );

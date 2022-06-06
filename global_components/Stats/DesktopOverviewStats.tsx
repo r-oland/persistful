@@ -16,6 +16,7 @@ import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
 import { getActivitySum } from 'utils/getActivitySum';
 import { getDayAchievements } from 'utils/getDayAchievements';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './Stats.module.scss';
 // =========================
 
@@ -81,21 +82,24 @@ export default function DesktopOverviewStats({
         ?.map((d) => getDayAchievements(d).total)
         .reduce((prev, cur) => prev + cur, 0) || 0;
 
-    const firstDay = format(
-      new Date(days![days!.length - 1].createdAt),
-      'dd MMM'
-    );
-    const lastDay = format(new Date(days![0].createdAt), 'dd MMM');
+    const isAllTime = range[0].getTime() === timestamp;
 
-    const weekPeriod =
-      firstDay === lastDay ? firstDay : `${firstDay} - ${lastDay}`;
+    const { firstDay, lastDay } = getStartEndWeek(
+      new Date(days![0].createdAt),
+      !isAllTime
+    );
+
+    const startEndWeek =
+      firstDay === lastDay
+        ? format(firstDay, 'dd MMM')
+        : `${format(firstDay, 'dd MMM')} - ${format(lastDay, 'dd MMM')}`;
 
     return setDisplayData({
       period: isSum
-        ? range[0].getTime() === timestamp
+        ? isAllTime
           ? 'All time'
-          : format(activeDay, 'MMMM')
-        : weekPeriod,
+          : format(activeDay, 'MMM')
+        : startEndWeek,
       totalDays,
       trackedDays: days?.length || 0,
       mostActive,
@@ -133,7 +137,7 @@ export default function DesktopOverviewStats({
           : 'green'
         : 'red',
       data: displayData.mostActive
-        ? getActivityCount(displayData.mostActive)
+        ? getActivityCount(displayData.mostActive, true)
         : '0:00',
     },
   ];

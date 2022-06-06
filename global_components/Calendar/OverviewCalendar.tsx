@@ -24,7 +24,7 @@ export default function OverviewCalendar() {
   const start = startOfMonth(activeDay);
   const end = endOfMonth(activeDay);
 
-  const { data: days } = useGetDays(start, end);
+  const { data: days } = useGetDays(start, end, { retry: false });
 
   const trackedDays =
     days?.map((d) => setDateTime(new Date(d.createdAt), 'middle')) || [];

@@ -1,18 +1,18 @@
 // Components==============
+import useGetDays from 'actions/day/useGetDays';
 import Activities from 'components/dashboard/Activities/Activities';
 import styles from 'components/dashboard/Dashboard.module.scss';
-import Graph from 'global_components/Graph/Graph';
 import SideBar from 'components/dashboard/SideBar/SideBar';
 import ValidateEffect from 'components/dashboard/ValidateEffect';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import DashboardStats from 'global_components/Stats/DashboardStats';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
-import { getPastDay } from 'utils/getPastDay';
-import useGetDays from 'actions/day/useGetDays';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 // =========================
 
 type DashboardContextType = {
@@ -45,11 +45,10 @@ export default function Dashboard() {
 
   const [activeDay, setActiveDay] = useState<Date>(new Date());
 
-  // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(activeDay, 6);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days, isLoading } = useGetDays(lastWeek, activeDay, {
+  const { data: days, isLoading } = useGetDays(firstDay, lastDay, {
     retry: false,
   });
 

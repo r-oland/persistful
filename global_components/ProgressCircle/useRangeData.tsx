@@ -81,7 +81,7 @@ export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
         displayStreak,
         dailyGoal,
       });
-  }, [days?.[0].createdAt, isLoading]);
+  }, [days?.[0]?.createdAt, isLoading]);
 
   return displayData;
 };

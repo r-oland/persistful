@@ -2,11 +2,11 @@
 import { faCheck, faClock } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDays from 'actions/day/useGetDays';
+import { MobileOverviewContext } from 'components/overview/MobileOverview/MobileOverview';
 import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
-import { getPastDay } from 'utils/getPastDay';
-import { MobileOverviewContext } from 'components/overview/MobileOverview/MobileOverview';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './Stats.module.scss';
 // =========================
 
@@ -20,11 +20,10 @@ export default function MobileOverviewStats() {
 
   const { activeDay } = useContext(MobileOverviewContext);
 
-  // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(activeDay, 6);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(lastWeek, activeDay, { retry: false });
+  const { data: days } = useGetDays(firstDay, lastDay, { retry: false });
 
   const totalDays =
     days

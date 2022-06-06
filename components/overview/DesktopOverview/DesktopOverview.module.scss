@@ -17,6 +17,7 @@
     gap: $spacing9;
 
     @media screen and (min-width: $desktop-extra-large) {
+      height: $app-height;
       padding-top: 90px;
     }
   }

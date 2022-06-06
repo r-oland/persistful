@@ -6,7 +6,7 @@ import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import MobileOverviewStats from 'global_components/Stats/MobileOverviewStats';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { createContext, useMemo, useState } from 'react';
-import { getPastDay } from 'utils/getPastDay';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './MobileOverview.module.scss';
 // =========================
 
@@ -24,11 +24,10 @@ export default function MobileOverview() {
 
   const tabletQuery = useMediaQ('min', 768);
 
-  // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(activeDay, 6);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days, isLoading } = useGetDays(lastWeek, activeDay, {
+  const { data: days, isLoading } = useGetDays(firstDay, lastDay, {
     retry: false,
   });
 

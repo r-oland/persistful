@@ -10,9 +10,9 @@ import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { useEffect, useState } from 'react';
-import { getPastDay } from 'utils/getPastDay';
-import Items from './Items/Items';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './GeneralTopNav.module.scss';
+import Items from './Items/Items';
 // =========================
 
 export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
@@ -48,7 +48,7 @@ export default function GeneralTopNav({
       return setSelected('none');
   }, [query]);
 
-  const lastWeek = getPastDay(activeDay, 6);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   return (
     <>
@@ -64,8 +64,8 @@ export default function GeneralTopNav({
             <FontAwesomeIcon icon={faCalendarDay} />
             <p>
               {overview
-                ? `${format(lastWeek, 'dd MMM')} - ${format(
-                    activeDay,
+                ? `${format(firstDay, 'dd MMM')} - ${format(
+                    lastDay,
                     'dd MMM '
                   )}`
                 : format(activeDay, 'dd MMMM yyyy')}

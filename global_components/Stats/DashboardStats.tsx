@@ -12,7 +12,7 @@ import { DashboardContext } from 'pages';
 import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
-import { getPastDay } from 'utils/getPastDay';
+import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './Stats.module.scss';
 // =========================
 
@@ -28,10 +28,9 @@ export default function DashboardStats() {
 
   const query = useMediaQ('min', 1024);
 
-  // Change it so that it is 6 days in the past. -> not 7 because today also counts
-  const lastWeek = getPastDay(activeDay, 6);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
-  const { data: days } = useGetDays(lastWeek, activeDay);
+  const { data: days } = useGetDays(firstDay, lastDay);
 
   const amountOfDays = days?.length || 0;
 

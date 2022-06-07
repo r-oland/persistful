@@ -2,6 +2,7 @@
 import { faPlus, faSave, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAddActivity from 'actions/activity/useAddActivity';
+import useDeleteActivity from 'actions/activity/useDeleteActivity';
 import useGetActivities from 'actions/activity/useGetActivities';
 import useUpdateActivity from 'actions/activity/useUpdateActivity';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -45,6 +46,7 @@ export default function Content({
   const { data: activities } = useGetActivities();
   const updateActivity = useUpdateActivity();
   const addActivity = useAddActivity();
+  const deleteActivity = useDeleteActivity();
   const newActivity = !activity;
   const localActivity = activity || defaultValues;
 
@@ -144,6 +146,19 @@ export default function Content({
         id: activity._id,
       })
       .then(() => handleSwitch(activity._id));
+  };
+
+  const handleDelete = () => {
+    if (!activity?._id) return;
+
+    // if activity has no history, immediately delete it
+    if (!activity.count)
+      return deleteActivity
+        .mutateAsync(activity._id)
+        .then(() => handleSwitch('new-activity'));
+
+    // else open confirm modal
+    setDeleteModalIsOpen(true);
   };
   //
 
@@ -281,7 +296,7 @@ export default function Content({
           </Button>
         ) : (
           <>
-            <Button color="red" onClick={() => setDeleteModalIsOpen(true)}>
+            <Button color="red" onClick={handleDelete}>
               <FontAwesomeIcon icon={faTrash} /> Delete
             </Button>
             <Button

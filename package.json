@@ -8,10 +8,10 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/pro-regular-svg-icons": "^5.15.4",
-    "@fortawesome/pro-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
+    "@fortawesome/fontawesome-svg-core": "^6.1.1",
+    "@fortawesome/pro-regular-svg-icons": "^6.1.1",
+    "@fortawesome/pro-solid-svg-icons": "^6.1.1",
+    "@fortawesome/react-fontawesome": "^0.1.18",
     "@google-cloud/storage": "^5.18.0",
     "@next-auth/mongodb-adapter": "^1.0.1",
     "axios": "^0.24.0",

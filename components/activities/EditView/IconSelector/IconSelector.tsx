@@ -57,18 +57,20 @@ export default function IconSelector({
               <HardShadow>
                 <div className={styles.inside}>
                   <div className={styles.bar} />
-                  <div className={styles.content}>
-                    {icons.map((i) => (
-                      <FontAwesomeIcon
-                        icon={i as IconName}
-                        key={i}
-                        className={icon === i ? styles.active : ''}
-                        onClick={() => {
-                          setSaveObject((prev) => ({ ...prev, icon: i }));
-                          setTooltipIsOpen(false);
-                        }}
-                      />
-                    ))}
+                  <div className={styles['scroll-container']}>
+                    <div className={styles.content}>
+                      {icons.map((i) => (
+                        <FontAwesomeIcon
+                          icon={i as IconName}
+                          key={i}
+                          className={icon === i ? styles.active : ''}
+                          onClick={() => {
+                            setSaveObject((prev) => ({ ...prev, icon: i }));
+                            setTooltipIsOpen(false);
+                          }}
+                        />
+                      ))}
+                    </div>
                   </div>
                 </div>
               </HardShadow>

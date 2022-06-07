@@ -1,19 +1,35 @@
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
+  faAlarmClock,
   faAlienMonster,
+  faAvocado,
   faBookSpells,
+  faBrush,
   faDumbbell,
+  faFileAlt,
   faFileCode,
   faFrenchFries,
   faGamepad,
   faGuitarElectric,
+  faHashtag,
+  faHeart,
+  faLaptop,
   faLeaf,
   faPalette,
   faPencil,
+  faRunning,
   faSackDollar,
+  faSmoking,
   faTooth,
+  faUniformMartialArts,
   faWatchFitness,
   faWaveform,
+  faPersonPraying,
+  faYinYang,
+  faWineBottle,
+  faWhiskeyGlass,
+  faShower,
+  faMug,
 } from '@fortawesome/pro-solid-svg-icons';
 
 export const fontawesomeHelper = () => {
@@ -31,23 +47,66 @@ export const fontawesomeHelper = () => {
     faLeaf,
     faAlienMonster,
     faGamepad,
-    faGuitarElectric
+    faGuitarElectric,
+    faSmoking,
+    faLaptop,
+    faFileAlt,
+    faBrush,
+    faAvocado,
+    faUniformMartialArts,
+    faRunning,
+    faHashtag,
+    faHeart,
+    faAlarmClock,
+    faPersonPraying,
+    faYinYang,
+    faWineBottle,
+    faWhiskeyGlass,
+    faShower,
+    faMug
   );
 };
 
 export const icons = [
-  'file-code',
+  // health
   'watch-fitness',
-  'waveform',
+  'dumbbell',
+  'uniform-martial-arts',
+  'running',
+  'leaf',
+  'avocado',
+  'yin-yang',
+  'shower',
+
+  // hobbies
+  'heart',
   'book-spells',
-  'french-fries',
-  'sack-dollar',
-  'tooth',
+  'guitar-electric',
+  'waveform',
   'palette',
   'pencil',
-  'dumbbell',
-  'leaf',
+  'brush',
+
+  // addictions
+  'french-fries',
   'alien-monster',
   'gamepad',
-  'guitar-electric',
+  'hashtag',
+
+  // bad habits
+  'wine-bottle',
+  'whiskey-glass',
+  'mug',
+  'smoking',
+  'tooth',
+  'alarm-clock',
+
+  // productivity
+  'file-code',
+  'laptop',
+  'file-alt',
+
+  // general
+  'sack-dollar',
+  'person-praying',
 ];

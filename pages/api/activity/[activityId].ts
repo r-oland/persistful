@@ -64,6 +64,13 @@ export default async function handler(
 
       res.status(200).send({ ...result.value, ...data });
     }
+
+    // delete reward
+    if (req.method === 'DELETE') {
+      const result = await activities.findOneAndDelete({ _id });
+
+      res.status(200).send(result);
+    }
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

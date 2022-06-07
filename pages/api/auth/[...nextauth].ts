@@ -4,6 +4,7 @@ import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
 import clientPromise, { getCollection } from 'utils/getMongo';
+import { defaultActivities } from 'utils/onboardingValues';
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -49,6 +50,9 @@ export default NextAuth({
         const users = await getCollection<UserEntity>('users');
         const result = await users.findOne({ _id });
 
+        // get activities
+        const activities = await getCollection<ActivityEntity>('activities');
+
         // if user doesn't match session abort
         if (!result) return;
 
@@ -75,6 +79,17 @@ export default NextAuth({
             $unset: { name: '' },
           }
         );
+
+        // format bulk write array
+        const bulkArray = defaultActivities(user.id).map((activity) => ({
+          insertOne: {
+            document: activity,
+          },
+        }));
+
+        // set default activities for new user
+        // @ts-ignore
+        activities.bulkWrite(bulkArray);
       } catch (e) {
         return console.error(e);
       }

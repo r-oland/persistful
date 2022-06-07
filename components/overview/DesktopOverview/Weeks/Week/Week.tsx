@@ -27,7 +27,7 @@ export default function Week({
       onClick={() => setIsOpenState((prev) => !prev)}
       style={{
         cursor: !sum ? 'pointer' : 'default',
-        marginBottom: isOpenState && !lastItem ? '2.5rem' : '',
+        marginBottom: !sum && isOpenState && !lastItem ? '2.5rem' : '',
       }}
     >
       <DesktopOverviewStats days={days} isSum={sum} />

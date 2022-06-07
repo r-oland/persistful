@@ -64,7 +64,10 @@ export default function Graph({
       if (activity) return { ...activity, ...activitySum };
       return undefined;
     })
-    .filter((exists) => exists) as ActivityEntity[];
+    .filter((exists) => exists)
+    .sort(
+      (a, b) => (a?.penalty ? 1 : 0) - (b?.penalty ? 1 : 0)
+    ) as ActivityEntity[];
 
   // dirty solution that sets height based on space that is left
   useEffect(() => {

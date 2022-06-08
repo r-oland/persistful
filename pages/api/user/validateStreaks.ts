@@ -179,8 +179,11 @@ export default async function handler(
         // Day has no streak and the day before it also has no streak
         if (hourDifference > 24) return false;
 
+        const dayBeforeHasStreak =
+          !!getDayAchievements(dayBeforeNoStreakDay).streak;
+
         // Day before no streak day has a streak and can use secondChange
-        if (!secondChanceWasUsedLastWeek) {
+        if (!secondChanceWasUsedLastWeek && dayBeforeHasStreak) {
           // add new secondChange entity to array
           secondChanceDates = [...secondChanceDates, d.createdAt];
 

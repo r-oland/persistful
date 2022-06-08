@@ -51,6 +51,8 @@ export default function Weeks({ days }: { days?: DayEntity[] }) {
 
   if (!days && !isLoading) return <></>;
 
+  // FIX THIS: data doesn't update after updating day
+
   return (
     <div className={styles.wrapper}>
       <h3>Weeks</h3>

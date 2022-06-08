@@ -39,10 +39,6 @@
     }
   }
 
-  .rdp-second_chance {
-    color: $red;
-  }
-
   .rdp-tracked_day {
     color: $green-dark;
   }
@@ -85,5 +81,9 @@
     transition: 0.2s;
     color: $white;
     box-shadow: -3px 3px 0px $black;
+  }
+
+  .rdp-second_chance {
+    color: $red;
   }
 }

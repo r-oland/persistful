@@ -39,8 +39,12 @@
     }
   }
 
-  .rdp-tracked_day {
+  .rdp-streak_day {
     color: $green-dark;
+  }
+
+  .rdp-no_streak_day {
+    color: $red-dark;
   }
 
   .rdp-day_today {

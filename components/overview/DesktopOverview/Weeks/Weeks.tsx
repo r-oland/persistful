@@ -14,9 +14,10 @@ export default function Weeks({ days }: { days?: DayEntity[] }) {
   const [weeksInRange, setWeeksInRange] = useState<DayEntity[][]>([]);
 
   useEffect(() => {
-    if (!days?.length) return;
+    if (!days && !isLoading) return setWeeksInRange([]);
+    if (isLoading) return;
 
-    const sortedDays = sortOnCreatedAt([...days], 'desc');
+    const sortedDays = sortOnCreatedAt([...days!], 'desc');
 
     const weeks: DayEntity[][] = [];
 
@@ -47,11 +48,9 @@ export default function Weeks({ days }: { days?: DayEntity[] }) {
     });
 
     setWeeksInRange(weeks);
-  }, [days?.length]);
+  }, [JSON.stringify(days), isLoading]);
 
-  if (!days && !isLoading) return <></>;
-
-  // FIX THIS: data doesn't update after updating day
+  if (!weeksInRange?.length) return <></>;
 
   return (
     <div className={styles.wrapper}>

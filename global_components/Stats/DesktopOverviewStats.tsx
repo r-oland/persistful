@@ -47,6 +47,8 @@ export default function DesktopOverviewStats({
 
   const { data: activityEntities } = useGetActivities();
 
+  const isAllTime = range[0].getTime() === timestamp && isSum;
+
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
     if (!days && !isLoading) return setDisplayData(defaultState);
@@ -82,8 +84,6 @@ export default function DesktopOverviewStats({
         ?.map((d) => getDayAchievements(d).total)
         .reduce((prev, cur) => prev + cur, 0) || 0;
 
-    const isAllTime = range[0].getTime() === timestamp;
-
     const { firstDay, lastDay } = getStartEndWeek(
       new Date(days![0].createdAt),
       !isAllTime
@@ -95,17 +95,17 @@ export default function DesktopOverviewStats({
         : `${format(firstDay, 'dd MMM')} - ${format(lastDay, 'dd MMM')}`;
 
     return setDisplayData({
-      period: isSum
-        ? isAllTime
-          ? 'All time'
-          : format(activeDay, 'MMMM')
+      period: isAllTime
+        ? 'All time'
+        : isSum
+        ? format(activeDay, 'MMMM')
         : startEndWeek,
       totalDays,
       trackedDays: days?.length || 0,
       mostActive,
       total: convertMinutesToHours(totalDays),
     });
-  }, [JSON.stringify(days), isLoading]);
+  }, [JSON.stringify(days), isAllTime, isLoading]);
 
   const cards = [
     {

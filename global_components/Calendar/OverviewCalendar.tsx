@@ -4,6 +4,7 @@ import { DesktopOverviewContext } from 'components/overview/DesktopOverview/Desk
 import { add, endOfMonth, startOfMonth } from 'date-fns';
 import React, { useContext } from 'react';
 import { DayPicker } from 'react-day-picker';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { setDateTime } from 'utils/setDateTime';
 import styles from './OverviewCalendar.module.scss';
 // =========================
@@ -26,8 +27,20 @@ export default function OverviewCalendar() {
 
   const { data: days } = useGetDays(start, end, { retry: false });
 
-  const trackedDays =
-    days?.map((d) => setDateTime(new Date(d.createdAt), 'middle')) || [];
+  const customDays = days?.map((d) => ({
+    date: d.createdAt,
+    hasStreak: getDayAchievements(d).streak,
+  }));
+
+  const streakDays =
+    customDays
+      ?.filter((d) => d.hasStreak)
+      ?.map((d) => setDateTime(new Date(d.date), 'middle')) || [];
+
+  const noStreakDays =
+    customDays
+      ?.filter((d) => !d.hasStreak)
+      ?.map((d) => setDateTime(new Date(d.date), 'middle')) || [];
 
   const someTimeAgo = new Date(timestamp);
 
@@ -40,8 +53,11 @@ export default function OverviewCalendar() {
         mode="default"
         defaultMonth={activeDay}
         weekStartsOn={1}
-        modifiers={{ trackedDays }}
-        modifiersClassNames={{ trackedDays: 'rdp-tracked_day' }}
+        modifiers={{ streakDays, noStreakDays }}
+        modifiersClassNames={{
+          streakDays: 'rdp-streak_day',
+          noStreakDays: 'rdp-no_streak_day',
+        }}
         onMonthChange={handleMonthChange}
       />
       <div

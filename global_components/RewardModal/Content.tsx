@@ -38,10 +38,6 @@ export default function Content({
 
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
-  const productLink =
-    saveObject?.productLink !== undefined
-      ? saveObject?.productLink
-      : reward?.productLink || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
   const image = localImage || reward?.image || '';
   const completedCycles = useGetRewardCycles(reward);
@@ -79,7 +75,6 @@ export default function Content({
         name,
         totalCycles,
         image: saveObject.image,
-        productLink,
       });
       return handleClose();
     }
@@ -130,20 +125,6 @@ export default function Content({
       </div>
       <div className={styles.middle}>
         <div className={styles.left}>
-          <div>
-            <p className={styles['sub-title']}>Product link</p>
-            <Input
-              value={productLink}
-              onChange={(e) =>
-                setSaveObject((prev) => ({
-                  ...prev,
-                  productLink: e.target.value,
-                }))
-              }
-              placeholder="https://vegtablemarket.com/bjc"
-              required={false}
-            />
-          </div>
           <div>
             <p className={styles['sub-title']}>Amount of cycles</p>
             <Slider

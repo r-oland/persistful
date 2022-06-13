@@ -14,23 +14,6 @@ import styles from './RewardCard.module.scss';
 import { shapes } from './shapes';
 // =========================
 
-function ConditionalLink({
-  link,
-  children,
-}: {
-  link?: string;
-  children: JSX.Element;
-}) {
-  if (link && link.includes('http' || 'https'))
-    return (
-      <a href={link} target="_blank" rel="noreferrer">
-        {children}
-      </a>
-    );
-
-  return children;
-}
-
 export default function RewardCard({
   reward,
   setModalIsOpen,
@@ -81,14 +64,12 @@ export default function RewardCard({
               {!!setModalIsOpen && (
                 <>
                   {status === 'completed' ? (
-                    <ConditionalLink link={reward?.productLink}>
-                      <Button
-                        color="green"
-                        onClick={() => completeReward.mutate(reward._id)}
-                      >
-                        Claim
-                      </Button>
-                    </ConditionalLink>
+                    <Button
+                      color="green"
+                      onClick={() => completeReward.mutate(reward._id)}
+                    >
+                      Claim
+                    </Button>
                   ) : (
                     <Button
                       color="white"

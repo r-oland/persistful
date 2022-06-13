@@ -3,7 +3,6 @@ type RewardEntity = {
   userId: string;
   name: string;
   image: string;
-  productLink?: string;
   startCycles: number;
   totalCycles: number;
   completedCycles: number;

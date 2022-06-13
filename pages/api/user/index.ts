@@ -52,6 +52,24 @@ export default async function handler(
 
       res.status(200).send({ ...result.value, ...req.body });
     }
+
+    // remove user and all field that correspond with user
+    if (req.method === 'DELETE') {
+      const sessions = await getCollection<any>('sessions');
+      const accounts = await getCollection<any>('accounts');
+      const activities = await getCollection<ActivityEntity>('activities');
+      const rewards = await getCollection<RewardEntity>('rewards');
+      const days = await getCollection<DayEntity>('days');
+
+      sessions.deleteMany({ userId: _id });
+      accounts.deleteMany({ userId: _id });
+      activities.deleteMany({ userId: session.user.uid });
+      rewards.deleteMany({ userId: session.user.uid });
+      days.deleteMany({ userId: session.user.uid });
+      users.findOneAndDelete({ _id });
+
+      res.status(200).send({ message: 'deleted successfully' });
+    }
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

@@ -1,5 +1,5 @@
 // Components==============
-import { faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
+import { faRadiation, faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
@@ -10,7 +10,11 @@ import React, { useState } from 'react';
 import styles from './Account.module.scss';
 // =========================
 
-export default function Account() {
+export default function Account({
+  setDeleteModalIsOpen,
+}: {
+  setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const [saveObject, setSaveObject] = useState<Partial<UserEntity>>({});
   const { data: user } = useGetUser();
   const { mutate } = useUpdateUser();
@@ -39,8 +43,19 @@ export default function Account() {
           onClickOutside={handleSubmit}
         />
       </div>
+      <div>
+        <strong>Delete account</strong>
+        <p className={styles.description}>
+          Permanently remove your account and all the data that is connected to
+          it. This action is irreversible and will be put in to action
+          immediately.
+        </p>
+        <Button color="red" onClick={() => setDeleteModalIsOpen(true)}>
+          <FontAwesomeIcon icon={faRadiation} /> Delete
+        </Button>
+      </div>
       <div className={styles.buttons}>
-        <Button color="red" onClick={() => signOut()}>
+        <Button color="white" onClick={() => signOut()}>
           <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </Button>
       </div>

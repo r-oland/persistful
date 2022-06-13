@@ -18,7 +18,7 @@ export default function NewRewardCard({
   const { push } = useRouter();
 
   return (
-    <ElementContainer color="black">
+    <ElementContainer color="black" noPadding>
       <div className={styles.wrapper}>
         <p className={styles.title}>No streak reward set</p>
         <p className={styles.description}>

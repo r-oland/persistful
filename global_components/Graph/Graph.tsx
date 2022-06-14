@@ -1,5 +1,6 @@
 // Components==============
 import useGetActivities from 'actions/activity/useGetActivities';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import React, { useEffect, useRef, useState } from 'react';
 import { getActivitySum } from 'utils/getActivitySum';
 import Column from './Column/Column';
@@ -51,7 +52,7 @@ export default function Graph({
     );
 
     setActivitySums(activities);
-  }, [JSON.stringify(days), isLoading]);
+  }, [useDeepComparison(days), isLoading]);
 
   // Grab activities from the daily snapshot to use the values that where used that day
   const activities = activitySums

@@ -1,6 +1,7 @@
 // Components==============
 import useGetDay from 'actions/day/useGetDay';
 import useGetUser from 'actions/user/useGetUser';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
@@ -61,7 +62,7 @@ export const useDayData = (activeDay: Date) => {
         displayStreak,
         dailyGoal,
       });
-  }, [JSON.stringify(day), user?.streak]);
+  }, [useDeepComparison(day), user?.streak]);
 
   return displayData;
 };

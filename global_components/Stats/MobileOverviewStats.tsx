@@ -3,6 +3,7 @@ import { faCheck, faClock } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDays from 'actions/day/useGetDays';
 import { MobileOverviewContext } from 'components/overview/MobileOverview/MobileOverview';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
@@ -39,7 +40,7 @@ export default function MobileOverviewStats() {
       });
 
     setDisplayData(defaultValues);
-  }, [JSON.stringify(days)]);
+  }, [useDeepComparison(days)]);
 
   const cards = [
     {

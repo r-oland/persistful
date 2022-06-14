@@ -11,6 +11,7 @@ import useGetActivities from 'actions/activity/useGetActivities';
 import { DesktopOverviewContext } from 'components/overview/DesktopOverview/DesktopOverview';
 import { format } from 'date-fns';
 import { timestamp } from 'global_components/Calendar/OverviewCalendar';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import React, { useContext, useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getActivityCount } from 'utils/getActivityCount';
@@ -105,7 +106,7 @@ export default function DesktopOverviewStats({
       mostActive,
       total: convertMinutesToHours(totalDays),
     });
-  }, [JSON.stringify(days), isAllTime, isLoading]);
+  }, [useDeepComparison(days), isAllTime, isLoading]);
 
   const cards = [
     {

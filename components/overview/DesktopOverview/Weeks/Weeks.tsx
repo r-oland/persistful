@@ -1,5 +1,6 @@
 // Components==============
 import { endOfWeek, startOfWeek } from 'date-fns';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import React, { useContext, useEffect, useState } from 'react';
 import { setDateTime } from 'utils/setDateTime';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
@@ -48,7 +49,7 @@ export default function Weeks({ days }: { days?: DayEntity[] }) {
     });
 
     setWeeksInRange(weeks);
-  }, [JSON.stringify(days), isLoading]);
+  }, [useDeepComparison(days), isLoading]);
 
   if (!weeksInRange?.length) return <></>;
 

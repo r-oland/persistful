@@ -3,6 +3,7 @@ import useGetActivities from 'actions/activity/useGetActivities';
 import useGetDay from 'actions/day/useGetDay';
 import ActivityCard from 'global_components/ActivityCard/ActivityCard';
 import ElementContainer from 'global_components/ElementContainer/ElementContainer';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { DashboardContext } from 'pages';
 import React, { useContext, useEffect, useRef, useState } from 'react';
@@ -116,7 +117,7 @@ export default function Activities() {
       // @ts-ignore
       if (activities) setDisplayActivities(activities);
     }
-  }, [JSON.stringify(day), !!activityEntities?.length]);
+  }, [useDeepComparison(day), !!activityEntities?.length]);
 
   return (
     <ConditionalWrapper twoItems={!!(goals?.length && penalties?.length)}>

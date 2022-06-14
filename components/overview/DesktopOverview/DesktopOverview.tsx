@@ -2,6 +2,7 @@
 import useGetDays from 'actions/day/useGetDays';
 import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import styles from './DesktopOverview.module.scss';
@@ -56,7 +57,7 @@ export default function DesktopOverview() {
       setRange,
       isLoading,
     }),
-    [rewards?.length, JSON.stringify(range), isLoading]
+    [rewards?.length, useDeepComparison(range), isLoading]
   );
 
   return (

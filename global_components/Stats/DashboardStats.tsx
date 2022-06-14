@@ -7,6 +7,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDays from 'actions/day/useGetDays';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { DashboardContext } from 'pages';
 import React, { useContext, useEffect, useState } from 'react';
@@ -59,7 +60,7 @@ export default function DashboardStats() {
         penaltyDays: `${penaltyDayCount} / ${days?.length}`,
         streaks,
       });
-  }, [JSON.stringify(days)]);
+  }, [useDeepComparison(days)]);
 
   const mobileCards = [
     {

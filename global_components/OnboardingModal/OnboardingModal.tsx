@@ -49,9 +49,14 @@ export default function OnboardingModal({
           </Button>
           <Button
             color={nextIsLast ? 'green' : 'white'}
-            onClick={() =>
-              nextIsLast ? push('/activities') : setCurrent((prev) => prev + 1)
-            }
+            onClick={() => {
+              if (nextIsLast) {
+                // set onboarding status to finished before switching to activities (necessary otherwise the user wouldn't update on unmount)
+                mutate({ finishedOnboarding: true });
+                return push('/activities');
+              }
+              setCurrent((prev) => prev + 1);
+            }}
           >
             {nextIsLast ? 'Set activities' : 'Next'}
             {!nextIsLast && <FontAwesomeIcon icon={faArrowRight} />}

@@ -74,6 +74,7 @@ export default NextAuth({
               },
               createdAt: new Date(),
               lastValidation: new Date(),
+              finishedOnboarding: false,
             },
             // If Google API returns name value, remove it
             $unset: { name: '' },

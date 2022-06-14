@@ -1,11 +1,14 @@
 // Components==============
 import useGetDays from 'actions/day/useGetDays';
+import useGetUser from 'actions/user/useGetUser';
 import Activities from 'components/dashboard/Activities/Activities';
 import styles from 'components/dashboard/Dashboard.module.scss';
 import SideBar from 'components/dashboard/SideBar/SideBar';
 import ValidateEffect from 'components/dashboard/ValidateEffect';
+import { AnimatePresence } from 'framer-motion';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
 import Graph from 'global_components/Graph/Graph';
+import OnboardingModal from 'global_components/OnboardingModal/OnboardingModal';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import DashboardStats from 'global_components/Stats/DashboardStats';
 import { useMediaQ } from 'hooks/useMediaQ';
@@ -27,12 +30,25 @@ export default function Dashboard() {
   const [invalidateActivitiesQuery, setInvalidateActivitiesQuery] =
     useState(false);
 
+  const [onboardingModalIsOpen, setOnboardingModalIsOpen] = useState(false);
+
   const query = useMediaQ('min', 1500);
   // @ts-ignore
   const desktopQuery = useMediaQ('min', 1175);
   const tabletQuery = useMediaQ('min', 768);
 
   const queryClient = useQueryClient();
+
+  const [activeDay, setActiveDay] = useState<Date>(new Date());
+
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
+
+  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
+  const { data: days, isLoading } = useGetDays(firstDay, lastDay, {
+    retry: false,
+  });
+
+  const { data: user } = useGetUser();
 
   // Invalidate query if user updated on of day activities and goes to another page
   useEffect(
@@ -43,14 +59,9 @@ export default function Dashboard() {
     [invalidateActivitiesQuery]
   );
 
-  const [activeDay, setActiveDay] = useState<Date>(new Date());
-
-  const { firstDay, lastDay } = getStartEndWeek(activeDay);
-
-  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days, isLoading } = useGetDays(firstDay, lastDay, {
-    retry: false,
-  });
+  useEffect(() => {
+    if (user && !user.finishedOnboarding) return setOnboardingModalIsOpen(true);
+  }, [user?.finishedOnboarding]);
 
   const value = useMemo(
     () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),
@@ -80,6 +91,11 @@ export default function Dashboard() {
         {query && <SideBar />}
         <ValidateEffect />
       </div>
+      <AnimatePresence>
+        {onboardingModalIsOpen && (
+          <OnboardingModal setModalIsOpen={setOnboardingModalIsOpen} />
+        )}
+      </AnimatePresence>
     </DashboardContext.Provider>
   );
 }

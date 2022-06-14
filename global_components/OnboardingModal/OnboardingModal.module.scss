@@ -1,0 +1,45 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  gap: $spacing6;
+
+  h2 {
+    margin-bottom: $spacing2;
+  }
+
+  .text {
+    display: grid;
+    gap: $spacing2;
+    align-content: start;
+
+    p {
+      font-size: $font-small;
+    }
+  }
+
+  .body {
+    display: grid;
+    gap: $spacing6;
+
+    span {
+      grid-row: 1;
+    }
+
+    @media screen and (min-width: $tablet) {
+      gap: $spacing8;
+      grid-template-columns: 1fr auto;
+
+      span {
+        grid-row: initial;
+      }
+    }
+  }
+
+  .button-wrapper {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: end;
+    gap: $spacing4;
+  }
+}

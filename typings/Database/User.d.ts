@@ -17,4 +17,5 @@ type UserEntity = {
   activeReward: string;
   lastValidation: Date;
   secondChanceDates?: Date[];
+  finishedOnboarding: boolean;
 };

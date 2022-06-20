@@ -1,10 +1,11 @@
-import { differenceInHours, endOfWeek, startOfWeek } from 'date-fns';
+import { endOfWeek, startOfWeek } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
 import { getPastDay } from 'utils/getPastDay';
+import { getPotentialSecondChanceDates } from 'utils/getPotentialSecondChanceDates';
 import { setDateTime } from 'utils/setDateTime';
 import { sortOnCreatedAt } from 'utils/sortOnCreatedAt';
 
@@ -109,9 +110,6 @@ export default async function handler(
     // The first day entity post
     const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
-    // Can be used if multiple dates in a row are missing
-    let nextItemShouldBreakStreak = false;
-
     // all items that could potentially use a second chance (not checked if it was used that week)
     let potentialSecondChanceDates: Date[][] = [];
 
@@ -121,59 +119,48 @@ export default async function handler(
       // break loop
       if (!d?.rules.secondChange) return false;
 
-      const dayBeforeNoStreakDay = descendingDayEntities.find(
+      const oneDateAgo = getPastDay(d.createdAt, 1);
+      const twoDatesAgo = getPastDay(d.createdAt, 2);
+
+      const oneDayAgo = descendingDayEntities.find(
+        (day) =>
+          day.createdAt.toLocaleDateString() === oneDateAgo.toLocaleDateString()
+      );
+
+      const twoDaysAgo = descendingDayEntities.find(
         (day) =>
           day.createdAt.toLocaleDateString() ===
-          getPastDay(d.createdAt, 1).toLocaleDateString()
+          twoDatesAgo.toLocaleDateString()
       );
 
       const dayHasStreak = !!getDayAchievements(d).streak;
-      const dayBeforeHasStreak =
-        !!getDayAchievements(dayBeforeNoStreakDay).streak;
-
-      // both days have streak -> ignore
-      if (dayHasStreak && dayBeforeHasStreak) return true;
+      const dayAgoHasStreak = !!getDayAchievements(oneDayAgo).streak;
+      const twoDaysAgoHasStreak = !!getDayAchievements(twoDaysAgo).streak;
 
       // neither day have a streak -> break loop
-      if (!dayHasStreak && !dayBeforeHasStreak) return false;
+      if (!dayHasStreak && !dayAgoHasStreak) return false;
 
-      // current day has a streak, but previous doesn't -> break on next iteration
-      if (dayHasStreak && !dayBeforeHasStreak) return true;
+      // current day days has a streak and previous day has day entity -> ignore
+      if (dayHasStreak && !!oneDayAgo) return true;
+
+      // previous day does not exists, but the day before that does and has a streak -> use second chance
+      if (dayHasStreak && !oneDayAgo && twoDaysAgoHasStreak) {
+        const newValue = getPotentialSecondChanceDates(
+          potentialSecondChanceDates,
+          oneDateAgo
+        );
+        potentialSecondChanceDates = newValue;
+
+        return true;
+      }
 
       // current day has no streak, but previous does -> use second chance
-      if (!dayHasStreak && dayBeforeHasStreak) {
-        const lastAddedWeek =
-          potentialSecondChanceDates[potentialSecondChanceDates.length - 1];
-
-        const dayInWeek = lastAddedWeek?.[0].getTime();
-
-        const weekStart = setDateTime(
-          startOfWeek(dayInWeek, { weekStartsOn: 1 }),
-          'start'
-        ).getTime();
-
-        const weekEnd = setDateTime(
-          endOfWeek(dayInWeek, { weekStartsOn: 1 }),
-          'end'
-        ).getTime();
-
-        // Another second chance was used in the last week -> add the current day to that array
-        if (
-          d.createdAt.getTime() > weekStart &&
-          d.createdAt.getTime() < weekEnd
-        ) {
-          potentialSecondChanceDates[potentialSecondChanceDates.length - 1] = [
-            ...lastAddedWeek,
-            d.createdAt,
-          ];
-          return true;
-        }
-
-        // no second chance was used in the last entry -> add a new array with this new week
-        potentialSecondChanceDates = [
-          ...potentialSecondChanceDates,
-          [d.createdAt],
-        ];
+      if (!dayHasStreak && dayAgoHasStreak) {
+        const newValue = getPotentialSecondChanceDates(
+          potentialSecondChanceDates,
+          d.createdAt
+        );
+        potentialSecondChanceDates = newValue;
 
         return true;
       }
@@ -217,65 +204,27 @@ export default async function handler(
 
     // get index of item that did not achieve goal
     const indexOfDateThatDidNotAchieveGoal = descendingDayEntities.findIndex(
-      (d, i) => {
-        const noStreak = !getDayAchievements(d).streak;
+      (d) => {
+        const dayHasStreak = !!getDayAchievements(d).streak;
 
         // The first entity where the streak wasn't achieved
-        if (!d?.rules.secondChange) return noStreak;
+        if (!d?.rules.secondChange) return !dayHasStreak;
 
         /* 
           handle second change 
         */
 
-        // true ? This is the next item, so break
-        if (nextItemShouldBreakStreak) return true;
-
-        const dayBeforeNoStreakDay = descendingDayEntities[i + 1];
-
-        const date1 = setDateTime(d.createdAt, 'middle');
-        const date2 = setDateTime(dayBeforeNoStreakDay?.createdAt, 'middle');
-
-        if (!date2 || !date1) return false;
-
-        const hourDifference = differenceInHours(date1, date2);
-
         const hasSecondChance = secondChanceDates
           .map((scd) => scd.toLocaleDateString())
           .includes(d.createdAt.toLocaleDateString());
 
-        //  There is a gap of 1 day or more. We know for certain that the previous day has no streak (it doesn't exist).
-        if (hourDifference >= 48) {
-          // Check if the current day DOES have a streak. If it does, a second chance can be used
-          if (noStreak) return true;
+        // used second chance -> ignore
+        if (hasSecondChance) return false;
 
-          // There is a gap of more then 1 day. We don't even have to check if second chance can be applied.
-          if (hourDifference > 48) {
-            // We should not return true here, but on the next iteration. This day has achieved it's streak.
-            nextItemShouldBreakStreak = true;
-            return false;
-          }
+        // day has streak -> ignore
+        if (dayHasStreak) return false;
 
-          // second change is used for this date -> it can be skipped
-          if (hasSecondChance) return false;
-
-          return true;
-        }
-
-        // the day has a streak so it can be ignored
-        if (!noStreak) return false;
-
-        // From this point we are safe to assume that the day does not have a streak
-
-        // Day has no streak and the day before it also has no streak
-        if (hourDifference > 24) return false;
-
-        const dayBeforeHasStreak =
-          !!getDayAchievements(dayBeforeNoStreakDay).streak;
-
-        // Day before no streak day has a streak and can use secondChange
-        if (hasSecondChance && dayBeforeHasStreak) return false;
-
-        // No conditions met -> dayBeforeNoStreakDay has a streak but could not use a second change
+        // Day has no streak and can't use a second chance -> break
         return true;
       }
     );

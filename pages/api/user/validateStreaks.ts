@@ -1,4 +1,4 @@
-import { differenceInDays, differenceInHours } from 'date-fns';
+import { differenceInHours, endOfWeek, startOfWeek } from 'date-fns';
 import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
@@ -109,10 +109,111 @@ export default async function handler(
     // The first day entity post
     const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
-    // array of new dates that will be stored in user object
-    let secondChanceDates: Date[] = [];
     // Can be used if multiple dates in a row are missing
     let nextItemShouldBreakStreak = false;
+
+    // all items that could potentially use a second chance (not checked if it was used that week)
+    let potentialSecondChanceDates: Date[][] = [];
+
+    // loop over day entities to create a list of all second chance dates. It's important that this is done before
+    // finding the index of the day that did not achieve it's goal.
+    descendingDayEntities.every((d) => {
+      // break loop
+      if (!d?.rules.secondChange) return false;
+
+      const dayBeforeNoStreakDay = descendingDayEntities.find(
+        (day) =>
+          day.createdAt.toLocaleDateString() ===
+          getPastDay(d.createdAt, 1).toLocaleDateString()
+      );
+
+      const dayHasStreak = !!getDayAchievements(d).streak;
+      const dayBeforeHasStreak =
+        !!getDayAchievements(dayBeforeNoStreakDay).streak;
+
+      // both days have streak -> ignore
+      if (dayHasStreak && dayBeforeHasStreak) return true;
+
+      // neither day have a streak -> break loop
+      if (!dayHasStreak && !dayBeforeHasStreak) return false;
+
+      // current day has a streak, but previous doesn't -> break on next iteration
+      if (dayHasStreak && !dayBeforeHasStreak) return true;
+
+      // current day has no streak, but previous does -> use second chance
+      if (!dayHasStreak && dayBeforeHasStreak) {
+        const lastAddedWeek =
+          potentialSecondChanceDates[potentialSecondChanceDates.length - 1];
+
+        const dayInWeek = lastAddedWeek?.[0].getTime();
+
+        const weekStart = setDateTime(
+          startOfWeek(dayInWeek, { weekStartsOn: 1 }),
+          'start'
+        ).getTime();
+
+        const weekEnd = setDateTime(
+          endOfWeek(dayInWeek, { weekStartsOn: 1 }),
+          'end'
+        ).getTime();
+
+        // Another second chance was used in the last week -> add the current day to that array
+        if (
+          d.createdAt.getTime() > weekStart &&
+          d.createdAt.getTime() < weekEnd
+        ) {
+          potentialSecondChanceDates[potentialSecondChanceDates.length - 1] = [
+            ...lastAddedWeek,
+            d.createdAt,
+          ];
+          return true;
+        }
+
+        // no second chance was used in the last entry -> add a new array with this new week
+        potentialSecondChanceDates = [
+          ...potentialSecondChanceDates,
+          [d.createdAt],
+        ];
+
+        return true;
+      }
+
+      // fallback
+      return false;
+    });
+
+    // Their was no day created yesterday, but it might take advantage of the second chance rule
+    if (user?.rules.secondChange && !yesterday && dayBeforeYesterdayHasStreak) {
+      const weekStart = setDateTime(
+        startOfWeek(yesterdayDate, { weekStartsOn: 1 }),
+        'start'
+      ).getTime();
+
+      const weekEnd = setDateTime(
+        endOfWeek(yesterdayDate, { weekStartsOn: 1 }),
+        'end'
+      ).getTime();
+
+      // find if there are any second chance dates used in same week as yesterday day
+      const yesterdayCanUseSecondChance = !potentialSecondChanceDates
+        .flat()
+        .find((d) => d.getTime() > weekStart && d.getTime() < weekEnd);
+
+      // can't use second chance so reset te entire streak
+      if (!yesterdayCanUseSecondChance) return await reset();
+
+      // add yesterdayDate to potentialSecondChanceDates
+      potentialSecondChanceDates = [
+        ...potentialSecondChanceDates,
+        [yesterdayDate],
+      ];
+    }
+
+    // all dates that are using a second chance in the current streak
+    const secondChanceDates = potentialSecondChanceDates
+      // There are multiple second chances in 1 week. No second chances -> break streak on most recent day
+      .filter((arr) => arr.length === 1)
+      .flat();
 
     // get index of item that did not achieve goal
     const indexOfDateThatDidNotAchieveGoal = descendingDayEntities.findIndex(
@@ -129,13 +230,6 @@ export default async function handler(
         // true ? This is the next item, so break
         if (nextItemShouldBreakStreak) return true;
 
-        const secondChanceWasUsedLastWeek = secondChanceDates.length
-          ? !!secondChanceDates.find(
-              (scd) => differenceInDays(scd, d.createdAt) < 7
-            )
-          : // No second change dates have been used at all
-            false;
-
         const dayBeforeNoStreakDay = descendingDayEntities[i + 1];
 
         const date1 = setDateTime(d.createdAt, 'middle');
@@ -144,6 +238,10 @@ export default async function handler(
         if (!date2 || !date1) return false;
 
         const hourDifference = differenceInHours(date1, date2);
+
+        const hasSecondChance = secondChanceDates
+          .map((scd) => scd.toLocaleDateString())
+          .includes(d.createdAt.toLocaleDateString());
 
         //  There is a gap of 1 day or more. We know for certain that the previous day has no streak (it doesn't exist).
         if (hourDifference >= 48) {
@@ -157,16 +255,8 @@ export default async function handler(
             return false;
           }
 
-          if (!secondChanceWasUsedLastWeek) {
-            // We have to calculate the previous day because the day entity does not exists
-            const previousDate = getPastDay(new Date(d.createdAt), 1);
-
-            // add new secondChange entity to array
-            secondChanceDates = [...secondChanceDates, previousDate];
-
-            // second change is used for this date -> it can be skipped
-            return false;
-          }
+          // second change is used for this date -> it can be skipped
+          if (hasSecondChance) return false;
 
           return true;
         }
@@ -183,40 +273,12 @@ export default async function handler(
           !!getDayAchievements(dayBeforeNoStreakDay).streak;
 
         // Day before no streak day has a streak and can use secondChange
-        if (!secondChanceWasUsedLastWeek && dayBeforeHasStreak) {
-          // add new secondChange entity to array
-          secondChanceDates = [...secondChanceDates, d.createdAt];
-
-          // second change is used for this date -> it can be skipped
-          return false;
-        }
+        if (hasSecondChance && dayBeforeHasStreak) return false;
 
         // No conditions met -> dayBeforeNoStreakDay has a streak but could not use a second change
         return true;
       }
     );
-
-    // Their was no day created yesterday, but it might take advantage of the second chance rule
-    if (user?.rules.secondChange && !yesterday && dayBeforeYesterdayHasStreak) {
-      const lastSecondChanceUsed = secondChanceDates?.[0];
-
-      const yesterdayCanUseSecondChance =
-        !lastSecondChanceUsed ||
-        differenceInDays(
-          setDateTime(yesterdayDate, 'middle'),
-          lastSecondChanceUsed
-        ) >= 7;
-
-      // Can use second chance so add it to the array
-      if (yesterdayCanUseSecondChance)
-        secondChanceDates = [
-          setDateTime(yesterdayDate, 'middle'),
-          ...secondChanceDates,
-        ];
-
-      // can't use second chance so reset te entires streak
-      if (!yesterdayCanUseSecondChance) return await reset();
-    }
 
     // Set last second chance in user object so it can be displayed in the front end
     await users.updateOne({ _id }, { $set: { secondChanceDates } });

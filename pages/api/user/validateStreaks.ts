@@ -72,7 +72,7 @@ export default async function handler(
     const dayBeforeYesterdayHasStreak =
       !!getDayAchievements(dayBeforeYesterday).streak;
 
-    if (user?.rules.secondChange) {
+    if (yesterday ? yesterday.rules.secondChange : user?.rules.secondChange) {
       // If there is no entry from yesterday and the day before that reset the streak
       if (!yesterday && !dayBeforeYesterday) return await reset();
 
@@ -106,9 +106,6 @@ export default async function handler(
       [...dayEntitiesGetter],
       'desc'
     );
-
-    // The first day entity post
-    const firstDate = new Date(dayEntities?.[0]?.createdAt);
 
     // all items that could potentially use a second chance (not checked if it was used that week)
     let potentialSecondChanceDates: Date[][] = [];
@@ -232,18 +229,10 @@ export default async function handler(
     // Set last second chance in user object so it can be displayed in the front end
     await users.updateOne({ _id }, { $set: { secondChanceDates } });
 
-    const dateAfterDateThatDidNotAchieveGoal =
-      descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt;
-
-    // all possible dates of first item
-    const dates = [firstDate, dateAfterDateThatDidNotAchieveGoal];
-
-    //  sort all dates and grab the most recent one
     const startDateGeneralStreak =
-      dates.sort(
-        (a, b) => (!a || !b ? 0 : new Date(b).getTime() - new Date(a).getTime())
-        // if no dates exist yet, grab current date
-      )[0] || new Date();
+      descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt ||
+      // fallback
+      new Date();
 
     // day entities that are used for calculating the general streak
     const generalStreakDays = dayEntities.filter((d) => {

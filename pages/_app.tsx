@@ -3,16 +3,18 @@ import Auth from 'global_components/Auth/Auth';
 import GlobalTodayStreakContextWrapper from 'global_components/GlobalTodayStreakContextWrapper';
 import Layout from 'global_components/Layout/Layout';
 import { useAppHeight } from 'hooks/useAppHeight';
+import { useDisableIOSZoom } from 'hooks/useDisableIOSZoom';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import React from 'react';
 import 'react-day-picker/dist/style.css';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
-import { fontawesomeHelper } from 'utils/fontawesomeHelper';
 import 'styles/DayPicker.scss';
+import { fontawesomeHelper } from 'utils/fontawesomeHelper';
 
 // =========================
 
@@ -42,20 +44,30 @@ type AppPropsWithExtraProps = AppProps & {
 
 function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
   useAppHeight();
+  useDisableIOSZoom();
 
   return (
-    <SessionProvider session={pageProps.session}>
-      <QueryClientProvider client={queryClient}>
-        <Auth noAuth={Component.noAuth}>
-          <GlobalTodayStreakContextWrapper>
-            <Layout noLayout={Component.noLayout}>
-              <Component {...pageProps} />
-            </Layout>
-            <ReactQueryDevtools initialIsOpen={false} />
-          </GlobalTodayStreakContextWrapper>
-        </Auth>
-      </QueryClientProvider>
-    </SessionProvider>
+    <>
+      <Head>
+        {/* prevent zoom in on input focus */}
+        <meta
+          name="viewport"
+          content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=no;user-scalable=0;"
+        />
+      </Head>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Auth noAuth={Component.noAuth}>
+            <GlobalTodayStreakContextWrapper>
+              <Layout noLayout={Component.noLayout}>
+                <Component {...pageProps} />
+              </Layout>
+              <ReactQueryDevtools initialIsOpen={false} />
+            </GlobalTodayStreakContextWrapper>
+          </Auth>
+        </QueryClientProvider>
+      </SessionProvider>
+    </>
   );
 }
 

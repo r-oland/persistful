@@ -1,14 +1,23 @@
 // Components==============
 import { faStepBackward } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useGetUser from 'actions/user/useGetUser';
 import styles from 'components/verify-mail/VerifyMail.module.scss';
 import Button from 'global_components/Button/Button';
 import Head from 'next/head';
 import Image from 'next/image';
-import React from 'react';
+import { useRouter } from 'next/router';
+import React, { useEffect } from 'react';
 // =========================
 
 export default function VerifyMail() {
+  const { data: user } = useGetUser({ retry: false });
+  const history = useRouter();
+
+  useEffect(() => {
+    if (user) history.push('/');
+  }, [!!user]);
+
   return (
     <>
       <Head>

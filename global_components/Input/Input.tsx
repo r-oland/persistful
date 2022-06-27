@@ -12,6 +12,7 @@ export default function Input({
   color = 'green',
   required = true,
   onClickOutside,
+  readOnly,
 }: {
   type?: string;
   value: string;
@@ -20,6 +21,7 @@ export default function Input({
   color?: 'red' | 'green';
   required?: boolean;
   onClickOutside?: (e: any) => void;
+  readOnly?: boolean;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -44,6 +46,7 @@ export default function Input({
         }}
         placeholder={placeholder}
         required={required}
+        readOnly={readOnly}
       />
       <div className={styles.bar} />
     </div>

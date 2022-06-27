@@ -95,6 +95,7 @@ export default function GeneralTopNav({
                 setRewardModalIsOpen={setRewardModalIsOpen}
                 activeDay={activeDay}
                 setActiveDay={setActiveDay}
+                overview={overview}
               />
             )}
           </AnimatePresence>

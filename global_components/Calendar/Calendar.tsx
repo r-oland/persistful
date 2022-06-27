@@ -9,9 +9,11 @@ import { getStartEndWeek } from 'utils/getStartEndWeek';
 export default function Calendar({
   activeDay,
   setActiveDay,
+  week,
 }: {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  week?: boolean;
 }) {
   const { data: user } = useGetUser();
 
@@ -20,7 +22,7 @@ export default function Calendar({
     setActiveDay(middleOfDay);
   };
 
-  const { firstDay } = getStartEndWeek(activeDay);
+  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   const currentWeek = Array.from(Array(7).keys()).map((i) =>
     addDays(firstDay, i)
@@ -29,20 +31,26 @@ export default function Calendar({
   const secondChance =
     user?.secondChanceDates?.map((scd) => new Date(scd)) || [];
 
-  return (
-    <DayPicker
-      selected={activeDay}
-      onDayClick={handleDayClick}
-      required
-      toDate={new Date()}
-      mode="single"
-      defaultMonth={activeDay}
-      weekStartsOn={1}
-      modifiers={{ secondChance, currentWeek }}
-      modifiersClassNames={{
-        secondChance: 'rdp-second_chance',
-        currentWeek: 'rdp-current_week',
-      }}
-    />
-  );
+  const sharedProps = {
+    onDayClick: handleDayClick,
+    toDate: new Date(),
+    defaultMonth: activeDay,
+    weekStartsOn: 1 as const,
+    modifiers: { secondChance, currentWeek },
+    modifiersClassNames: {
+      secondChance: 'rdp-second_chance',
+      currentWeek: 'rdp-current_week',
+    },
+  };
+
+  if (week)
+    return (
+      <DayPicker
+        {...sharedProps}
+        selected={{ from: firstDay, to: lastDay }}
+        mode="range"
+      />
+    );
+
+  return <DayPicker {...sharedProps} selected={activeDay} required />;
 }

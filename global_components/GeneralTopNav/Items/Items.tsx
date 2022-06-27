@@ -32,13 +32,19 @@ function Reward({
 function CalendarComp({
   activeDay,
   setActiveDay,
+  overview,
 }: {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  overview?: boolean;
 }) {
   return (
     <motion.div variants={framerTopNavChild}>
-      <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+      <Calendar
+        activeDay={activeDay}
+        setActiveDay={setActiveDay}
+        week={overview}
+      />
     </motion.div>
   );
 }
@@ -51,6 +57,7 @@ export default function Items({
   setRewardModalIsOpen,
   activeDay,
   setActiveDay,
+  overview,
 }: {
   selected: TopNavSelectedOption;
   setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
@@ -59,6 +66,7 @@ export default function Items({
   setRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  overview?: boolean;
 }) {
   const ref = useRef(null);
 
@@ -93,7 +101,11 @@ export default function Items({
     >
       {selected === 'bar' ? (
         <>
-          <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
+          <CalendarComp
+            activeDay={activeDay}
+            setActiveDay={setActiveDay}
+            overview={overview}
+          />
           <Reward
             activeReward={activeReward}
             setModalIsOpen={setRewardModalIsOpen}
@@ -105,7 +117,11 @@ export default function Items({
           setModalIsOpen={setRewardModalIsOpen}
         />
       ) : selected === 'calendar' ? (
-        <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
+        <CalendarComp
+          activeDay={activeDay}
+          setActiveDay={setActiveDay}
+          overview={overview}
+        />
       ) : (
         <></>
       )}

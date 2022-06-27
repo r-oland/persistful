@@ -1,18 +1,21 @@
 // Components==============
-import { GetServerSideProps } from 'next';
-import { getSession, signIn } from 'next-auth/react';
-import React, { useState } from 'react';
+import { faSpinnerThird } from '@fortawesome/pro-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from 'components/login/Login.module.scss';
-import Image from 'next/image';
 import Button from 'global_components/Button/Button';
 import Input from 'global_components/Input/Input';
+import { GetServerSideProps } from 'next';
+import { getSession, signIn } from 'next-auth/react';
 import Head from 'next/head';
+import Image from 'next/image';
+import React, { useState } from 'react';
 // =========================
 
 export default function Login() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
 
   const [email, setEmail] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   return (
     <>
@@ -30,7 +33,14 @@ export default function Login() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                signIn('email', { email });
+                setSubmitting(true);
+                if (submitting) return;
+                signIn('email', { email }).then(() => {
+                  // timeout to keep spinning before jumping to validate-mail screen
+                  setTimeout(() => {
+                    setSubmitting(false);
+                  }, 1000);
+                });
               }}
             >
               <Input
@@ -38,10 +48,12 @@ export default function Login() {
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="john.doesitgood@mail.com"
                 type="email"
+                readOnly={submitting}
               />
               <div className={styles.buttons}>
-                <Button stretch submit>
+                <Button stretch submit inactive={submitting}>
                   {mode === 'login' ? 'Sign in' : 'Continue'}
+                  {submitting && <FontAwesomeIcon icon={faSpinnerThird} spin />}
                 </Button>
                 <Button color="white" onClick={() => signIn('google')} stretch>
                   <Image src="/images/google.svg" width="16" height="16" />

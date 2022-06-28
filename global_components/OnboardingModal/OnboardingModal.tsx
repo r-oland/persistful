@@ -19,7 +19,7 @@ export default function OnboardingModal({
   const [current, setCurrent] = useState(0);
 
   const { push } = useRouter();
-  const { mutate } = useUpdateUser();
+  const { mutateAsync, mutate } = useUpdateUser();
 
   const nextIsLast = current === content.length - 1;
 
@@ -52,8 +52,9 @@ export default function OnboardingModal({
             onClick={() => {
               if (nextIsLast) {
                 // set onboarding status to finished before switching to activities (necessary otherwise the user wouldn't update on unmount)
-                mutate({ finishedOnboarding: true });
-                return push('/activities');
+                return mutateAsync({ finishedOnboarding: true }).then(() =>
+                  push('/activities')
+                );
               }
               setCurrent((prev) => prev + 1);
             }}

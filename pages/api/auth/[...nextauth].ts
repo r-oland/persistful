@@ -3,8 +3,10 @@ import { ObjectId } from 'mongodb';
 import NextAuth from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
+import nodemailer from 'nodemailer';
 import clientPromise, { getCollection } from 'utils/getMongo';
 import { defaultActivities } from 'utils/onboardingValues';
+import { html, text } from 'utils/email';
 
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
@@ -16,6 +18,7 @@ export default NextAuth({
     EmailProvider({
       server: {
         host: process.env.EMAIL_SERVER_HOST,
+        // @ts-ignore
         port: process.env.EMAIL_SERVER_PORT,
         auth: {
           user: process.env.EMAIL_SERVER_USER,
@@ -23,6 +26,21 @@ export default NextAuth({
         },
       },
       from: process.env.EMAIL_FROM,
+      async sendVerificationRequest({
+        identifier: email,
+        url,
+        provider: { server, from },
+      }) {
+        const { host } = new URL(url);
+        const transport = nodemailer.createTransport(server);
+        await transport.sendMail({
+          to: email,
+          from,
+          subject: `Sign in to ${host}`,
+          text: text({ url, host }),
+          html: html({ url, host, email }),
+        });
+      },
     }),
   ],
   pages: {

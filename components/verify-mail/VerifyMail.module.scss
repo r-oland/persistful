@@ -1,39 +1,56 @@
 @import 'styles/Variables';
 
-.wrapper {
+.page {
   display: grid;
   justify-content: center;
   align-items: center;
   height: $app-height;
-  gap: $spacing8;
   justify-items: center;
   align-content: center;
-  text-align: center;
   padding: 0 $spacing4;
 
-  .text {
+  .wrapper {
     display: grid;
-    gap: $spacing4;
+    gap: $spacing8;
     justify-items: center;
+    text-align: center;
+    padding: $spacing8 $spacing6;
+    background-color: $white;
+    border: $border-light;
 
-    h1 {
-      @include underline;
+    .text {
+      display: grid;
+      gap: $spacing6;
+      justify-items: center;
+
+      h1 {
+        @include underline;
+      }
+
+      p {
+        max-width: 600px;
+        text-align: center;
+      }
     }
 
-    p {
-      font-size: $font-large;
-      max-width: 800px;
-      text-align: center;
-    }
-  }
+    .input-wrapper {
+      display: grid;
+      grid-template-columns: auto auto;
 
-  .buttons {
-    display: grid;
-    gap: $spacing4;
-    justify-items: center;
+      input {
+        width: 100px;
+      }
 
-    @media screen and (min-width: 350px) {
-      grid-auto-flow: column;
+      button {
+        background-color: $green;
+        height: 100%;
+        padding-left: 2px;
+        padding-right: calc($spacing3 + 2px);
+        color: $white;
+        svg {
+          transform: scale(1.2);
+        }
+      }
     }
   }
 }

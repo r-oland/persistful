@@ -8,6 +8,11 @@ import clientPromise, { getCollection } from 'utils/getMongo';
 import { defaultActivities } from 'utils/onboardingValues';
 import { html, text } from 'utils/email';
 
+const code = (
+  Math.random().toString(36).substring(2, 5) +
+  Math.random().toString(36).substring(2, 5)
+).toUpperCase();
+
 export default NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   providers: [
@@ -26,6 +31,9 @@ export default NextAuth({
         },
       },
       from: process.env.EMAIL_FROM,
+      async generateVerificationToken() {
+        return code;
+      },
       async sendVerificationRequest({
         identifier: email,
         url,
@@ -38,7 +46,7 @@ export default NextAuth({
           from,
           subject: `Sign in to ${host}`,
           text: text({ url, host }),
-          html: html({ url, host, email }),
+          html: html({ code, host, email }),
         });
       },
     }),

@@ -31,7 +31,7 @@ export default function VerifyMail() {
             e.preventDefault();
 
             history.push(
-              `http://localhost:1234/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=roland.branten%40gmail.com`
+              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=roland.branten%40gmail.com`
             );
           }}
         >

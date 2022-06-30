@@ -50,6 +50,7 @@ export default function VerifyMail() {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
                 placeholder="Code"
+                autoComplete="one-time-code"
               />
               <button type="submit">
                 <FontAwesomeIcon icon={faCheck} />

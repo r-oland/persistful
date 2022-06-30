@@ -13,6 +13,7 @@ export default function Input({
   required = true,
   onClickOutside,
   readOnly,
+  autoComplete,
 }: {
   type?: string;
   value: string;
@@ -22,6 +23,7 @@ export default function Input({
   required?: boolean;
   onClickOutside?: (e: any) => void;
   readOnly?: boolean;
+  autoComplete?: string;
 }) {
   const [isEditing, setIsEditing] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -47,6 +49,7 @@ export default function Input({
         placeholder={placeholder}
         required={required}
         readOnly={readOnly}
+        autoComplete={autoComplete}
       />
       <div className={styles.bar} />
     </div>

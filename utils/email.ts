@@ -1,9 +1,9 @@
 // Email HTML body
 export function html({
-  url,
+  code,
   host,
   email,
-}: Record<'url' | 'host' | 'email', string>) {
+}: Record<'code' | 'host' | 'email', string>) {
   // Insert invisible space into domains and email address to prevent both the
   // email address and the domain from being turned into a hyperlink by email
   // clients like Outlook and Apple mail, as this is confusing because it seems
@@ -13,11 +13,10 @@ export function html({
 
   // Some simple styling options
   const backgroundColor = '#f9f9f9';
-  const textColor = '#444444';
+  const textColor = '#282f36';
+  const primaryColor = '#18e597';
+  const greyColor = '#a8acb1';
   const mainBackgroundColor = '#ffffff';
-  const buttonBackgroundColor = '#18e597';
-  const buttonBorderColor = '#18e597';
-  const buttonTextColor = '#ffffff';
 
   return `
 <body style="background: ${backgroundColor};">
@@ -35,16 +34,17 @@ export function html({
       </td>
     </tr>
     <tr>
-      <td align="center" style="padding: 20px 0;">
-        <table border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td align="center" style="border-radius: 1px;" bgcolor="${buttonBackgroundColor}"><a href="${url}" style="font-size: 18px; font-family: Helvetica, Arial, sans-serif; color: ${buttonTextColor}; text-decoration: none; border-radius: 5px; padding: 10px 20px; border: 1px solid ${buttonBorderColor}; display: inline-block; font-weight: bold;">Sign in</a></td>
-          </tr>
-        </table>
+      <td align="center" style="font-family: Helvetica, Arial, sans-serif; color: ${textColor}; font-size: 16px;">
+        Congratulations! This is your golden ticket to log in to Persistful.
       </td>
     </tr>
     <tr>
-      <td align="center" style="padding: 0px 0px 10px 0px; font-size: 16px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${textColor};">
+      <td align="center" style="padding: 25px 0; font-family: Helvetica, Arial, sans-serif; color: ${primaryColor}; font-size: 32px;">
+        ${code}
+      </td>
+    </tr>
+    <tr>
+      <td align="center" style="padding: 0px 0px 10px 0px; font-size: 12px; line-height: 22px; font-family: Helvetica, Arial, sans-serif; color: ${greyColor};">
         If you did not request this email you can safely ignore it.
       </td>
     </tr>

@@ -1,18 +1,19 @@
 // Components==============
-import { faStepBackward } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import styles from 'components/verify-mail/VerifyMail.module.scss';
-import Button from 'global_components/Button/Button';
+import Input from 'global_components/Input/Input';
 import Head from 'next/head';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 // =========================
 
 export default function VerifyMail() {
   const { data: user } = useGetUser({ retry: false });
   const history = useRouter();
+
+  const [value, setValue] = useState('');
 
   useEffect(() => {
     if (user) history.push('/');
@@ -23,28 +24,39 @@ export default function VerifyMail() {
       <Head>
         <title>Verify mail</title>
       </Head>
-      <div className={styles.wrapper}>
-        <div className={styles.text}>
-          <div>
-            <h1>Check your email</h1>
+      <div className={styles.page}>
+        <form
+          className={styles.wrapper}
+          onSubmit={(e) => {
+            e.preventDefault();
+
+            history.push(
+              `http://localhost:1234/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=roland.branten%40gmail.com`
+            );
+          }}
+        >
+          <div className={styles.text}>
+            <div>
+              <h1>Check your mail!</h1>
+            </div>
+            <p>
+              We've sent a verification code to your email adres. This code
+              expires shortly, so quit reading and start clicking!
+            </p>
           </div>
-          <p>
-            We've sent you a verification link to your email adres. This code
-            expires shortly, so quit reading and start clicking!
-          </p>
-        </div>
-        <div className={styles.buttons}>
-          <Button color="red" to="/login">
-            <FontAwesomeIcon icon={faStepBackward} />
-            Go back
-          </Button>
-          <a href="https://mail.google.com/mail/u/0/">
-            <Button>
-              <Image src="/images/gmail.svg" width="16" height="16" />
-              Open Gmail
-            </Button>
-          </a>
-        </div>
+          <div>
+            <div className={styles['input-wrapper']}>
+              <Input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Code"
+              />
+              <button type="submit">
+                <FontAwesomeIcon icon={faCheck} />
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </>
   );

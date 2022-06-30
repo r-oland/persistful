@@ -35,7 +35,7 @@ export function html({
     </tr>
     <tr>
       <td align="center" style="font-family: Helvetica, Arial, sans-serif; color: ${textColor}; font-size: 16px;">
-        Congratulations! This is your golden ticket to log in to Persistful.
+        Copy and paste the code below into Persistful in order to login.
       </td>
     </tr>
     <tr>
@@ -55,5 +55,5 @@ export function html({
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
 export function text({ url, host }: Record<'url' | 'host', string>) {
-  return `Sign in to ${host}\n${url}\n\n`;
+  return `Sign into ${host}\n${url}\n\n`;
 }

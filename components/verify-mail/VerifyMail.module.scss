@@ -44,9 +44,11 @@
       button {
         background-color: $green;
         height: 100%;
-        padding-left: 2px;
-        padding-right: calc($spacing3 + 2px);
+        width: 40px;
+        transform: translateX(-10px);
         color: $white;
+        transition: 0.2s;
+
         svg {
           transform: scale(1.2);
         }

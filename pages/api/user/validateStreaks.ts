@@ -193,8 +193,8 @@ export default async function handler(
       ];
     }
 
-    // all dates that are using a second chance in the current streak
-    const secondChanceDates = potentialSecondChanceDates
+    // a list of potential second chances, filtered on allowing 1 per week
+    const secondChanceDatesPerWeek = potentialSecondChanceDates
       // There are multiple second chances in 1 week. No second chances -> break streak on most recent day
       .filter((arr) => arr.length === 1)
       .flat();
@@ -208,10 +208,10 @@ export default async function handler(
         if (!d?.rules.secondChange) return !dayHasStreak;
 
         /* 
-          handle second change 
+          handle second chance 
         */
 
-        const hasSecondChance = secondChanceDates
+        const hasSecondChance = secondChanceDatesPerWeek
           .map((scd) => scd.toLocaleDateString())
           .includes(d.createdAt.toLocaleDateString());
 
@@ -225,9 +225,6 @@ export default async function handler(
         return true;
       }
     );
-
-    // Set last second chance in user object so it can be displayed in the front end
-    await users.updateOne({ _id }, { $set: { secondChanceDates } });
 
     const startDateGeneralStreak =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt ||
@@ -248,8 +245,17 @@ export default async function handler(
       .map((day) => getDayAchievements(day).streak)
       .reduce((prev, cur) => prev + cur);
 
+    // all dates that are using a second chance in the current streak
+    const secondChanceDates = secondChanceDatesPerWeek.filter(
+      // filter out potential dates that came before start streak
+      (scd) => scd.getTime() > startDateGeneralStreak.getTime()
+    );
+
     // update streak in user model
-    await users.updateOne({ _id }, { $set: { streak: total } });
+    await users.updateOne(
+      { _id },
+      { $set: { streak: total, secondChanceDates } }
+    );
 
     if (activeReward && startDateGeneralStreak) {
       // if general streak if going on for longer then the reward streak -> activeReward.created_at

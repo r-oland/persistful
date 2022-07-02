@@ -182,11 +182,11 @@ export default function Content({
         <p className={styles['inactive-message']}>
           You can only have 4 active {penaltyMode ? 'penalties' : 'activities'}{' '}
           at the same time. Set another {penaltyMode ? 'penalty' : 'activity'}{' '}
-          to inactive to be able to activate or edit this one.
+          to inactive to activate or edit this one.
         </p>
       )}
       <div className={hideToggle ? styles.inactive : ''}>
-        <b>
+        <b className={newActivity ? styles['activity-type'] : ''}>
           {newActivity
             ? isToggled
               ? 'Penalty activity'
@@ -196,8 +196,8 @@ export default function Content({
         {newActivity && (
           <p className={styles.description}>
             {isToggled
-              ? "Adding time to a penalty activity hinders you in achieving you'r daily progress. It's a pretty effective way of getting rid of bad habits."
-              : 'Adding time to a persistful activity builds up your streak! Ideale this should be something that you enjoy doing.'}
+              ? "Performing penalty activities will hinder you in achieving your daily goals. It's a pretty effective way of getting rid of bad habits."
+              : 'Performing persistful activities is the way to build up your streak! A little tip, pick something that you enjoy doing. This will make persisting streaks a piece of cake.'}
           </p>
         )}
         <Toggle
@@ -228,7 +228,10 @@ export default function Content({
           penalty={penaltyMode}
           onClick={handleCountModeChange}
         >
-          <p>Count activity in x amount of times instead of time</p>
+          <p>
+            Count the number of times an action is performed instead of the
+            amount of minutes
+          </p>
         </Checkbox>
       </div>
       <AnimatePresence>

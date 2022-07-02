@@ -20,15 +20,15 @@ export default function NewRewardCard({
   return (
     <ElementContainer color="black" noPadding>
       <div className={styles.wrapper}>
-        <p className={styles.title}>No streak reward set</p>
+        <p className={styles.title}>No reward set</p>
         <p className={styles.description}>
-          Because you earn it. Well... not yet, but you will!
+          Rewards help by giving you something to strive towards.
         </p>
         <Button
           color="white"
           onClick={() => (query ? setModalIsOpen(true) : push(`/reward/new`))}
         >
-          Set new streak
+          Set new reward
         </Button>
         {shapes.map((shape, i) => (
           <Shape info={shape} color="grey" key={i} />

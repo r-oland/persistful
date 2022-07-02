@@ -95,13 +95,15 @@ export default function Content({
       <div className={styles.top}>
         <div>
           <h3 className={styles.title}>
-            What do you wan't to dangle to the end of your stick?
+            What do you want to dangle to the end of your stick?
           </h3>
         </div>
         <p className={styles.description}>
-          Wether it be a fancy new piece of equipment, a new book or a nice
-          thick carrot, we all like treating ourself from time to time. Let
-          you're next treat be the thing that drives you to glory and honor!
+          Whether it be a fancy new piece of equipment, a nice activity, or a
+          juicy carrot, we all like treating ourselves from time to time. You
+          could just buy something on an impulse, but that might leave you with
+          a guilty feeling. So rather than that, set a goal and make yourself
+          ear it!
         </p>
       </div>
       <div className={styles['upload-image-wrapper']}>

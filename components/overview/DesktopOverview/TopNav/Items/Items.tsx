@@ -15,7 +15,7 @@ function RewardsComp() {
   return (
     <motion.div className={styles.reward} variants={framerTopNavChild}>
       <h3 className={styles.title}>
-        Earned reward{rewards.length > 1 ? 's' : ''}
+        Earned reward{rewards.length === 1 ? '' : 's'}
       </h3>
       {rewards.length ? (
         <div className={styles['scroll-wrapper']}>

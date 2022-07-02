@@ -40,7 +40,7 @@ export default function VerifyMail() {
               <h1>Check your mail!</h1>
             </div>
             <p>
-              We've sent a verification code to your email adres. This code
+              We've sent a verification code to your email address. This code
               expires shortly, so quit reading and start clicking!
             </p>
           </div>

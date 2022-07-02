@@ -35,10 +35,9 @@ export default function DeleteConfirmModal({
         <div>
           <h2>Are you sure that you want to delete this activity?</h2>
           <p>
-            In order to persist your usage history, the data of this activity
-            won't be deleted permanently. You can always restore it by adding a
-            new activity with the same name that it had at the moment of
-            deletion.
+            This action is not permanent. You can always pick up where you left
+            off by adding a new activity with the name{' '}
+            <strong>{activity?.name}</strong>.
           </p>
         </div>
         <div className={styles['button-wrapper']}>

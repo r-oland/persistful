@@ -28,11 +28,10 @@ export default function DeleteConfirmModal({
     <Modal setModalIsOpen={setModalIsOpen} color="red">
       <div className={styles.wrapper}>
         <div>
-          <h2>Are you sure that you want to delete your account?</h2>
+          <h2>Careful now!</h2>
           <p>
-            Once again, this action is permanently and can <strong>not</strong>{' '}
-            be reversed. Are you really sure that you want to delete all off
-            your tracked progress?
+            Once again, this action is permanently and can not be reversed. Are
+            you sure that you want to delete all of your tracked progress?
           </p>
         </div>
         <div className={styles['button-wrapper']}>

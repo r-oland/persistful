@@ -23,7 +23,7 @@ export default function Rules() {
       <div>
         <strong>Daily goal</strong>
         <p className={styles.description}>
-          The minimal amount of hours that you need to hit in order to maintain
+          The minimal amount of time that you need to reach in order to maintain
           your streak. This also determines the length of your streak cycles.
         </p>
         <Slider
@@ -41,7 +41,7 @@ export default function Rules() {
           onClick={(secondChange) => updateRules({ secondChange })}
         >
           <p>
-            You're allowed to miss 1 day a weak without breaking your streak.
+            You're allowed to miss 1 day a week without breaking your streak.
           </p>
         </Checkbox>
       </div>
@@ -60,8 +60,8 @@ export default function Rules() {
         <div>
           <strong>Bonus time</strong>
           <p className={styles.description}>
-            The amount of time that get's rewarded to you if you have avoided
-            all penalties.
+            The amount of time that gets rewarded to you if you have avoided all
+            penalties in a day.
           </p>
           <Slider
             initialValue={rules.bonusTime}

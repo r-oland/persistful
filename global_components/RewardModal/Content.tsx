@@ -95,15 +95,15 @@ export default function Content({
       <div className={styles.top}>
         <div>
           <h3 className={styles.title}>
-            What do you want to dangle to the end of your stick?
+            What do you want to dangle to the end of a stick?
           </h3>
         </div>
         <p className={styles.description}>
           Whether it be a fancy new piece of equipment, a nice activity, or a
-          juicy carrot, we all like treating ourselves from time to time. You
-          could just buy something on an impulse, but that might leave you with
-          a guilty feeling. So rather than that, set a goal and make yourself
-          ear it!
+          juicy carrot, we all like treating ourselves from time to time. That's
+          perfectly fine, but rewarding yourself without actually earning it is
+          kind of a missed opportunity. Be smarter than that and dangle your
+          treat at the end of a stick.
         </p>
       </div>
       <div className={styles['upload-image-wrapper']}>

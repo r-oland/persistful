@@ -99,11 +99,8 @@ export default function Content({
           </h3>
         </div>
         <p className={styles.description}>
-          Whether it be a fancy new piece of equipment, a nice activity, or a
-          juicy carrot, we all like treating ourselves from time to time. That's
-          perfectly fine, but rewarding yourself without actually earning it is
-          kind of a missed opportunity. Be smarter than that and dangle your
-          treat at the end of a stick.
+          Choose a reward. This could be a product, an activity or maybe a day
+          off. Use your imagination!
         </p>
       </div>
       <div className={styles['upload-image-wrapper']}>

@@ -1,6 +1,8 @@
 // Components==============
+import { AnimatePresence } from 'framer-motion';
 import Auth from 'global_components/Auth/Auth';
 import GlobalTodayStreakContextWrapper from 'global_components/GlobalTodayStreakContextWrapper';
+import IosInstallPrompt from 'global_components/IosInstallPrompt/IosInstallPrompt';
 import Layout from 'global_components/Layout/Layout';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { useDisableIOSZoom } from 'hooks/useDisableIOSZoom';
@@ -64,6 +66,9 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
                 <Layout noLayout={Component.noLayout}>
                   <Component {...pageProps} />
                 </Layout>
+                <AnimatePresence>
+                  {values.iosInstallModalIsOpen && <IosInstallPrompt />}
+                </AnimatePresence>
                 <ReactQueryDevtools initialIsOpen={false} />
               </GlobalTodayStreakContextWrapper>
             </PwaInstallContext.Provider>

@@ -15,6 +15,7 @@ export default function DesktopNav() {
   const router = useRouter();
 
   const context = useContext(PwaInstallContext);
+  const { deferredPrompt, canShowIosInstall } = context;
 
   return (
     <motion.div
@@ -37,7 +38,7 @@ export default function DesktopNav() {
           </ConditionaClick>
         ))}
       </div>
-      {!!context.deferredPrompt && (
+      {!!(deferredPrompt || canShowIosInstall) && (
         <button type="button" onClick={() => handlePwaInstall(context)}>
           <div className={styles.item}>
             <FontAwesomeIcon icon={faDownload} />

@@ -36,6 +36,8 @@ export default function GeneralTopNav({
 
   const context = useContext(PwaInstallContext);
 
+  const { deferredPrompt, canShowIosInstall } = context;
+
   const { data: activeReward } = useGetActiveReward();
 
   const totalCompleted = useGetRewardCycles(activeReward);
@@ -76,7 +78,7 @@ export default function GeneralTopNav({
             </p>
           </div>
           <div className={styles['icon-wrapper']}>
-            {!tabletQuery && context.deferredPrompt && (
+            {!tabletQuery && (deferredPrompt || canShowIosInstall) && (
               <div
                 className={styles.reward}
                 onClick={() => handlePwaInstall(context)}

@@ -1,0 +1,19 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  gap: $spacing2;
+
+  h3 {
+    margin-bottom: $spacing1;
+  }
+
+  p,
+  strong {
+    font-size: $font-small;
+  }
+
+  svg {
+    color: rgb(80, 158, 231);
+  }
+}

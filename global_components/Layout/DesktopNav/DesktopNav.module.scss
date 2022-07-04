@@ -2,10 +2,15 @@
 
 .wrapper {
   display: grid;
+  align-content: space-between;
   width: 91px;
   background-color: $white;
   border-right: 1px solid $grey-light;
-  align-content: start;
+
+  .items {
+    display: grid;
+    align-content: start;
+  }
 
   .item {
     cursor: pointer;

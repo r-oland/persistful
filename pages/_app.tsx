@@ -4,6 +4,7 @@ import GlobalTodayStreakContextWrapper from 'global_components/GlobalTodayStreak
 import Layout from 'global_components/Layout/Layout';
 import { useAppHeight } from 'hooks/useAppHeight';
 import { useDisableIOSZoom } from 'hooks/useDisableIOSZoom';
+import { PwaInstallContext, usePwaInstall } from 'hooks/usePwaInstall';
 import { NextPage } from 'next';
 import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
@@ -15,7 +16,6 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
 import 'styles/DayPicker.scss';
 import { fontawesomeHelper } from 'utils/fontawesomeHelper';
-
 // =========================
 
 fontawesomeHelper();
@@ -45,6 +45,7 @@ type AppPropsWithExtraProps = AppProps & {
 function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
   useAppHeight();
   useDisableIOSZoom();
+  const values = usePwaInstall();
 
   return (
     <>
@@ -58,12 +59,14 @@ function MyApp({ Component, pageProps }: AppPropsWithExtraProps) {
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
           <Auth noAuth={Component.noAuth}>
-            <GlobalTodayStreakContextWrapper>
-              <Layout noLayout={Component.noLayout}>
-                <Component {...pageProps} />
-              </Layout>
-              <ReactQueryDevtools initialIsOpen={false} />
-            </GlobalTodayStreakContextWrapper>
+            <PwaInstallContext.Provider value={values}>
+              <GlobalTodayStreakContextWrapper>
+                <Layout noLayout={Component.noLayout}>
+                  <Component {...pageProps} />
+                </Layout>
+                <ReactQueryDevtools initialIsOpen={false} />
+              </GlobalTodayStreakContextWrapper>
+            </PwaInstallContext.Provider>
           </Auth>
         </QueryClientProvider>
       </SessionProvider>

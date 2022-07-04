@@ -1,6 +1,6 @@
 // Components==============
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
-import { faFlame } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleArrowDown, faFlame } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetActiveReward from 'actions/reward/useGetActiveReward';
 import { format } from 'date-fns';
@@ -9,7 +9,8 @@ import RewardModal from 'global_components/RewardModal/RewardModal';
 import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
-import React, { useEffect, useState } from 'react';
+import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
+import React, { useContext, useEffect, useState } from 'react';
 import { getStartEndWeek } from 'utils/getStartEndWeek';
 import styles from './GeneralTopNav.module.scss';
 import Items from './Items/Items';
@@ -31,6 +32,9 @@ export default function GeneralTopNav({
 
   // @ts-ignore
   const query = useMediaQ('min', 825);
+  const tabletQuery = useMediaQ('min', 768);
+
+  const context = useContext(PwaInstallContext);
 
   const { data: activeReward } = useGetActiveReward();
 
@@ -71,19 +75,38 @@ export default function GeneralTopNav({
                 : format(activeDay, 'dd MMMM yyyy')}
             </p>
           </div>
-          <div className={styles.reward} onClick={() => setSelected('streak')}>
-            <FontAwesomeIcon icon={faFlame} />
-            {!!activeReward && (
+          <div className={styles['icon-wrapper']}>
+            {!tabletQuery && context.deferredPrompt && (
               <div
-                className={`${styles.counter} ${
-                  activeReward?.totalCycles === completedCycles
-                    ? styles.completed
-                    : ''
-                }`}
+                className={styles.reward}
+                onClick={() => handlePwaInstall(context)}
               >
-                <p>{activeReward ? completedCycles : 0}</p>
+                <FontAwesomeIcon icon={faCircleArrowDown} />
+                <div
+                  className={`${styles.counter} ${styles.completed}`}
+                  style={{ left: 13 }}
+                >
+                  <p>!</p>
+                </div>
               </div>
             )}
+            <div
+              className={styles.reward}
+              onClick={() => setSelected('streak')}
+            >
+              <FontAwesomeIcon icon={faFlame} />
+              {!!activeReward && (
+                <div
+                  className={`${styles.counter} ${
+                    activeReward?.totalCycles === completedCycles
+                      ? styles.completed
+                      : ''
+                  }`}
+                >
+                  <p>{activeReward ? completedCycles : 0}</p>
+                </div>
+              )}
+            </div>
           </div>
           <AnimatePresence>
             {selected !== 'none' && (

@@ -37,14 +37,14 @@ export default function DesktopNav() {
           </ConditionaClick>
         ))}
       </div>
-      {!!context.deferredPrompt &&
-      <button type="button" onClick={() => handlePwaInstall(context)}>
-        <div className={styles.item}>
-          <FontAwesomeIcon icon={faDownload} />
-          <p>Install</p>
-        </div>
-      </button>
-      }
+      {!!context.deferredPrompt && (
+        <button type="button" onClick={() => handlePwaInstall(context)}>
+          <div className={styles.item}>
+            <FontAwesomeIcon icon={faDownload} />
+            <p>Install</p>
+          </div>
+        </button>
+      )}
     </motion.div>
   );
 }

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import styles from 'components/login/Login.module.scss';
 import Button from 'global_components/Button/Button';
 import Input from 'global_components/Input/Input';
+import { useStorage } from 'hooks/useStorage';
 import { GetServerSideProps } from 'next';
 import { getSession, signIn } from 'next-auth/react';
 import Head from 'next/head';
@@ -14,7 +15,7 @@ import React, { useState } from 'react';
 export default function Login() {
   const [mode, setMode] = useState<'login' | 'register'>('login');
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useStorage('sign-in-email', '');
   const [submitting, setSubmitting] = useState(false);
 
   return (

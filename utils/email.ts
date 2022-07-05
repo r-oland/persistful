@@ -54,6 +54,6 @@ export function html({
 }
 
 // Email Text body (fallback for email clients that don't render HTML, e.g. feature phones)
-export function text({ url, host }: Record<'url' | 'host', string>) {
-  return `Sign into ${host}\n${url}\n\n`;
+export function text({ code, host }: Record<'code' | 'host', string>) {
+  return `Sign into ${host}\nWith code: ${code}\n\n`;
 }

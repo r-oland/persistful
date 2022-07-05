@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import styles from 'components/verify-mail/VerifyMail.module.scss';
 import Input from 'global_components/Input/Input';
+import { useStorage } from 'hooks/useStorage';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
@@ -14,6 +15,7 @@ export default function VerifyMail() {
   const history = useRouter();
 
   const [value, setValue] = useState('');
+  const [email] = useStorage('sign-in-email', '');
 
   useEffect(() => {
     if (user) history.push('/');
@@ -31,7 +33,9 @@ export default function VerifyMail() {
             e.preventDefault();
 
             history.push(
-              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=roland.branten%40gmail.com`
+              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=${encodeURIComponent(
+                email
+              )}`
             );
           }}
         >

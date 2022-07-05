@@ -33,7 +33,7 @@ export default function VerifyMail() {
             e.preventDefault();
 
             history.push(
-              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value}&email=${encodeURIComponent(
+              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value.trim()}&email=${encodeURIComponent(
                 email
               )}`
             );

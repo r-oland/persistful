@@ -27,7 +27,7 @@ export default function Shape({
     return (
       <motion.div
         initial={{ opacity: 0 }}
-        animate={{ opacity: 0.08 }}
+        animate={{ opacity: 0.12 }}
         className={`${styles.circle} ${styles[color]}`}
         style={style}
       />
@@ -36,7 +36,7 @@ export default function Shape({
   return (
     <motion.div
       initial={{ opacity: 0 }}
-      animate={{ opacity: 0.08 }}
+      animate={{ opacity: 0.12 }}
       className={`${styles.triangle} ${styles[color]}`}
       style={style}
     />

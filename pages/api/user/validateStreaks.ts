@@ -228,8 +228,8 @@ export default async function handler(
 
     const startDateGeneralStreak =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt ||
-      // fallback
-      new Date();
+      // fallback if streak was never broken -> grab first day
+      dayEntities[0].createdAt;
 
     // day entities that are used for calculating the general streak
     const generalStreakDays = dayEntities.filter((d) => {
@@ -243,7 +243,7 @@ export default async function handler(
     // total sum of all completed streak day cycles
     const total = generalStreakDays
       .map((day) => getDayAchievements(day).streak)
-      .reduce((prev, cur) => prev + cur);
+      .reduce((prev, cur) => prev + cur, 0);
 
     // all dates that are using a second chance in the current streak
     const secondChanceDates = secondChanceDatesPerWeek.filter(
@@ -277,7 +277,7 @@ export default async function handler(
         .map((day) => getDayAchievements(day).streak);
 
       const newValue = reducibleArr.length
-        ? reducibleArr.reduce((prev, cur) => prev + cur) -
+        ? reducibleArr.reduce((prev, cur) => prev + cur, 0) -
           // - start cycles in case you added a reward mid day with already achieved streaks
           activeReward.startCycles
         : 0;

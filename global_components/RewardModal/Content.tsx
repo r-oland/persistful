@@ -35,6 +35,7 @@ export default function Content({
 
   const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
   const [localImage, setLocalImage] = useState('');
+  const [fileToLarge, setFileToLarge] = useState(false);
 
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
@@ -52,7 +53,9 @@ export default function Content({
     setModalIsOpen ? setModalIsOpen(false) : push('/');
 
   function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
-    if (!e.target.files) return;
+    if (!e.target.files?.length) return;
+    if (e.target.files[0].size > 3000000) return setFileToLarge(true);
+    setFileToLarge(false);
 
     // @ts-ignore
     setSaveObject((prev) => ({ ...prev, image: e.target.files[0] }));
@@ -103,24 +106,32 @@ export default function Content({
           off. Use your imagination!
         </p>
       </div>
-      <div className={styles['upload-image-wrapper']}>
-        <label htmlFor="upload">
-          {image ? (
-            <Image src={image} width={40} height={40} />
-          ) : (
-            <div className={styles['upload-image']}>
-              <FontAwesomeIcon icon={faCamera} />
-            </div>
-          )}
-          <input type="file" id="upload" onChange={handleImageUpload} />
-        </label>
-        <Input
-          value={name}
-          onChange={(e) =>
-            setSaveObject((prev) => ({ ...prev, name: e.target.value }))
-          }
-          placeholder="A big juicy carrot"
-        />
+      <div>
+        {fileToLarge && (
+          <p className={styles['to-large']}>
+            Oops! I think this file ate to much carrots... The maximum upload
+            size is 3MB.
+          </p>
+        )}
+        <div className={styles['upload-image-wrapper']}>
+          <label htmlFor="upload">
+            {image ? (
+              <Image src={image} width={40} height={40} />
+            ) : (
+              <div className={styles['upload-image']}>
+                <FontAwesomeIcon icon={faCamera} />
+              </div>
+            )}
+            <input type="file" id="upload" onChange={handleImageUpload} />
+          </label>
+          <Input
+            value={name}
+            onChange={(e) =>
+              setSaveObject((prev) => ({ ...prev, name: e.target.value }))
+            }
+            placeholder="A big juicy carrot"
+          />
+        </div>
       </div>
       <div className={styles.middle}>
         <div className={styles.left}>

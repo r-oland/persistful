@@ -24,6 +24,12 @@
     margin-bottom: $spacing2;
   }
 
+  .to-large {
+    font-size: $font-extra-small;
+    color: $red;
+    margin-bottom: $spacing1;
+  }
+
   .upload-image-wrapper {
     display: grid;
     gap: $spacing4;

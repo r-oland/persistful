@@ -4,6 +4,8 @@ type DailyActivityEntity = {
   countMode: 'minutes' | 'times';
   countCalc?: number;
   count: number;
+  // only in front-end
+  timesCount?: number;
 };
 
 type DayEntity = {

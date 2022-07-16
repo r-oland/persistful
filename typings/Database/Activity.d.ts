@@ -22,4 +22,6 @@ type ActivityEntity = {
   countMode: 'minutes' | 'times';
   countCalc: number;
   createdAt: Date;
+  // only in front-end
+  timesCount?: number;
 };

@@ -2,28 +2,23 @@
 
 .wrapper {
   display: grid;
-  gap: $spacing5;
+  gap: $spacing4;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   padding: $spacing7 $spacing5 $spacing5;
   height: calc($app-height - 50px - 65px);
   align-content: start;
   border-right: 1px solid $grey-light;
   overflow: auto;
 
-  .content {
-    display: grid;
-    gap: $spacing4;
-    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-
-    @media screen and (min-width: $desktop-extra-large) {
-      gap: $spacing6;
-      grid-template-columns: repeat(2, 220px);
-    }
-  }
-
   @media screen and (min-width: $desktop) {
     padding: $spacing11 $spacing10;
     background-color: $white;
     height: calc($app-height - 181px);
+  }
+
+  @media screen and (min-width: $desktop-extra-large) {
+    gap: $spacing6;
+    grid-template-columns: repeat(2, 220px);
   }
 
   .title {

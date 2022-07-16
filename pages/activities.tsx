@@ -32,7 +32,7 @@ export default function Activities() {
       </Head>
       <ActivitiesContext.Provider value={memorizedValues}>
         <div className={styles.wrapper}>
-          {query && <TopBar />}
+          <TopBar />
           <div className={styles.content}>
             <LeftSidebar />
             {query && <EditView key={selectedActivity} />}

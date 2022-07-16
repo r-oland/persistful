@@ -1,5 +1,15 @@
 @import 'styles/Variables';
 
+.mobile-wrapper {
+  display: grid;
+  align-items: center;
+  padding: 0 $spacing5;
+
+  p {
+    font-weight: $weight-bold;
+  }
+}
+
 .wrapper {
   display: grid;
   height: 181px;

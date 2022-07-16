@@ -70,11 +70,24 @@ export default function DesktopOverviewStats({
           if (activityIndex !== -1) {
             const item = activities[activityIndex];
             // add sum to total
-            if (item) item.count += sum;
+            if (item) {
+              item.count += sum;
+
+              // The amount of times needs to be stored separately because this data can get lost if countCalc differs over days.
+              if (activity.countMode === 'times') {
+                if (!item.timesCount) item.timesCount = 0;
+                item.timesCount += activity.count;
+              }
+            }
             return;
           }
+
           // init item in array (destructure to prevent bug where days array from being incremented)
-          return activities.push({ ...activity, count: sum });
+          return activities.push({
+            ...activity,
+            count: sum,
+            timesCount: activity.countMode === 'times' ? activity.count : 0,
+          });
         })
     );
 
@@ -138,7 +151,7 @@ export default function DesktopOverviewStats({
           : 'green'
         : 'red',
       data: displayData.mostActive
-        ? getActivityCount(displayData.mostActive, true)
+        ? getActivityCount(displayData.mostActive)
         : '0:00',
     },
   ];

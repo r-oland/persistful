@@ -1,11 +1,6 @@
 import { convertMinutesToHours } from './convertMinutesToHours';
 
-export const getActivityCount = (
-  activity: DailyActivityEntity,
-  calcReduction = false
-) =>
+export const getActivityCount = (activity: DailyActivityEntity) =>
   activity.countMode === 'minutes'
     ? convertMinutesToHours(activity.count)
-    : calcReduction
-    ? `${activity.count / (activity.countCalc || 0)}x`
-    : `${Math.floor(activity.count)}x`;
+    : `${Math.floor(activity?.timesCount || activity.count)}x`;

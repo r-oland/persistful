@@ -52,7 +52,8 @@ export default function Rules() {
           onClick={(prm) => updateRules({ prm })}
         >
           <p>
-            You receive bonus points for not engaging in negative activities.
+            You receive a bonus time by default. Performing a negative activity
+            will remove this bonus.
           </p>
         </Checkbox>
       </div>

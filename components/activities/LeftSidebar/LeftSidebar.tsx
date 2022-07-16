@@ -54,24 +54,17 @@ export default function LeftSidebar() {
 
   return (
     <div className={styles.wrapper}>
-      {!query && (
-        <div>
-          <h2 className={styles.title}>Activities</h2>
-        </div>
-      )}
-      <div className={styles.content}>
-        <NewActivity />
-        <Activities
-          activities={activities}
-          allActivities={allActivities}
-          query={query}
-        />
-        <Activities
-          activities={penalties}
-          allActivities={allActivities}
-          query={query}
-        />
-      </div>
+      <NewActivity />
+      <Activities
+        activities={activities}
+        allActivities={allActivities}
+        query={query}
+      />
+      <Activities
+        activities={penalties}
+        allActivities={allActivities}
+        query={query}
+      />
     </div>
   );
 }

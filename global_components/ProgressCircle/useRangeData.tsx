@@ -1,4 +1,5 @@
 // Components==============
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getDayAchievements } from 'utils/getDayAchievements';
@@ -81,7 +82,7 @@ export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
         displayStreak,
         dailyGoal,
       });
-  }, [days?.[0]?.createdAt, isLoading]);
+  }, [useDeepComparison(days), isLoading]);
 
   return displayData;
 };

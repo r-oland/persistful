@@ -30,19 +30,22 @@ export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
 
   const total = Math.floor(totalDays / amountOfDays);
 
-  // Not rounded per day
-  const streak =
-    days
-      ?.map((d) => getDayAchievements(d, true).streak)
-      .reduce((prev, cur) => prev + cur, 0) || 0;
+  // calc daily goal
+  const totalDailyGoal =
+    days?.map((d) => d.rules.dailyGoal).reduce((prev, cur) => prev + cur, 0) ||
+    0;
+
+  const averageGoal = totalDailyGoal / amountOfDays;
+  const dailyGoal = convertMinutesToHours(averageGoal);
+
+  const rawStreak = total / averageGoal;
+  const streak = rawStreak < 0 ? 0 : rawStreak;
 
   // Rounded per day
   const displayStreak =
     days
       ?.map((d) => getDayAchievements(d).streak)
       .reduce((prev, cur) => prev + cur, 0) || 0;
-
-  const averageStreak = streak / amountOfDays;
 
   // calc bonus time
   const totalBonusTime =
@@ -57,15 +60,9 @@ export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
   const averageBonusTime = totalBonusTime / amountOfDays;
 
   // calc progress
-  const progress = getProgress(averageStreak);
-  const bonusProgress = getProgress(averageBonusTime);
-
-  // calc daily goal
-  const totalDailyGoal =
-    days?.map((d) => d.rules.dailyGoal).reduce((prev, cur) => prev + cur, 0) ||
-    0;
-
-  const dailyGoal = convertMinutesToHours(totalDailyGoal / amountOfDays);
+  const progress = getProgress(streak);
+  const bonusProgress =
+    streak === 0 ? [0, 0, 0] : getProgress(averageBonusTime);
 
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {

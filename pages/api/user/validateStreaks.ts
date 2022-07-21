@@ -226,6 +226,19 @@ export default async function handler(
       }
     );
 
+    // get date string of day that broke streak
+    const streakBreakDayString =
+      descendingDayEntities[
+        indexOfDateThatDidNotAchieveGoal
+      ]?.createdAt.toLocaleDateString();
+
+    // get date string of yesterday
+    const yesterdayString = yesterdayDate.toLocaleDateString();
+
+    // reset the streak if it was broken yesterday.
+    // This is necessary because this day will have an index of 0 and can therefor not be used in startDateGeneralStreak
+    if (streakBreakDayString === yesterdayString) return await reset();
+
     const startDateGeneralStreak =
       descendingDayEntities[indexOfDateThatDidNotAchieveGoal - 1]?.createdAt ||
       // fallback if streak was never broken -> grab first day

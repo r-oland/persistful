@@ -43,3 +43,6 @@ public/workbox-*.js
 
 # Google cloud key
 storage-key.json
+
+# fontawesome key
+.npmrc

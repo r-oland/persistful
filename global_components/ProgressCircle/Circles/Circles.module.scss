@@ -41,6 +41,10 @@
     transform: rotate(-90deg);
     stroke: $green;
 
+    &.phantom {
+      stroke: $green-light;
+    }
+
     &.bonus {
       stroke: $green-dark;
     }

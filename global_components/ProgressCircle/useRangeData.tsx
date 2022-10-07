@@ -13,6 +13,7 @@ const defaultValues = {
   streak: 0,
   displayStreak: 0,
   dailyGoal: '0:00',
+  phantom: false,
 };
 
 export type DayDataTypes = typeof defaultValues;
@@ -78,6 +79,7 @@ export const useRangeData = (days?: DayEntity[], isLoading?: boolean) => {
         streak,
         displayStreak,
         dailyGoal,
+        phantom: false,
       });
   }, [useDeepComparison(days), isLoading]);
 

@@ -100,6 +100,7 @@ export default NextAuth({
                 dailyGoal: 90,
                 secondChange: false,
                 prm: false,
+                balance: false,
                 bonusTime: 30,
               },
               createdAt: new Date(),

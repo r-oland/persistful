@@ -36,7 +36,7 @@ function DisplayComponent({
 }) {
   return (
     <div className={styles.wrapper}>
-      <Circles progress={displayData.progress} />
+      <Circles progress={displayData.progress} phantom={displayData.phantom} />
       <Circles progress={displayData.bonusProgress} bonus />
       <div className={styles.center}>
         <CounterTitle valueTo={displayData.total} streak={displayData.streak} />

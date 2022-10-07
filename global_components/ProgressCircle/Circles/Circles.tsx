@@ -9,10 +9,12 @@ function Circle({
   percentage,
   index,
   bonus,
+  phantom,
 }: {
   percentage: number;
   index: number;
   bonus?: boolean;
+  phantom?: boolean;
 }) {
   const strokeWidth = index === 0 ? 5 : index === 1 ? 6.5 : 8.5;
   const radius = 45;
@@ -113,7 +115,9 @@ function Circle({
       </svg>
       <svg
         viewBox="0 0 100 100"
-        className={`${styles.progress} ${bonus ? styles.bonus : ''}`}
+        className={`${styles.progress} ${bonus ? styles.bonus : ''} ${
+          phantom ? styles.phantom : ''
+        }`}
       >
         <motion.circle
           cx="50"
@@ -139,14 +143,22 @@ function Circle({
 export default function Circles({
   progress,
   bonus,
+  phantom,
 }: {
   progress: number[];
   bonus?: boolean;
+  phantom?: boolean;
 }) {
   return (
     <>
       {progress.map((percentage, i) => (
-        <Circle percentage={percentage} index={i} key={i} bonus={bonus} />
+        <Circle
+          percentage={percentage}
+          index={i}
+          key={i}
+          bonus={bonus}
+          phantom={phantom}
+        />
       ))}
     </>
   );

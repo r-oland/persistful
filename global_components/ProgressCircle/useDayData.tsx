@@ -15,6 +15,7 @@ const defaultValues = {
   streak: 0,
   displayStreak: 0,
   dailyGoal: '0:00',
+  phantom: false,
 };
 
 export type ProgressCircleTypes = typeof defaultValues;
@@ -26,7 +27,10 @@ export const useDayData = (activeDay: Date) => {
 
   const { data: day } = useGetDay(activeDay);
 
-  const { total, bonusScore, streak } = getDayAchievements(day, true);
+  const { total, bonusScore, streak, phantomStreak } = getDayAchievements(
+    day,
+    true
+  );
 
   const flatStreak = Math.floor(streak);
 
@@ -35,7 +39,8 @@ export const useDayData = (activeDay: Date) => {
     ? bonusScore / (day?.rules?.dailyGoal || 0)
     : 0;
 
-  const progress = getProgress(streak);
+  // use a phantom streak if it exists
+  const progress = getProgress(phantomStreak || streak);
   const bonusProgress = getProgress(todayBonusTime);
 
   const todayStamp = new Date().toLocaleDateString();
@@ -61,6 +66,7 @@ export const useDayData = (activeDay: Date) => {
         streak,
         displayStreak,
         dailyGoal,
+        phantom: !!phantomStreak,
       });
   }, [useDeepComparison(day), user?.streak]);
 

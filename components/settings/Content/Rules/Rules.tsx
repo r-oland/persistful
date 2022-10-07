@@ -46,6 +46,18 @@ export default function Rules() {
         </Checkbox>
       </div>
       <div>
+        <strong>Enforced balance mode</strong>
+        <Checkbox
+          initialValue={!!rules.balance}
+          onClick={(balance) => updateRules({ balance })}
+        >
+          <p>
+            You streak will only start counting after you've added time to at
+            least 2 positive activities.
+          </p>
+        </Checkbox>
+      </div>
+      <div>
         <strong>Positive reinforcement mode</strong>
         <Checkbox
           initialValue={rules.prm}

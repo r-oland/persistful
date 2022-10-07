@@ -1,6 +1,8 @@
 type RulesEntity = {
   dailyGoal: number;
   secondChange: boolean;
+  // no migration done yet so it can be undefined
+  balance?: boolean;
   prm: boolean;
   bonusTime: number;
 };

@@ -52,7 +52,7 @@ export default function Rules() {
           onClick={(balance) => updateRules({ balance })}
         >
           <p>
-            You streak will only start counting after you've added time to at
+            Your streak will only start counting after you've added time to at
             least 2 positive activities.
           </p>
         </Checkbox>

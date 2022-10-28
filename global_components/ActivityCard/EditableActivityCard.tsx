@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
 import useUpdateUser from 'actions/user/useUpdateUser';
+import { MobileActivityCardsContext } from 'components/dashboard/Activities/Activities';
 import { AnimatePresence } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import { useMediaQ } from 'hooks/useMediaQ';
@@ -50,6 +51,7 @@ export default function EditableActivityCard({
   const updateUser = useUpdateUser();
 
   const { activeDay } = useContext(DashboardContext);
+  const { setOverlayIsDisplayed } = useContext(MobileActivityCardsContext);
   const { data: day } = useGetDay(activeDay);
 
   const query = useMediaQ('min', 525);
@@ -65,6 +67,11 @@ export default function EditableActivityCard({
   const [key, setKey] = useState(0);
   useEffect(() => {
     if (displayOverlay) setKey((prev) => prev + 1);
+
+    if (setOverlayIsDisplayed) {
+      if (displayOverlay) return setOverlayIsDisplayed(true);
+      setOverlayIsDisplayed(false);
+    }
   }, [displayOverlay]);
   //
 

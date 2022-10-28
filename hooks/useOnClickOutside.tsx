@@ -20,9 +20,11 @@ export function useOnClickOutside({ refs, handler, condition = true }: Props) {
       };
 
       document.addEventListener('mousedown', listener);
+      document.addEventListener('touchstart', listener);
 
       return () => {
         document.removeEventListener('mousedown', listener);
+        document.removeEventListener('touchstart', listener);
       };
     }
   }, [refs, handler, condition]);

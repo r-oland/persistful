@@ -6,9 +6,24 @@ import ElementContainer from 'global_components/ElementContainer/ElementContaine
 import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { DashboardContext } from 'pages';
-import React, { useContext, useEffect, useRef, useState } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import styles from './Activities.module.scss';
 // =========================
+
+type MobileActivityCardsContextType = {
+  setOverlayIsDisplayed: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const MobileActivityCardsContext = createContext(
+  {} as MobileActivityCardsContextType
+);
 
 function ConditionalWrapper({
   children,
@@ -20,6 +35,9 @@ function ConditionalWrapper({
   const query = useMediaQ('min', 768);
   const ref = useRef<HTMLDivElement>(null);
   const [penalty, setPenalty] = useState(false);
+  const [overlayIsDisplayed, setOverlayIsDisplayed] = useState(false);
+
+  const contextValue = useMemo(() => ({ setOverlayIsDisplayed }), []);
 
   if (query) return <div className={styles.wrapper}>{children}</div>;
 
@@ -31,24 +49,31 @@ function ConditionalWrapper({
   };
 
   return (
-    <div className={styles['mobile-wrapper']}>
-      <div
-        className={styles.items}
-        style={{ gridTemplateColumns: twoItems ? '100% 100%' : '' }}
-        ref={ref}
-        onScroll={(e: any) => getScrollPosition(e.target.scrollLeft)}
-      >
-        {children}
-      </div>
-      {twoItems && (
+    <MobileActivityCardsContext.Provider value={contextValue}>
+      <div className={styles['mobile-wrapper']}>
         <div
-          className={`${styles.toggle} ${penalty ? styles['is-penalty'] : ''}`}
+          className={styles.items}
+          style={{
+            gridTemplateColumns: twoItems ? '100% 100%' : '',
+            overflow: overlayIsDisplayed ? 'hidden' : 'auto',
+          }}
+          ref={ref}
+          onScroll={(e: any) => getScrollPosition(e.target.scrollLeft)}
         >
-          <div className={styles.activity} />
-          <div className={styles.penalty} />
+          {children}
         </div>
-      )}
-    </div>
+        {twoItems && (
+          <div
+            className={`${styles.toggle} ${
+              penalty ? styles['is-penalty'] : ''
+            }`}
+          >
+            <div className={styles.activity} />
+            <div className={styles.penalty} />
+          </div>
+        )}
+      </div>
+    </MobileActivityCardsContext.Provider>
   );
 }
 

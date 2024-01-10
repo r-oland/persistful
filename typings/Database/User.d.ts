@@ -20,4 +20,5 @@ type UserEntity = {
   lastValidation: Date;
   secondChanceDates?: Date[];
   finishedOnboarding: boolean;
+  subscription?: string;
 };

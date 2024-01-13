@@ -40,6 +40,7 @@ yarn-error.log*
 # service worker
 public/sw.js
 public/workbox-*.js
+/public/worker-*
 
 # Google cloud key
 storage-key.json

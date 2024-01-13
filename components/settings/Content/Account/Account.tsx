@@ -1,8 +1,13 @@
 // Components==============
-import { faRadiation, faSignOutAlt } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faRadiation,
+  faSend,
+  faSignOutAlt,
+} from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
+import axios from 'axios';
 import Button from 'global_components/Button/Button';
 import Checkbox from 'global_components/Checkbox/Checkbox';
 import Input from 'global_components/Input/Input';
@@ -66,6 +71,11 @@ export default function Account({
             day.
           </p>
         </Checkbox>
+      </div>
+      <div>
+        <Button color="green" onClick={() => axios.post('/api/notification')}>
+          <FontAwesomeIcon icon={faSend} /> fire notification
+        </Button>
       </div>
       <div>
         <strong>Delete account</strong>

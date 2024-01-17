@@ -1,17 +1,21 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
-/** @type {import('next').NextConfig} */
-const withPWA = require('next-pwa');
-const runtimeCaching = require('next-pwa/cache');
-
-module.exports = withPWA({
-  reactStrictMode: true,
-  pwa: {
+const runtimeCaching = require("next-pwa/cache");
+const withPWA = require("next-pwa")({
     dest: 'public',
     disable: process.env.NODE_ENV === 'development',
     runtimeCaching,
     buildExcludes: [/middleware-manifest\.json$/],
-  },
+});
+
+const nextConfig = withPWA({
+  reactStrictMode: true,
   images: {
-    domains: ['storage.googleapis.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'storage.googleapis.com',
+      },
+    ],
   },
 });
+
+module.exports = nextConfig;

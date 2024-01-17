@@ -36,7 +36,12 @@ export default function OnboardingModal({
           <h2>{content[current].title}</h2>
           <div className={styles.body}>
             <div className={styles.text}>{content[current].text}</div>
-            <Image src={content[current].image} width={215} height={150} />
+            <Image
+              src={content[current].image}
+              width={215}
+              height={150}
+              alt="Onboarding image"
+            />
           </div>
         </div>
         <div className={styles['button-wrapper']}>

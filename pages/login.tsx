@@ -57,7 +57,12 @@ export default function Login() {
                   {submitting && <FontAwesomeIcon icon={faSpinnerThird} spin />}
                 </Button>
                 <Button color="white" onClick={() => signIn('google')} stretch>
-                  <Image src="/images/google.svg" width="16" height="16" />
+                  <Image
+                    src="/images/google.svg"
+                    width="16"
+                    height="16"
+                    alt="Google logo"
+                  />
                   {mode === 'login'
                     ? 'Sign in with Google'
                     : 'Continue with Google'}

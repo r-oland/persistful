@@ -116,7 +116,7 @@ export default function Content({
         <div className={styles['upload-image-wrapper']}>
           <label htmlFor="upload">
             {image ? (
-              <Image src={image} width={40} height={40} />
+              <Image src={image} width={40} height={40} alt="Reward image" />
             ) : (
               <div className={styles['upload-image']}>
                 <FontAwesomeIcon icon={faCamera} />

@@ -36,7 +36,7 @@ export default function RewardCard({
     <HardShadow stretch>
       <div className={styles.wrapper}>
         <div className={styles.image}>
-          <Image src={reward.image} layout="fill" />
+          <Image src={reward.image} layout="fill" alt={reward.name} />
         </div>
         <div className={styles.content}>
           <div className={styles.bottom}>
@@ -110,8 +110,8 @@ export default function RewardCard({
                   {status === 'overview'
                     ? reward.totalCycles
                     : status === 'completed'
-                    ? 0
-                    : reward.totalCycles - completedCycles}
+                      ? 0
+                      : reward.totalCycles - completedCycles}
                 </p>
               </div>
               <p className={styles['cycles-left']}>

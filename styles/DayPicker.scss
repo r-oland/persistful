@@ -1,6 +1,7 @@
 @import 'styles/Variables';
 
 :root {
+  .rdp {
   --rdp-cell-size: 28px;
   --rdp-accent-color: #18e597;
   --rdp-background-color: #e8fcf5;
@@ -8,6 +9,7 @@
   --rdp-outline: none;
   /* Outline border for focused and selected elements */
   --rdp-outline-selected: none;
+  }
 }
 
 .rdp {

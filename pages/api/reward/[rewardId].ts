@@ -22,7 +22,7 @@ export default async function handler(
     const session = await checkAuth(req, res);
     if (!session) return res.status(404).send({ message: 'Session not found' });
 
-    const _id = new ObjectId(req.query.rewardId as string);
+    const _id = new ObjectId(req.query.rewardId as string) as any;
     const userId = session.user.uid;
 
     const rewards = await getCollection<RewardEntity>('rewards');

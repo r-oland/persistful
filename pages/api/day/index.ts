@@ -32,12 +32,12 @@ export default async function handler(
         .find({ userId })
         // Filter out the only values (next to the _id) that are needed
         .project({ countCalc: 1, countMode: 1, penalty: 1 })
-        .map((activity) => ({ ...activity, count: 0 } as DailyActivityEntity))
+        .map((activity) => ({ ...activity, count: 0 }) as DailyActivityEntity)
         .toArray();
 
       // get user
       const users = await getCollection<UserEntity>('users');
-      const _id = new ObjectId(userId);
+      const _id = new ObjectId(userId) as any;
       const user = await users.findOne({ _id });
       if (!user) return;
 

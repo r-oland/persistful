@@ -74,7 +74,7 @@ export default NextAuth({
         if (!user.id.length) return;
 
         // Get user id
-        const _id = new ObjectId(user.id);
+        const _id = new ObjectId(user.id) as any;
 
         // get user
         const users = await getCollection<UserEntity>('users');

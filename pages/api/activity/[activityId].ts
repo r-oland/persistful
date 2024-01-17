@@ -12,7 +12,7 @@ export default async function handler(
     const session = await checkAuth(req, res);
     if (!session) return;
 
-    const _id = new ObjectId(req.query.activityId as string);
+    const _id = new ObjectId(req.query.activityId as string) as any;
 
     const activities = await getCollection<ActivityEntity>('activities');
 

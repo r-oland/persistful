@@ -10,8 +10,8 @@ export default async function handler(
   try {
     const session = await checkAuth(req, res);
 
-    const _id = new ObjectId(req.query.rewardId as string);
-    const userId = new ObjectId(session?.user.uid);
+    const _id = new ObjectId(req.query.rewardId as string) as any;
+    const userId = new ObjectId(session?.user.uid) as any;
 
     const rewards = await getCollection<RewardEntity>('rewards');
     const users = await getCollection<UserEntity>('users');

@@ -16,13 +16,13 @@ export default async function handler(
 
       // get day
       const days = await getCollection<DayEntity>('days');
-      const _id = new ObjectId(data.id);
+      const _id = new ObjectId(data.id) as any;
       const day = await days.findOne({ _id });
       if (!day) return res.status(404).send({ message: 'day not found' });
 
       // get activity
       const activities = await getCollection<ActivityEntity>('activities');
-      const activityId = new ObjectId(data.activityId);
+      const activityId = new ObjectId(data.activityId) as any;
       const activity = await activities.findOne({ _id: activityId });
       if (!activity)
         return res.status(404).send({ message: 'activity not found' });

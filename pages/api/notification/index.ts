@@ -32,7 +32,7 @@ export default async function handler(
     if (!session) return;
 
     // Get user id
-    const _id = new ObjectId(session.user.uid);
+    const _id = new ObjectId(session.user.uid) as any;
 
     // get user
     const users = await getCollection<UserEntity>('users');

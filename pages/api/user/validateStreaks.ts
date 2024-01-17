@@ -20,7 +20,7 @@ export default async function handler(
 
     // get user
     const userId = session.user.uid;
-    const _id = new ObjectId(userId);
+    const _id = new ObjectId(userId) as any;
     const users = await getCollection<UserEntity>('users');
     const user = await users.findOne({ _id });
 

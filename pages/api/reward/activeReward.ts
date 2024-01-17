@@ -11,7 +11,7 @@ export default async function handler(
     const session = await checkAuth(req, res);
     if (!session) return;
 
-    const _id = new ObjectId(session.user.uid);
+    const _id = new ObjectId(session.user.uid) as any;
 
     if (req.method === 'GET') {
       // get active reward id from user

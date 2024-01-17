@@ -28,7 +28,7 @@ export default async function handler(
 
     // Get user id
     const userId = session.user.uid;
-    const objectUserId = new ObjectId(userId);
+    const objectUserId = new ObjectId(userId) as any;
 
     if (req.method === 'GET') {
       const data = await rewards.find({ userId }).toArray();

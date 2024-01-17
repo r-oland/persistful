@@ -16,7 +16,7 @@ import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProg
 import { useCounter } from 'hooks/useCounter';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import styles from './RewardModal.module.scss';

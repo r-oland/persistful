@@ -6,7 +6,7 @@ import Shape from 'global_components/Shape/Shape';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
 import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React from 'react';
 import { format } from 'date-fns';

@@ -4,7 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import Button from 'global_components/Button/Button';
 import Modal from 'global_components/Modal/Modal';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { content } from './content';

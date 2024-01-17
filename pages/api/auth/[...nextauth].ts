@@ -1,6 +1,6 @@
 import { MongoDBAdapter } from '@next-auth/mongodb-adapter';
 import { ObjectId } from 'mongodb';
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GoogleProvider from 'next-auth/providers/google';
 import nodemailer from 'nodemailer';
@@ -10,7 +10,7 @@ import { html, text } from 'utils/email';
 
 let code: string;
 
-export default NextAuth({
+export const authOptions: NextAuthOptions = {
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     GoogleProvider({
@@ -127,4 +127,6 @@ export default NextAuth({
       }
     },
   },
-});
+};
+
+export default NextAuth(authOptions);

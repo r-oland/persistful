@@ -6,10 +6,12 @@ import Button from 'global_components/Button/Button';
 import Input from 'global_components/Input/Input';
 import { useStorage } from 'hooks/useStorage';
 import { GetServerSideProps } from 'next';
-import { getSession, signIn } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import Head from 'next/head';
 import Image from 'next/legacy/image';
 import React, { useState } from 'react';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]';
 // =========================
 
 export default function Login() {
@@ -93,7 +95,7 @@ export default function Login() {
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
   if (session)
     return {

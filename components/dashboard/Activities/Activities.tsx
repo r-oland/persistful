@@ -101,12 +101,12 @@ const getThreeItemClasses = (items: any[], i = 0, query = true) =>
   query
     ? ''
     : items.length === 3
-    ? i === 0
-      ? styles['bottom-right']
-      : i === 2
-      ? styles['bottom-left']
-      : ''
-    : '';
+      ? i === 0
+        ? styles['bottom-right']
+        : i === 2
+          ? styles['bottom-left']
+          : ''
+      : '';
 
 export default function Activities() {
   const [displayActivities, setDisplayActivities] = useState<ActivityEntity[]>(

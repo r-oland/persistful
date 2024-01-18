@@ -32,11 +32,15 @@ export default function VerifyMail() {
           onSubmit={(e) => {
             e.preventDefault();
 
-            history.push(
-              `/api/auth/callback/email?callbackUrl=3DSessionRequired&token=${value.trim()}&email=${encodeURIComponent(
-                email
-              )}`
+            const baseURL = window.location.origin;
+            const callbackUrl = encodeURIComponent(
+              `${baseURL}/login?callbackUrl=${baseURL}&error=SessionRequired`
             );
+            const token = value.trim();
+            const encodedEmail = encodeURIComponent(email);
+            const apiUrl = `/api/auth/callback/email?callbackUrl=${callbackUrl}&token=${token}&email=${encodedEmail}`;
+
+            history.push(apiUrl);
           }}
         >
           <div className={styles.text}>

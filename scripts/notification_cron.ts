@@ -6,7 +6,7 @@ dotenv.config();
 
 const { CRON_API_KEY, NEXTAUTH_URL } = process.env;
 
-cron.schedule('*/8 * * * * *', () => {
+cron.schedule('30 21 * * *', () => {
   fetch(`${NEXTAUTH_URL}/api/notification/push`, {
     method: 'POST',
     headers: {

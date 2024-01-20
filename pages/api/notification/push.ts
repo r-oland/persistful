@@ -1,6 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
+import { getNotificationMessage } from 'utils/getNotificationMessage';
 import { publicVapidKey } from 'utils/notificationUtils';
+import { setDateTime } from 'utils/setDateTime';
 import webpush from 'web-push';
 
 const vapidKeys = {
@@ -36,6 +39,7 @@ export default async function handler(
 
     // Retrieve subscriptions from database
     const collection = await getCollection<SubscriptionEntity>('subscriptions');
+    const days = await getCollection<DayEntity>('days');
     const subscriptions = await collection.find().toArray();
 
     if (req.method === 'POST') {
@@ -47,12 +51,19 @@ export default async function handler(
 
       await Promise.all(
         subscriptions.map(async (subscription) => {
+          const start = setDateTime(new Date(), 'start');
+          const end = setDateTime(new Date(), 'end');
+
+          const today = await days.findOne({
+            userId: subscription.uid,
+            createdAt: { $gte: start, $lt: end },
+          });
+
+          const currentStreak = getDayAchievements(today).streak;
+
           await triggerPushMsg(
             JSON.parse(subscription.data),
-            JSON.stringify({
-              title: 'Not too late to get started',
-              message: 'A few hours left',
-            })
+            JSON.stringify(getNotificationMessage(currentStreak))
           );
         })
       );

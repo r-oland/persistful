@@ -64,6 +64,9 @@ $border-light: 1px solid $grey-light;
 // App height
 $app-height: var(--app-height);
 
+// Mobile nav height
+$mobile-nav-height: var(--mobile-nav-height);
+
 @mixin underline {
   display: inline;
   box-shadow: inset 0 -12px 0px 0px $green-light;

@@ -18,9 +18,11 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import 'styles/App.scss';
 import 'styles/DayPicker.scss';
 import { fontawesomeHelper } from 'utils/fontawesomeHelper';
+import { setMobileNavHeight } from 'utils/setMobileNavHeight';
 // =========================
 
 fontawesomeHelper();
+setMobileNavHeight();
 
 export const queryClient = new QueryClient({
   // get fresh data after 10 mins of use -> in case someone left their tab open

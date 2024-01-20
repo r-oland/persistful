@@ -5,7 +5,7 @@
 
   .content {
     overflow: auto;
-    height: calc($app-height - 50px - 65px - 65px);
+    height: calc($app-height - 50px - 65px - $mobile-nav-height);
     padding: $spacing7 $spacing5 $spacing5;
     display: grid;
     gap: $spacing7;

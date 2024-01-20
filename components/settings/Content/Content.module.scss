@@ -3,7 +3,7 @@
 .mobile {
   padding: $spacing7 $spacing5 $spacing5;
 
-  height: calc($app-height - 50px - 65px);
+  height: calc($app-height - 50px - $mobile-nav-height);
 
   @media screen and (min-width: $tablet) {
     height: calc($app-height - 50px);

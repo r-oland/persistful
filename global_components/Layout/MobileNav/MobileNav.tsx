@@ -11,8 +11,12 @@ import styles from './MobileNav.module.scss';
 export default function MobileNav() {
   const router = useRouter();
 
+  const pwaInstalled =
+    typeof window !== 'undefined' &&
+    window.matchMedia('(display-mode: standalone)').matches;
+
   return (
-    <div className={styles.wrapper}>
+    <div className={`${styles.wrapper} ${pwaInstalled ? styles.pwa : ''}`}>
       {navItems
         .filter((item) => !item.desktopOnly)
         .map((item) => (

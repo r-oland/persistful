@@ -5,7 +5,7 @@
   gap: $spacing4;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   padding: $spacing7 $spacing5 $spacing5;
-  height: calc($app-height - 50px - 65px);
+  height: calc($app-height - 50px - $mobile-nav-height);
   align-content: start;
   border-right: 1px solid $grey-light;
   overflow: auto;

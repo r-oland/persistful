@@ -3,10 +3,14 @@
 .wrapper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  height: 65px;
+  height: $mobile-nav-height;
   background-color: $white;
   border-top: 1px solid $grey-light;
   align-content: center;
+
+  &.pwa {
+    padding-bottom: $spacing3;
+  }
 
   .item {
     display: grid;

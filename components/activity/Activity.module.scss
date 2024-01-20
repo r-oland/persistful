@@ -6,7 +6,7 @@
   .content {
     display: grid;
     align-content: start;
-    height: calc($app-height - 50px - 65px);
+    height: calc($app-height - 50px - $mobile-nav-height);
     padding: $spacing7 $spacing5 $spacing5;
 
     @media screen and (min-width: $tablet) {

@@ -4,7 +4,7 @@
   display: grid;
 
   .app {
-    height: calc($app-height - 65px);
+    height: calc($app-height - $mobile-nav-height);
     width: 100%;
     overflow: auto;
   }

@@ -1,12 +1,9 @@
 export function checkNotificationBrowserSupport() {
-  if (!('serviceWorker' in navigator))
-    throw new Error("Service Worker isn't supported on this browser");
+  if (!('serviceWorker' in navigator)) return false;
+  if (!('Notification' in window)) return false;
+  if (!('PushManager' in window)) return false;
 
-  if (!('Notification' in window))
-    throw new Error('Notifications are not supported on this browser');
-
-  if (!('PushManager' in window))
-    throw new Error('Push notifications are not supported on this browser');
+  return true;
 }
 
 export async function getNotificationPermission() {
@@ -17,8 +14,13 @@ export async function getNotificationPermission() {
   }
 }
 
-export async function registerServiceWorker() {
+export async function fetchServiceWorker() {
   try {
+    // Check if worker is already registered
+    const registeredServiceWorker = await navigator.serviceWorker.ready;
+    if (registeredServiceWorker) return registeredServiceWorker;
+
+    // worker is not registered, register it
     const registration = await navigator.serviceWorker.register('/sw.js');
     return registration;
   } catch (err) {

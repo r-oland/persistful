@@ -4,7 +4,8 @@ type DbEntities =
   | 'rewards'
   | 'days'
   | 'sessions'
-  | 'accounts';
+  | 'accounts'
+  | 'subscriptions';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];

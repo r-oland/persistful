@@ -11,26 +11,35 @@ export default function Checkbox({
   penalty,
   children,
   onClick,
-  initialValue,
+  externalOnClick,
+  initialValue = false,
+  externalValue,
 }: {
   penalty?: boolean;
   children: React.ReactNode;
-  onClick: (isChecked: boolean) => void;
-  initialValue: boolean;
+  onClick?: (isChecked: boolean) => void;
+  externalOnClick?: () => void;
+  initialValue?: boolean;
+  externalValue?: boolean;
 }) {
   const [isChecked, setIsChecked] = useState(initialValue);
+  const condition = externalValue !== undefined ? externalValue : isChecked;
 
   return (
     <div
       className={styles.wrapper}
       onClick={() => {
-        setIsChecked((prev) => !prev);
-        onClick(!isChecked);
+        if (externalOnClick) return externalOnClick();
+
+        if (onClick) {
+          setIsChecked((prev) => !prev);
+          onClick(!isChecked);
+        }
       }}
     >
       <div className={`${styles.checkbox} ${penalty ? styles.penalty : ''}`}>
         <AnimatePresence>
-          {isChecked && (
+          {condition && (
             <motion.div {...framerFade}>
               <FontAwesomeIcon icon={faCheck} />
             </motion.div>

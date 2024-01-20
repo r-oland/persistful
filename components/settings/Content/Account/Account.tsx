@@ -24,7 +24,7 @@ export default function Account({
   setDeleteModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [saveObject, setSaveObject] = useState<Partial<UserEntity>>({});
-  const [hasBrowserSupport, setHasBrowserSupport] = useState(false);
+  const [hasBrowserSupport] = useState(() => checkNotificationBrowserSupport());
   const [hasNotificationsEnabled, setHasNotificationsEnabled] = useState(false);
   const { data: user } = useGetUser();
   const { mutate: updateUser } = useUpdateUser();
@@ -83,8 +83,6 @@ export default function Account({
   useEffect(() => {
     checkExistingSubscription();
   }, []);
-
-  useEffect(() => setHasBrowserSupport(checkNotificationBrowserSupport()), []);
 
   return (
     <div className={styles.wrapper}>

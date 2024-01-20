@@ -8,7 +8,7 @@
     height: calc($app-height - 50px - 65px - $mobile-nav-height);
     padding: $spacing7 $spacing5 $spacing4;
     display: grid;
-    gap: $spacing7;
+    gap: $spacing5;
     align-content: start;
     grid-template-rows: auto 1fr;
     max-width: 1350px;

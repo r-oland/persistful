@@ -13,7 +13,7 @@ export const setAppHeight = () => {
     ? '100dvh'
     : `${
         typeof visualViewport !== 'undefined'
-          ? visualViewport.height
+          ? visualViewport?.height
           : window.innerHeight
       }px`;
 

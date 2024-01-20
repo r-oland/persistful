@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb';
+import { Document, MongoClient } from 'mongodb';
 
 const uri = process.env.MONGODB_URI;
 const options = {};
@@ -27,7 +27,7 @@ if (process.env.NODE_ENV === 'development') {
   clientPromise = client.connect();
 }
 
-export const getCollection = <Type>(collection: DbEntities) =>
+export const getCollection = <Type extends Document>(collection: DbEntities) =>
   clientPromise.then((r) => r.db().collection<Type>(collection));
 
 // Export a module-scoped MongoClient promise. By doing this in a

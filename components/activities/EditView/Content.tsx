@@ -23,7 +23,7 @@ import IconSelector from './IconSelector/IconSelector';
 const defaultValues = {
   status: 'active',
   penalty: false,
-  name: 'New activity',
+  name: '',
   count: 90,
   countMode: 'minutes',
   countCalc: 30,
@@ -217,7 +217,7 @@ export default function Content({
         <Input
           value={name}
           onChange={handleNameChange}
-          placeholder="Name"
+          placeholder="Reading"
           color={penaltyMode ? 'red' : 'green'}
         />
       </div>

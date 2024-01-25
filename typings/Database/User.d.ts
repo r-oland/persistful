@@ -19,6 +19,7 @@ type UserEntity = {
   activeReward: string;
   lastValidation: Date;
   secondChanceDates?: Date[];
+  startDateGeneralStreak?: Date;
   finishedOnboarding: boolean;
   subscription?: string;
 };

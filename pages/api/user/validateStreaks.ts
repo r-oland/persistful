@@ -36,7 +36,13 @@ export default async function handler(
     const reset = async () => {
       await users.updateOne(
         { _id },
-        { $set: { streak: 0, secondChanceDates: undefined } }
+        {
+          $set: {
+            streak: 0,
+            secondChanceDates: undefined,
+            startDateGeneralStreak: undefined,
+          },
+        }
       );
       if (activeReward)
         await rewards.updateOne(
@@ -267,7 +273,7 @@ export default async function handler(
     // update streak in user model
     await users.updateOne(
       { _id },
-      { $set: { streak: total, secondChanceDates } }
+      { $set: { streak: total, secondChanceDates, startDateGeneralStreak } }
     );
 
     if (activeReward && startDateGeneralStreak) {

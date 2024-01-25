@@ -1,6 +1,6 @@
 // Components==============
 import useGetUser from 'actions/user/useGetUser';
-import { add, addDays } from 'date-fns';
+import { add, addDays, differenceInDays } from 'date-fns';
 import React from 'react';
 import { DayPicker } from 'react-day-picker';
 import { getStartEndWeek } from 'utils/getStartEndWeek';
@@ -24,9 +24,11 @@ export default function Calendar({
 
   const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
-  const currentWeek = Array.from(Array(7).keys()).map((i) =>
-    addDays(firstDay, i)
-  );
+  const streak = user?.startDateGeneralStreak
+    ? Array.from(
+        Array(differenceInDays(new Date(), user.startDateGeneralStreak)).keys()
+      ).map((i) => addDays(user.startDateGeneralStreak!, i))
+    : [];
 
   const secondChance =
     user?.secondChanceDates?.map((scd) => new Date(scd)) || [];
@@ -36,10 +38,10 @@ export default function Calendar({
     toDate: new Date(),
     defaultMonth: activeDay,
     weekStartsOn: 1 as const,
-    modifiers: { secondChance, currentWeek },
+    modifiers: { secondChance, streak },
     modifiersClassNames: {
       secondChance: 'rdp-second_chance',
-      currentWeek: 'rdp-current_week',
+      streak: 'rdp-streak_day',
     },
   };
 

@@ -2,13 +2,13 @@
 
 :root {
   .rdp {
-  --rdp-cell-size: 28px;
-  --rdp-accent-color: #18e597;
-  --rdp-background-color: #e8fcf5;
-  /* Outline border for focused elements */
-  --rdp-outline: none;
-  /* Outline border for focused and selected elements */
-  --rdp-outline-selected: none;
+    --rdp-cell-size: 28px;
+    --rdp-accent-color: #18e597;
+    --rdp-background-color: #e8fcf5;
+    /* Outline border for focused elements */
+    --rdp-outline: none;
+    /* Outline border for focused and selected elements */
+    --rdp-outline-selected: none;
   }
 }
 
@@ -77,10 +77,6 @@
 
   .rdp-cell {
     padding: 3.5px 8.5px;
-  }
-
-  .rdp-current_week {
-    color: $green-dark;
   }
 
   .rdp-day_selected {

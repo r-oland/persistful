@@ -60,12 +60,15 @@ export default async function handler(
       const activities = await getCollection<ActivityEntity>('activities');
       const rewards = await getCollection<RewardEntity>('rewards');
       const days = await getCollection<DayEntity>('days');
+      const subscriptions =
+        await getCollection<SubscriptionEntity>('subscriptions');
 
       sessions.deleteMany({ userId: _id });
       accounts.deleteMany({ userId: _id });
       activities.deleteMany({ userId: session.user.uid });
       rewards.deleteMany({ userId: session.user.uid });
       days.deleteMany({ userId: session.user.uid });
+      subscriptions.deleteMany({ uid: session.user.uid });
       users.findOneAndDelete({ _id });
 
       res.status(200).send({ message: 'deleted successfully' });

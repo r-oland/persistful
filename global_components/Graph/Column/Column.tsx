@@ -47,8 +47,8 @@ export default function Column({
   const value = displayPercentage
     ? `${percentage}%`
     : !activity.count
-    ? '-'
-    : getActivityCount(activity);
+      ? '-'
+      : getActivityCount(activity);
 
   return (
     <div

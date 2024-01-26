@@ -22,8 +22,8 @@ export default function NewActivity() {
       <div
         className={`
           ${styles.wrapper}  ${
-          selectedActivity === 'new-activity' ? styles.selected : ''
-        }
+            selectedActivity === 'new-activity' ? styles.selected : ''
+          }
             `}
         onClick={() =>
           clickQuery

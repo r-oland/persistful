@@ -54,10 +54,10 @@ function Circle({
         index === 0
           ? styles.outer
           : index === 1
-          ? styles.middle
-          : index === 2
-          ? styles.inner
-          : ''
+            ? styles.middle
+            : index === 2
+              ? styles.inner
+              : ''
       }`}
     >
       {!bonus && (

@@ -9,6 +9,13 @@ module.exports = {
     'airbnb',
     'prettier',
   ],
+  ignorePatterns: [
+    'node_modules/*',
+    '.next/*',
+    '.out/*',
+    '!.prettierrc.js',
+    'public/*',
+  ],
   rules: {
     'react/jsx-filename-extension': [
       2,

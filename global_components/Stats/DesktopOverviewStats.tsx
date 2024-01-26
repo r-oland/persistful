@@ -112,8 +112,8 @@ export default function DesktopOverviewStats({
       period: isAllTime
         ? 'All time'
         : isSum
-        ? format(activeDay, 'MMMM')
-        : startEndWeek,
+          ? format(activeDay, 'MMMM')
+          : startEndWeek,
       totalDays,
       trackedDays: days?.length || 0,
       mostActive,

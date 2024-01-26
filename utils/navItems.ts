@@ -20,4 +20,4 @@ export const navItems = [
   },
 ];
 
-export type NavItem = typeof navItems[0];
+export type NavItem = (typeof navItems)[0];

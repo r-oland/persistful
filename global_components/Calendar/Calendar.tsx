@@ -4,6 +4,7 @@ import { add, addDays, differenceInDays } from 'date-fns';
 import React from 'react';
 import { DayPicker } from 'react-day-picker';
 import { getStartEndWeek } from 'utils/getStartEndWeek';
+import { setDateTime } from 'utils/setDateTime';
 // =========================
 
 export default function Calendar({
@@ -26,7 +27,12 @@ export default function Calendar({
 
   const streak = user?.startDateGeneralStreak
     ? Array.from(
-        Array(differenceInDays(new Date(), user.startDateGeneralStreak)).keys()
+        Array(
+          differenceInDays(
+            setDateTime(new Date(), 'middle'),
+            setDateTime(user.startDateGeneralStreak, 'middle')
+          )
+        ).keys()
       ).map((i) => addDays(user.startDateGeneralStreak!, i))
     : [];
 

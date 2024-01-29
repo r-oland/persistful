@@ -19,7 +19,7 @@ function Reward({
 }) {
   return (
     <motion.div className={styles.reward} variants={framerTopNavChild}>
-      <h3 className={styles.title}>Next reward</h3>
+      <h3 className={styles.title}>Rewards</h3>
       {activeReward ? (
         <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
       ) : (

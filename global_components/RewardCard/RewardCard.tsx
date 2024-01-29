@@ -16,11 +16,11 @@ import { shapes } from './shapes';
 
 export default function RewardCard({
   reward,
-  setModalIsOpen,
+  setSelectedReward,
   overview,
 }: {
   reward: RewardEntity;
-  setModalIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedReward?: React.Dispatch<React.SetStateAction<string>>;
   overview?: boolean;
 }) {
   const completeReward = useCompleteReward();
@@ -61,7 +61,7 @@ export default function RewardCard({
                   </p>
                 </div>
               )}
-              {!!setModalIsOpen && (
+              {!!setSelectedReward && (
                 <>
                   {status === 'completed' ? (
                     <Button
@@ -75,7 +75,7 @@ export default function RewardCard({
                       color="white"
                       onClick={() =>
                         query
-                          ? setModalIsOpen(true)
+                          ? setSelectedReward(reward._id)
                           : push(`/reward/${reward._id}`)
                       }
                     >

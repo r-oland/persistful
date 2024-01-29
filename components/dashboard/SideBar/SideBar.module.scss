@@ -16,11 +16,17 @@
       padding: 0 1.4rem;
     }
 
-    .reward {
+    .rewards-section {
       padding: 0 $spacing8;
 
       .title {
         margin-bottom: $spacing4;
+      }
+
+      .rewards {
+        display: grid;
+        gap: $spacing4;
+        justify-items: center;
       }
     }
   }

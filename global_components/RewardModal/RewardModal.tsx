@@ -5,15 +5,18 @@ import Content from './Content';
 // =========================
 
 export default function RewardModal({
-  setModalIsOpen,
+  setSelectedReward,
   reward,
 }: {
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
   reward?: RewardEntity;
 }) {
   return (
-    <Modal setModalIsOpen={setModalIsOpen} color="green">
-      <Content setModalIsOpen={setModalIsOpen} reward={reward} />
+    <Modal setModalIsOpen={() => setSelectedReward('initial')} color="green">
+      <Content
+        setModalIsOpen={() => setSelectedReward('initial')}
+        reward={reward}
+      />
     </Modal>
   );
 }

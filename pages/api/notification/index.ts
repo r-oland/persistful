@@ -20,6 +20,7 @@ export default async function handler(
       const result = await collection.insertOne({
         uid: session.user.uid,
         data: req.body.subscription,
+        createdAt: new Date(),
       });
 
       return res.status(200).send(result);

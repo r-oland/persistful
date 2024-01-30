@@ -1,6 +1,7 @@
 // Components==============
 import { useMediaQ } from 'hooks/useMediaQ';
 import React from 'react';
+import useRenewSubscription from 'hooks/useRenewSubscription';
 import DesktopNav from './DesktopNav/DesktopNav';
 import styles from './Layout.module.scss';
 import MobileNav from './MobileNav/MobileNav';
@@ -8,6 +9,7 @@ import MobileNav from './MobileNav/MobileNav';
 
 function Component({ children }: { children: JSX.Element }) {
   const query = useMediaQ('min', 768);
+  useRenewSubscription();
 
   return (
     <div className={styles.wrapper}>

@@ -19,6 +19,7 @@ export default async function handler(
           // no endDate means it's still open
           endDate: { $exists: false },
         })
+        .sort({ createdAt: -1 })
         .toArray();
 
       // if they doen't exist, return nothing

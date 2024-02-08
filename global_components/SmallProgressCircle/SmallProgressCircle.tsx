@@ -9,7 +9,7 @@ export default function SmallProgressCircle({
   large,
 }: {
   percentage: number;
-  color?: 'green' | 'red' | 'black';
+  color?: 'green' | 'red' | 'black' | 'dark-green';
   children?: React.ReactNode;
   large?: boolean;
 }) {

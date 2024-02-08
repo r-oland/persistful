@@ -7,7 +7,7 @@ import styles from './HardShadow.module.scss';
 const variants = {
   hover: { scale: 1 },
   initial: { scale: 1 },
-  tap: { scale: 0.9 },
+  tap: { scale: 0.97 },
 };
 
 const child = {

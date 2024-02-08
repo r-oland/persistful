@@ -1,93 +1,110 @@
 @import 'styles/Variables';
 
 .wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1px 120px;
   background-color: $white;
   border: $border;
   border-radius: $border-radius;
+  position: relative;
+  overflow: hidden;
 
-  .image {
+  .relative-wrapper {
     position: relative;
-    width: 100%;
-    height: 100px;
-    background-color: $black;
-    z-index: 1;
 
-    img {
-      object-fit: cover;
+    .image {
+      position: relative;
+      width: 100%;
+      height: 120px;
+      background-color: $black;
+      z-index: 1;
+
+      img {
+        object-fit: cover;
+      }
+
+      .shade {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 120px;
+        background-color: rgba($black, 0.75);
+        z-index: 2;
+      }
+
+      .content {
+        position: relative;
+        display: grid;
+        align-content: start;
+        grid-template-rows: auto 1fr auto;
+        height: 100%;
+        z-index: 3;
+        padding: $spacing4;
+
+        .name {
+          font-size: $font-large;
+          color: $white;
+          margin-bottom: $spacing1;
+        }
+
+        .mode {
+          font-size: $font-tiny;
+          color: $green-light;
+        }
+
+        .status {
+          background-color: $green-dark;
+          width: max-content;
+          font-weight: $weight-semi-bold;
+          font-size: $font-tiny;
+          padding: 0.15rem $spacing2;
+          border-radius: $border-radius;
+        }
+      }
     }
   }
 
-  .content {
-    display: grid;
+  .bar {
     position: relative;
-    gap: $spacing2;
-    padding: $spacing3 $spacing4;
+    width: 1px;
+    height: 100%;
+    background-color: $black;
+  }
 
-    .top {
+  .progress {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+
+    .count-wrapper {
+      position: relative;
       display: grid;
-      gap: $spacing2;
+      justify-content: center;
+      align-items: center;
 
-      .title {
+      .flame {
+        grid-column: 1;
+        grid-row: 1;
+        width: 30px;
+      }
+
+      .count {
+        grid-column: 1;
+        grid-row: 1;
+        transform: translateY(8px);
         font-weight: $weight-bold;
-        @include underline-grey;
-      }
-
-      .description {
-        font-size: $font-small;
-        margin-top: $spacing1;
-      }
-
-      .dates {
-        display: grid;
-        gap: $spacing1;
-
-        p,
-        strong {
-          font-size: $font-extra-small;
-        }
+        font-size: 13px;
+        text-align: center;
+        color: $white;
       }
     }
 
-    .bottom {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: $spacing4;
-
-      .count-wrapper,
-      .cycles-left {
-        transform: translateY(-4px);
-      }
-
-      .count-wrapper {
-        position: relative;
-        display: grid;
-        justify-content: center;
-        align-items: center;
-
-        .flame {
-          grid-column: 1;
-          grid-row: 1;
-          width: 30px;
-        }
-
-        .count {
-          grid-column: 1;
-          grid-row: 1;
-          transform: translateY(8px);
-          font-weight: $weight-bold;
-          font-size: 13px;
-          text-align: center;
-          color: $white;
-        }
-      }
-
-      .cycles-left {
-        font-weight: $weight-bold;
-        font-size: $font-tiny;
-        width: 60px;
-        text-align: center;
-      }
+    .cycles-left {
+      font-weight: $weight-bold;
+      font-size: $font-tiny;
+      width: 60px;
+      text-align: center;
     }
   }
 }

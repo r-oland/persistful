@@ -11,7 +11,7 @@ export const shapes: PatternEntity[] = [
     shape: 'circle',
     size: 35,
     top: '-20px',
-    left: '17px',
+    left: '217px',
   },
   {
     r: 95,

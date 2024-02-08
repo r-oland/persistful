@@ -27,7 +27,7 @@
   }
 }
 
-.reward {
+.rewards-section {
   width: 300px;
 
   .title {
@@ -37,5 +37,12 @@
     @media screen and (min-width: $tablet) {
       text-align: initial;
     }
+  }
+
+  .rewards {
+    display: grid;
+    gap: $spacing4;
+    justify-items: center;
+    grid-auto-flow: column;
   }
 }

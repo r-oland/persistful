@@ -16,8 +16,7 @@ export default function SideBar() {
   const { data: openRewards } = useGetOpenRewards();
   const [selectedReward, setSelectedReward] = useState('initial');
 
-  // @ts-ignore
-  const query = useMediaQ('min', 825);
+  const query = useMediaQ('min', 768);
   const { push } = useRouter();
 
   const { activeDay, setActiveDay } = useContext(DashboardContext);

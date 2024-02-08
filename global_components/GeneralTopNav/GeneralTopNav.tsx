@@ -2,7 +2,7 @@
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
 import { faCircleArrowDown, faFlame } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useGetActiveReward from 'actions/reward/useGetActiveReward';
+import useGetOpenRewards from 'actions/reward/useGetOpenRewards';
 import { format } from 'date-fns';
 import { AnimatePresence } from 'framer-motion';
 import RewardModal from 'global_components/RewardModal/RewardModal';
@@ -12,6 +12,7 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
 import { getStartEndWeek } from 'utils/getStartEndWeek';
+import useGetUser from 'actions/user/useGetUser';
 import styles from './GeneralTopNav.module.scss';
 import Items from './Items/Items';
 // =========================
@@ -28,7 +29,7 @@ export default function GeneralTopNav({
   overview?: boolean;
 }) {
   const [selected, setSelected] = useState<TopNavSelectedOption>('none');
-  const [rewardModalIsOpen, setRewardModalIsOpen] = useState(false);
+  const [selectedReward, setSelectedReward] = useState('initial');
 
   // @ts-ignore
   const query = useMediaQ('min', 825);
@@ -38,7 +39,10 @@ export default function GeneralTopNav({
 
   const { deferredPrompt, canShowIosInstall } = context;
 
-  const { data: activeReward } = useGetActiveReward();
+  const { data: openRewards } = useGetOpenRewards();
+  const { data: user } = useGetUser();
+
+  const activeReward = openRewards?.find((or) => or._id === user?.activeReward);
 
   const totalCompleted = useGetRewardCycles(activeReward);
 
@@ -113,11 +117,10 @@ export default function GeneralTopNav({
           <AnimatePresence>
             {selected !== 'none' && (
               <Items
-                activeReward={activeReward}
                 selected={selected}
                 setSelected={setSelected}
-                rewardModalIsOpen={rewardModalIsOpen}
-                setRewardModalIsOpen={setRewardModalIsOpen}
+                selectedReward={selectedReward}
+                setSelectedReward={setSelectedReward}
                 activeDay={activeDay}
                 setActiveDay={setActiveDay}
                 overview={overview}
@@ -127,10 +130,10 @@ export default function GeneralTopNav({
         </div>
       </TopNavWrapper>
       <AnimatePresence>
-        {rewardModalIsOpen && (
+        {selectedReward !== 'initial' && (
           <RewardModal
-            setModalIsOpen={setRewardModalIsOpen}
-            reward={activeReward}
+            setSelectedReward={setSelectedReward}
+            reward={openRewards?.find((or) => or._id === selectedReward)}
           />
         )}
       </AnimatePresence>

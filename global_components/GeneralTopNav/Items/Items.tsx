@@ -1,30 +1,49 @@
 // Components==============
 import { motion } from 'framer-motion';
 import Calendar from 'global_components/Calendar/Calendar';
-import NewRewardCard from 'global_components/NewRewardCard/NewRewardCard';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
 import React, { useEffect, useRef, useState } from 'react';
 import { framerTopNavChild, framerTopNavParent } from 'utils/framerAnimations';
+import Button from 'global_components/Button/Button';
+import { useRouter } from 'next/router';
+import useGetOpenRewards from 'actions/reward/useGetOpenRewards';
+import { useMediaQ } from 'hooks/useMediaQ';
 import { TopNavSelectedOption } from '../GeneralTopNav';
 import styles from './Items.module.scss';
 // =========================
 
 function Reward({
-  activeReward,
-  setModalIsOpen,
+  setSelectedReward,
 }: {
-  activeReward?: RewardEntity;
-  setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const { data: openRewards } = useGetOpenRewards();
+
+  const query = useMediaQ('min', 768);
+  const { push } = useRouter();
+
   return (
-    <motion.div className={styles.reward} variants={framerTopNavChild}>
+    <motion.div
+      className={styles['rewards-section']}
+      variants={framerTopNavChild}
+    >
       <h3 className={styles.title}>Rewards</h3>
-      {activeReward ? (
-        <RewardCard reward={activeReward} setModalIsOpen={setModalIsOpen} />
-      ) : (
-        <NewRewardCard setModalIsOpen={setModalIsOpen} />
-      )}
+      <div className={styles.rewards}>
+        {openRewards?.map((openReward) => (
+          <RewardCard
+            key={openReward._id}
+            reward={openReward}
+            setSelectedReward={setSelectedReward}
+          />
+        ))}
+      </div>
+      <Button
+        color="white"
+        onClick={() => (query ? setSelectedReward('new') : push('/reward/new'))}
+      >
+        New Reward
+      </Button>
     </motion.div>
   );
 }
@@ -52,18 +71,16 @@ function CalendarComp({
 export default function Items({
   selected,
   setSelected,
-  activeReward,
-  rewardModalIsOpen,
-  setRewardModalIsOpen,
+  selectedReward,
+  setSelectedReward,
   activeDay,
   setActiveDay,
   overview,
 }: {
   selected: TopNavSelectedOption;
   setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
-  activeReward?: RewardEntity;
-  rewardModalIsOpen: boolean;
-  setRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  selectedReward: string;
+  setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
   overview?: boolean;
@@ -87,8 +104,8 @@ export default function Items({
   }, [activeDay]);
 
   useEffect(() => {
-    if (rewardModalIsOpen) setSelected('none');
-  }, [rewardModalIsOpen]);
+    if (selectedReward !== 'initial') setSelected('none');
+  }, [selectedReward]);
 
   return (
     <motion.div
@@ -106,16 +123,10 @@ export default function Items({
             setActiveDay={setActiveDay}
             overview={overview}
           />
-          <Reward
-            activeReward={activeReward}
-            setModalIsOpen={setRewardModalIsOpen}
-          />
+          <Reward setSelectedReward={setSelectedReward} />
         </>
       ) : selected === 'streak' ? (
-        <Reward
-          activeReward={activeReward}
-          setModalIsOpen={setRewardModalIsOpen}
-        />
+        <Reward setSelectedReward={setSelectedReward} />
       ) : selected === 'calendar' ? (
         <CalendarComp
           activeDay={activeDay}

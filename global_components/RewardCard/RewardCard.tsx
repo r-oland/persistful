@@ -25,8 +25,7 @@ export default function RewardCard({
 
   const { data: user } = useGetUser();
 
-  const completedCycles = reward?.completedCycles || 0;
-  const isCompleted = completedCycles >= reward.totalCycles;
+  const isCompleted = reward.completedCycles === reward.totalCycles;
 
   const rewardStatus = !user?.activeReward
     ? 'unset'
@@ -67,9 +66,7 @@ export default function RewardCard({
         <div className={styles.bar} />
         <div className={styles.progress}>
           <SmallProgressCircle
-            percentage={
-              isCompleted ? 100 : (100 / reward.totalCycles) * completedCycles
-            }
+            percentage={(100 / reward.totalCycles) * reward.completedCycles}
             color={isCompleted ? 'dark-green' : 'black'}
             large
           >
@@ -86,7 +83,7 @@ export default function RewardCard({
                 />
               </svg>
               <p className={styles.count}>
-                {isCompleted ? 0 : reward.totalCycles - completedCycles}
+                {reward.totalCycles - reward.completedCycles}
               </p>
             </div>
             <p className={styles['cycles-left']}>Cycles left</p>

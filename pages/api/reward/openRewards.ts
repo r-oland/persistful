@@ -16,7 +16,8 @@ export default async function handler(
       const openRewards = await rewards
         .find({
           userId: session.user.uid,
-          $expr: { $lt: ['$completedCycles', '$totalCycles'] },
+          // no endDate means it's still open
+          endDate: { $exists: false },
         })
         .toArray();
 

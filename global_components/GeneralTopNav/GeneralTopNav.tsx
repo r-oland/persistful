@@ -43,8 +43,6 @@ export default function GeneralTopNav({
 
   const activeReward = openRewards?.find((or) => or._id === user?.activeReward);
 
-  const completedCycles = activeReward?.completedCycles || 0;
-
   useEffect(() => {
     if (selected === 'bar' && !query) return setSelected('none');
     if (selected === 'calendar' || (selected === 'streak' && query))
@@ -97,12 +95,12 @@ export default function GeneralTopNav({
               {!!activeReward && (
                 <div
                   className={`${styles.counter} ${
-                    activeReward?.totalCycles === completedCycles
+                    activeReward?.totalCycles === activeReward?.completedCycles
                       ? styles.completed
                       : ''
                   }`}
                 >
-                  <p>{activeReward ? completedCycles : 0}</p>
+                  <p>{activeReward?.completedCycles || 0}</p>
                 </div>
               )}
             </div>

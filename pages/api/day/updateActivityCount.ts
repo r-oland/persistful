@@ -65,11 +65,19 @@ export default async function handler(
         const rewards = await getCollection<RewardEntity>('rewards');
 
         const reward = await rewards.findOne({ _id: user.activeReward });
+        if (!reward) return;
+
         const updatedCompletedCycles =
-          (reward?.completedCycles || 0) + newStreak - oldStreak;
-        // Prevent negative values
+          reward.completedCycles + newStreak - oldStreak;
+
         const completedCycles =
-          updatedCompletedCycles < 0 ? 0 : updatedCompletedCycles;
+          updatedCompletedCycles < 0
+            ? // Prevent negative values
+              0
+            : updatedCompletedCycles > reward.totalCycles
+              ? // Prevent values higher than totalCycles
+                reward.totalCycles
+              : updatedCompletedCycles;
 
         // Update active reward with newly calculated completedCycles
         await rewards.findOneAndUpdate(

@@ -6,7 +6,11 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React from 'react';
-import { faRotateRight } from '@fortawesome/pro-regular-svg-icons';
+import {
+  faFire,
+  faPartyHorn,
+  faRotateRight,
+} from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import styles from './RewardCard.module.scss';
@@ -35,6 +39,17 @@ export default function RewardCard({
         ? 'active'
         : 'stale';
 
+  const rewardContent = !user?.activeReward
+    ? {
+        text: 'Setting a reward can be an excellent way of motivating yourself.',
+        icon: undefined,
+      }
+    : isCompleted
+      ? { text: 'claim your reward', icon: faPartyHorn }
+      : reward.name === 'reset'
+        ? { text: 'reset', icon: faRotateRight }
+        : { text: '2', icon: faFire };
+
   return (
     <HardShadow stretch animations={!!setSelectedReward}>
       <div
@@ -55,7 +70,10 @@ export default function RewardCard({
             <div className={styles.content}>
               <p className={styles.name}>{reward.name}</p>
               <p className={styles.mode}>
-                <FontAwesomeIcon icon={faRotateRight} /> reset
+                {!!rewardContent.icon && (
+                  <FontAwesomeIcon icon={rewardContent.icon} />
+                )}{' '}
+                {rewardContent.text}
               </p>
               <p className={`${styles.status} ${styles[rewardStatus]}`}>
                 {rewardStatus.charAt(0).toUpperCase() + rewardStatus.slice(1)}
@@ -86,7 +104,11 @@ export default function RewardCard({
                 {reward.totalCycles - reward.completedCycles}
               </p>
             </div>
-            <p className={styles['cycles-left']}>Cycles left</p>
+            <p
+              className={`${styles['cycles-left']} ${isCompleted ? styles.completed : ''}`}
+            >
+              Cycles left
+            </p>
           </SmallProgressCircle>
           {shapes.map((shape, i) => (
             <Shape

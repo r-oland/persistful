@@ -51,6 +51,10 @@
         .mode {
           font-size: $font-tiny;
           color: $green-light;
+
+          svg {
+            font-size: 9px;
+          }
         }
 
         .status {
@@ -110,6 +114,10 @@
       font-size: $font-tiny;
       width: 60px;
       text-align: center;
+
+      &.completed {
+        color: $green-dark;
+      }
     }
   }
 }

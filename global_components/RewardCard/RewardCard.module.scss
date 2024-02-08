@@ -54,12 +54,17 @@
         }
 
         .status {
-          background-color: $green-dark;
+          background-color: $white;
           width: max-content;
           font-weight: $weight-semi-bold;
           font-size: $font-tiny;
           padding: 0.15rem $spacing2;
           border-radius: $border-radius;
+
+          &.active,
+          &.completed {
+            background-color: $green-dark;
+          }
         }
       }
     }

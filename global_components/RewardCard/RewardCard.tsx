@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import { faRotateRight } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import useGetUser from 'actions/user/useGetUser';
 import styles from './RewardCard.module.scss';
 import { shapes } from './shapes';
 // =========================
@@ -23,8 +24,18 @@ export default function RewardCard({
   const query = useMediaQ('min', 768);
   const { push } = useRouter();
 
+  const { data: user } = useGetUser();
+
   const completedCycles = useGetRewardCycles(reward);
   const isCompleted = completedCycles >= reward.totalCycles;
+
+  const rewardStatus = !user?.activeReward
+    ? 'unset'
+    : isCompleted
+      ? 'completed'
+      : user.activeReward === reward._id
+        ? 'active'
+        : 'stale';
 
   return (
     <HardShadow stretch animations={!!setSelectedReward}>
@@ -48,7 +59,9 @@ export default function RewardCard({
               <p className={styles.mode}>
                 <FontAwesomeIcon icon={faRotateRight} /> reset
               </p>
-              <p className={styles.status}>Active</p>
+              <p className={`${styles.status} ${styles[rewardStatus]}`}>
+                {rewardStatus.charAt(0).toUpperCase() + rewardStatus.slice(1)}
+              </p>
             </div>
           </div>
         </div>

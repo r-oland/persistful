@@ -14,7 +14,6 @@ import Input from 'global_components/Input/Input';
 import Slider from 'global_components/Slider/Slider';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
 import { useCounter } from 'hooks/useCounter';
-import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
@@ -41,7 +40,7 @@ export default function Content({
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
   const image = localImage || reward?.image || '';
-  const completedCycles = useGetRewardCycles(reward);
+  const completedCycles = reward?.completedCycles || 0;
   const minSlider = completedCycles + 1;
   const maxSlider = 120;
 

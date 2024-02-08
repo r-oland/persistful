@@ -7,7 +7,6 @@ import { format } from 'date-fns';
 import { AnimatePresence } from 'framer-motion';
 import RewardModal from 'global_components/RewardModal/RewardModal';
 import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
-import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
@@ -44,13 +43,7 @@ export default function GeneralTopNav({
 
   const activeReward = openRewards?.find((or) => or._id === user?.activeReward);
 
-  const totalCompleted = useGetRewardCycles(activeReward);
-
-  const completedCycles = activeReward
-    ? totalCompleted > activeReward.totalCycles
-      ? activeReward?.totalCycles
-      : totalCompleted
-    : 0;
+  const completedCycles = activeReward?.completedCycles || 0;
 
   useEffect(() => {
     if (selected === 'bar' && !query) return setSelected('none');

@@ -3,9 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { addImageToStorage } from 'utils/addImageToStorage';
 import { checkAuth } from 'utils/checkAuth';
 import { formDataParser } from 'utils/formDataParser';
-import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
-import { setDateTime } from 'utils/setDateTime';
 
 // disable the default body parser
 export const config = {
@@ -38,21 +36,7 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
-      // get daily streak to set startCycles
       const users = await getCollection<UserEntity>('users');
-      const days = await getCollection<DayEntity>('days');
-
-      const today = await days.findOne({
-        userId,
-        createdAt: {
-          $gte: setDateTime(new Date(), 'start'),
-          $lt: setDateTime(new Date(), 'end'),
-        },
-      });
-
-      const dailyStreak = getDayAchievements(today).streak;
-      //
-
       const data = await formDataParser(req);
 
       // FormData converts number to string -> convert back
@@ -70,7 +54,6 @@ export default async function handler(
           image,
           userId,
           createdAt: new Date(),
-          startCycles: dailyStreak,
           completedCycles: 0,
         })
         .then(async (r) => {

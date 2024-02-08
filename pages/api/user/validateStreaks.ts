@@ -47,7 +47,7 @@ export default async function handler(
       if (activeReward)
         await rewards.updateOne(
           { _id: activeRewardId },
-          { $set: { completedCycles: 0, startCycles: 0 } }
+          { $set: { completedCycles: 0 } }
         );
 
       return res.status(200).send({ message: 'Streaks reset' });
@@ -275,46 +275,6 @@ export default async function handler(
       { _id },
       { $set: { streak: total, secondChanceDates, startDateGeneralStreak } }
     );
-
-    if (activeReward && startDateGeneralStreak) {
-      // if general streak if going on for longer then the reward streak -> activeReward.created_at
-      // if general streak is later then the active reward -> start date general streak
-      const startDateRewardStreak =
-        new Date(startDateGeneralStreak).getTime() <
-        new Date(activeReward.createdAt).getTime()
-          ? activeReward.createdAt
-          : startDateGeneralStreak;
-
-      const reducibleArr = dayEntities
-        .filter((d) => {
-          // Equalize hours to make sure that same days match
-          const createdDate = setDateTime(d.createdAt, 'middle');
-          const startDate = setDateTime(startDateRewardStreak, 'middle');
-
-          return createdDate >= startDate;
-        })
-        .map((day) => getDayAchievements(day).streak);
-
-      const newValue = reducibleArr.length
-        ? reducibleArr.reduce((prev, cur) => prev + cur, 0) -
-          // - start cycles in case you added a reward mid day with already achieved streaks
-          activeReward.startCycles
-        : 0;
-
-      // set new reward value
-      await rewards.updateOne(
-        { _id: activeRewardId },
-        {
-          $set: {
-            completedCycles:
-              // make sure that cycles can't go over the max
-              newValue > activeReward.totalCycles
-                ? activeReward.totalCycles
-                : newValue,
-          },
-        }
-      );
-    }
 
     return res.status(200).send({ message: 'streaks updated' });
   } catch (err: any) {

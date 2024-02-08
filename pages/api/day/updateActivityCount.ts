@@ -2,6 +2,7 @@ import { UpdateActivityCountTypes } from 'actions/day/useUpdateActivityCount';
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
 
 export default async function handler(
@@ -9,7 +10,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    await checkAuth(req, res);
+    // Check if session exists
+    const session = await checkAuth(req, res);
+    if (!session) return;
 
     if (req.method === 'PUT') {
       const data = req.body as UpdateActivityCountTypes;
@@ -40,6 +43,40 @@ export default async function handler(
           ? { ...a, count: a.count + data.value }
           : a
       );
+
+      // Calculate difference in streak
+      const oldStreak = getDayAchievements(day).streak;
+      const newStreak = getDayAchievements({
+        ...day,
+        activities: newValue,
+      }).streak;
+
+      // If streak has changed, and user has an active reward set: update reward
+      if (oldStreak !== newStreak) {
+        // Get user
+        const userId = new ObjectId(session.user.uid) as any;
+        const users = await getCollection<UserEntity>('users');
+        const user = await users.findOne({ _id: userId });
+
+        // Nothing to update if user has no active reward
+        if (!user?.activeReward) return;
+
+        // get rewards
+        const rewards = await getCollection<RewardEntity>('rewards');
+
+        const reward = await rewards.findOne({ _id: user.activeReward });
+        const updatedCompletedCycles =
+          (reward?.completedCycles || 0) + newStreak - oldStreak;
+        // Prevent negative values
+        const completedCycles =
+          updatedCompletedCycles < 0 ? 0 : updatedCompletedCycles;
+
+        // Update active reward with newly calculated completedCycles
+        await rewards.findOneAndUpdate(
+          { _id: user.activeReward },
+          { $set: { completedCycles } }
+        );
+      }
 
       // set new count value to day entity
       const result = await days.findOneAndUpdate(

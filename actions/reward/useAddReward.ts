@@ -3,12 +3,7 @@ import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 // =========================
 
-type OmitTypes =
-  | '_id'
-  | 'userId'
-  | 'createdAt'
-  | 'completedCycles'
-  | 'startCycles';
+type OmitTypes = '_id' | 'userId' | 'createdAt' | 'completedCycles';
 
 export default function useAddReward() {
   const queryClient = useQueryClient();

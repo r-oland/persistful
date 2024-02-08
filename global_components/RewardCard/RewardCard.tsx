@@ -2,7 +2,6 @@
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import Shape from 'global_components/Shape/Shape';
 import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProgressCircle';
-import useGetRewardCycles from 'hooks/useGetRewardCycles';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
@@ -26,7 +25,7 @@ export default function RewardCard({
 
   const { data: user } = useGetUser();
 
-  const completedCycles = useGetRewardCycles(reward);
+  const completedCycles = reward?.completedCycles || 0;
   const isCompleted = completedCycles >= reward.totalCycles;
 
   const rewardStatus = !user?.activeReward

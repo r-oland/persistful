@@ -21,6 +21,7 @@ export default function useUpdateActivityCount() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('days');
+        queryClient.invalidateQueries('rewards');
         // invalidate query after user has left dashboard page
         setInvalidateActivitiesQuery(true);
       },

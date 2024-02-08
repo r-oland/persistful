@@ -1,6 +1,6 @@
 // Components==============
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
-import { faFlame } from '@fortawesome/pro-solid-svg-icons';
+import { faGift } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { format } from 'date-fns';
 import { AnimatePresence } from 'framer-motion';
@@ -31,7 +31,7 @@ export default function TopNav() {
             <p>{format(activeDay, 'MMMM yyyy')}</p>
           </div>
           <div className={styles.reward}>
-            <FontAwesomeIcon icon={faFlame} />
+            <FontAwesomeIcon icon={faGift} />
             <div className={`${styles.counter}`}>
               <p>{rewards.length || 0}</p>
             </div>

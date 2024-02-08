@@ -1,6 +1,6 @@
 // Components==============
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
-import { faCircleArrowDown, faFlame } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleArrowDown, faGift } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetOpenRewards from 'actions/reward/useGetOpenRewards';
 import { format } from 'date-fns';
@@ -91,7 +91,7 @@ export default function GeneralTopNav({
               className={styles.reward}
               onClick={() => setSelected('streak')}
             >
-              <FontAwesomeIcon icon={faFlame} />
+              <FontAwesomeIcon icon={faGift} />
               {!!activeReward && (
                 <div
                   className={`${styles.counter} ${

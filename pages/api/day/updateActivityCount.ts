@@ -1,9 +1,47 @@
 import { UpdateActivityCountTypes } from 'actions/day/useUpdateActivityCount';
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { Session } from 'next-auth';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
+
+async function updateActiveReward(
+  session: Session,
+  oldStreak: number,
+  newStreak: number
+) {
+  // Get user
+  const userId = new ObjectId(session.user.uid) as any;
+  const users = await getCollection<UserEntity>('users');
+  const user = await users.findOne({ _id: userId });
+
+  // Nothing to update if user has no active reward
+  if (!user?.activeReward) return;
+
+  // get rewards
+  const rewards = await getCollection<RewardEntity>('rewards');
+
+  const reward = await rewards.findOne({ _id: user.activeReward });
+  if (!reward) return;
+
+  const updatedCompletedCycles = reward.completedCycles + newStreak - oldStreak;
+
+  const completedCycles =
+    updatedCompletedCycles < 0
+      ? // Prevent negative values
+        0
+      : updatedCompletedCycles > reward.totalCycles
+        ? // Prevent values higher than totalCycles
+          reward.totalCycles
+        : updatedCompletedCycles;
+
+  // Update active reward with newly calculated completedCycles
+  await rewards.findOneAndUpdate(
+    { _id: user.activeReward },
+    { $set: { completedCycles } }
+  );
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,54 +82,23 @@ export default async function handler(
           : a
       );
 
-      // Calculate difference in streak
-      const oldStreak = getDayAchievements(day).streak;
-      const newStreak = getDayAchievements({
-        ...day,
-        activities: newValue,
-      }).streak;
-
-      // If streak has changed, and user has an active reward set: update reward
-      if (oldStreak !== newStreak) {
-        // Get user
-        const userId = new ObjectId(session.user.uid) as any;
-        const users = await getCollection<UserEntity>('users');
-        const user = await users.findOne({ _id: userId });
-
-        // Nothing to update if user has no active reward
-        if (!user?.activeReward) return;
-
-        // get rewards
-        const rewards = await getCollection<RewardEntity>('rewards');
-
-        const reward = await rewards.findOne({ _id: user.activeReward });
-        if (!reward) return;
-
-        const updatedCompletedCycles =
-          reward.completedCycles + newStreak - oldStreak;
-
-        const completedCycles =
-          updatedCompletedCycles < 0
-            ? // Prevent negative values
-              0
-            : updatedCompletedCycles > reward.totalCycles
-              ? // Prevent values higher than totalCycles
-                reward.totalCycles
-              : updatedCompletedCycles;
-
-        // Update active reward with newly calculated completedCycles
-        await rewards.findOneAndUpdate(
-          { _id: user.activeReward },
-          { $set: { completedCycles } }
-        );
-      }
-
       // set new count value to day entity
       const result = await days.findOneAndUpdate(
         { _id },
         { $set: { activities: newValue } },
         { upsert: true }
       );
+
+      // Calculate difference in streak to update reward
+      const oldStreak = getDayAchievements(day).streak;
+      const newStreak = getDayAchievements({
+        ...day,
+        activities: newValue,
+      }).streak;
+
+      // If streak has changed, update active reward
+      if (oldStreak !== newStreak)
+        await updateActiveReward(session, oldStreak, newStreak);
 
       res.status(200).send({ ...result.value, ...data });
     }

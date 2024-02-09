@@ -91,6 +91,7 @@ export default function Content({
       addReward.mutate({
         name,
         totalCycles,
+        minCycles,
         mode,
         image: saveObject.image,
       });

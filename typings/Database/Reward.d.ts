@@ -4,6 +4,7 @@ type RewardEntity = {
   name: string;
   image: string;
   mode: 'reset' | 'streak';
+  minCycles?: number;
   totalCycles: number;
   completedCycles: number;
   endDate?: Date;

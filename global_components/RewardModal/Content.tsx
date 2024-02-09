@@ -18,6 +18,9 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
+import useGetUser from 'actions/user/useGetUser';
+import useUpdateUser from 'actions/user/useUpdateUser';
+import Checkbox from 'global_components/Checkbox/Checkbox';
 import styles from './RewardModal.module.scss';
 // =========================
 
@@ -28,17 +31,24 @@ export default function Content({
   setModalIsOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   reward?: RewardEntity;
 }) {
+  const { data: user } = useGetUser();
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
+  const updateUser = useUpdateUser();
   const deleteReward = useDeleteReward();
+
+  const isActiveReward = user?.activeReward === reward?._id;
 
   const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
   const [localImage, setLocalImage] = useState('');
   const [fileToLarge, setFileToLarge] = useState(false);
+  const [isActive, setIsActive] = useState(isActiveReward);
 
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
   const totalCycles = saveObject?.totalCycles || reward?.totalCycles || 30;
+  const minCycles = saveObject?.minCycles || reward?.minCycles || 10;
+  const mode = saveObject?.mode || reward?.mode || 'reset';
   const image = localImage || reward?.image || '';
   const completedCycles = reward?.completedCycles || 0;
   const minSlider = completedCycles + 1;
@@ -68,6 +78,11 @@ export default function Content({
 
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (isActive)
+      updateUser.mutate({
+        activeReward: reward?._id,
+      });
 
     // Add new reward
     if (!reward) {
@@ -133,20 +148,73 @@ export default function Content({
           />
         </div>
       </div>
-      <div className={styles.middle}>
-        <div className={styles.left}>
+      <div
+        className={`${styles['cycles-slider-wrapper']} ${!isActiveReward ? styles.inactive : ''}`}
+      >
+        {!isActiveReward && (
           <div>
-            <p className={styles['sub-title']}>Amount of cycles</p>
+            <p className={styles['sub-title']}>Active</p>
+            <Checkbox
+              externalValue={isActive}
+              externalOnClick={() => setIsActive((prev) => !prev)}
+              big
+            >
+              <></>
+            </Checkbox>
+          </div>
+        )}
+        <div>
+          <p className={styles['sub-title']}>Amount of cycles</p>
+          <Slider
+            initialValue={totalCycles}
+            max={maxSlider}
+            min={minSlider}
+            step={1}
+            onChange={(value) =>
+              setSaveObject((prev) => ({ ...prev, totalCycles: value }))
+            }
+          />
+        </div>
+      </div>
+      <div className={styles.middle}>
+        <div className={styles['mode-wrapper']}>
+          <p className={styles['sub-title']}>Reward mode</p>
+          <div className={styles['checkbox-wrapper']}>
+            <div>
+              <Checkbox
+                externalValue={mode === 'reset'}
+                externalOnClick={() => setSaveObject({ mode: 'reset' })}
+              >
+                <span>Reset your reward streak on failure of daily streak</span>
+              </Checkbox>
+            </div>
+            <div>
+              <Checkbox
+                externalValue={mode === 'streak'}
+                externalOnClick={() => setSaveObject({ mode: 'streak' })}
+              >
+                <span>
+                  Don’t reset reward streak on daily streak failure, but only
+                  start counting from <b>{minCycles}</b> streaks
+                </span>
+              </Checkbox>
+            </div>
+          </div>
+          {mode === 'streak' && (
             <Slider
-              initialValue={totalCycles}
-              max={maxSlider}
-              min={minSlider}
+              initialValue={minCycles}
+              max={50}
+              min={0}
               step={1}
               onChange={(value) =>
-                setSaveObject((prev) => ({ ...prev, totalCycles: value }))
+                setSaveObject((prev) => ({ ...prev, minCycles: value }))
               }
+              onMount={(value) =>
+                setSaveObject((prev) => ({ ...prev, minCycles: value }))
+              }
+              hideValue
             />
-          </div>
+          )}
         </div>
         {query && (
           <>
@@ -154,7 +222,7 @@ export default function Content({
             <Image
               src="/images/carrot.svg"
               width={203}
-              height={146}
+              height={155}
               alt="carrot"
             />
           </>

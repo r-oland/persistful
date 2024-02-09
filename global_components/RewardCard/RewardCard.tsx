@@ -56,7 +56,7 @@ export default function RewardCard({
       : reward.mode === 'reset'
         ? { text: 'reset', icon: faRotateRight }
         : // reward.mode === 'streak'
-          { text: '2', icon: faFire };
+          { text: reward?.minCycles, icon: faFire };
 
   const handleRewardClick = () => {
     if (overviewPage) return;

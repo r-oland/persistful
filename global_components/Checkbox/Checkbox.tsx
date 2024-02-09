@@ -14,6 +14,7 @@ export default function Checkbox({
   externalOnClick,
   initialValue = false,
   externalValue,
+  big,
 }: {
   penalty?: boolean;
   children: React.ReactNode;
@@ -21,13 +22,14 @@ export default function Checkbox({
   externalOnClick?: () => void;
   initialValue?: boolean;
   externalValue?: boolean;
+  big?: boolean;
 }) {
   const [isChecked, setIsChecked] = useState(initialValue);
   const condition = externalValue !== undefined ? externalValue : isChecked;
 
   return (
     <div
-      className={styles.wrapper}
+      className={`${styles.wrapper} ${big ? styles.big : ''}`}
       onClick={() => {
         if (externalOnClick) return externalOnClick();
 

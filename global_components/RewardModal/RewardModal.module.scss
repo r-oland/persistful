@@ -67,17 +67,31 @@
     }
   }
 
+  .cycles-slider-wrapper {
+    display: grid;
+
+    &.inactive {
+      grid-template-columns: auto 1fr;
+    }
+  }
+
   .middle {
     display: grid;
 
     @media screen and (min-width: $tablet) {
-      grid-template-columns: 1fr 100px auto 40px;
+      grid-template-columns: 1fr 65px auto 40px;
     }
 
-    .left {
-      display: grid;
-      gap: $spacing4;
-      align-content: start;
+    .mode-wrapper {
+      span {
+        font-size: $font-small;
+      }
+
+      .checkbox-wrapper {
+        display: grid;
+        gap: $spacing1;
+        margin-bottom: $spacing2;
+      }
     }
   }
 

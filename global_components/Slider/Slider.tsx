@@ -1,5 +1,5 @@
 // Components==============
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import styles from './Slider.module.scss';
 // =========================
@@ -12,6 +12,8 @@ export default function Slider({
   max,
   time,
   step = 5,
+  hideValue,
+  onMount,
 }: {
   initialValue: number;
   onChange: (value: number) => void;
@@ -20,6 +22,8 @@ export default function Slider({
   max: number;
   time?: boolean;
   step?: number;
+  hideValue?: boolean;
+  onMount?: (value: number) => void;
 }) {
   const [value, setValue] = useState(initialValue);
   const [sliderPosition, setSliderPosition] = useState(initialValue);
@@ -36,8 +40,14 @@ export default function Slider({
   const percentage = (correctedStartValue * 100) / range;
   const offset = (sliderPosition / max - 0.5) * 10;
 
+  useEffect(() => {
+    if (onMount) onMount(value);
+  }, []);
+
   return (
-    <div className={`${styles.container} ${penalty ? styles.penalty : ''}`}>
+    <div
+      className={`${styles.container} ${penalty ? styles.penalty : ''} ${hideValue ? styles['hide-value'] : ''}`}
+    >
       <input
         type="range"
         min={min}
@@ -47,13 +57,15 @@ export default function Slider({
         className={styles.slider}
         onChange={handleChange}
       />
-      <p
-        style={{
-          left: `calc(${percentage}% - ${offset}px)`,
-        }}
-      >
-        {time ? convertMinutesToHours(value) : value}
-      </p>
+      {!hideValue && (
+        <p
+          style={{
+            left: `calc(${percentage}% - ${offset}px)`,
+          }}
+        >
+          {time ? convertMinutesToHours(value) : value}
+        </p>
+      )}
     </div>
   );
 }

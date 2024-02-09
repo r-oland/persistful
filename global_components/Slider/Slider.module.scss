@@ -11,6 +11,10 @@
     font-size: $font-small;
   }
 
+  &.hide-value {
+    padding-bottom: 0;
+  }
+
   &.penalty {
     .slider {
       background-color: $red-light;

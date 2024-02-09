@@ -7,6 +7,17 @@
   gap: $spacing4;
   cursor: pointer;
 
+  &.big {
+    .checkbox {
+      width: 40px;
+      height: 40px;
+
+      svg {
+        font-size: $font-h3;
+      }
+    }
+  }
+
   .checkbox {
     display: grid;
     justify-content: center;

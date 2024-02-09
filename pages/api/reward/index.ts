@@ -44,6 +44,11 @@ export default async function handler(
         data.fields.totalCycles as string
       );
 
+      if (data.fields.minCycles)
+        (data.fields.minCycles as string | number) = parseInt(
+          data.fields.minCycles as string
+        );
+
       // Handle uploading image
       const image = await addImageToStorage(data, `rewards/${userId}`);
 

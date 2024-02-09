@@ -17,7 +17,7 @@ import { useCounter } from 'hooks/useCounter';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import Checkbox from 'global_components/Checkbox/Checkbox';
@@ -91,7 +91,7 @@ export default function Content({
       addReward.mutate({
         name,
         totalCycles,
-        mode: 'reset',
+        mode,
         image: saveObject.image,
       });
       return handleClose();
@@ -104,6 +104,10 @@ export default function Content({
     });
     handleClose();
   };
+
+  useEffect(() => {
+    if (mode === 'streak') setSaveObject((prev) => ({ ...prev, minCycles }));
+  }, [mode]);
 
   return (
     <form className={styles.wrapper} onSubmit={handleSave}>
@@ -183,7 +187,9 @@ export default function Content({
             <div>
               <Checkbox
                 externalValue={mode === 'reset'}
-                externalOnClick={() => setSaveObject({ mode: 'reset' })}
+                externalOnClick={() =>
+                  setSaveObject((prev) => ({ ...prev, mode: 'reset' }))
+                }
               >
                 <span>Reset your reward streak on failure of daily streak</span>
               </Checkbox>
@@ -191,7 +197,9 @@ export default function Content({
             <div>
               <Checkbox
                 externalValue={mode === 'streak'}
-                externalOnClick={() => setSaveObject({ mode: 'streak' })}
+                externalOnClick={() =>
+                  setSaveObject((prev) => ({ ...prev, mode: 'streak' }))
+                }
               >
                 <span>
                   Don’t reset reward streak on daily streak failure, but only
@@ -207,9 +215,6 @@ export default function Content({
               min={0}
               step={1}
               onChange={(value) =>
-                setSaveObject((prev) => ({ ...prev, minCycles: value }))
-              }
-              onMount={(value) =>
                 setSaveObject((prev) => ({ ...prev, minCycles: value }))
               }
               hideValue

@@ -1,5 +1,5 @@
 // Components==============
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import styles from './Slider.module.scss';
 // =========================
@@ -13,7 +13,6 @@ export default function Slider({
   time,
   step = 5,
   hideValue,
-  onMount,
 }: {
   initialValue: number;
   onChange: (value: number) => void;
@@ -23,7 +22,6 @@ export default function Slider({
   time?: boolean;
   step?: number;
   hideValue?: boolean;
-  onMount?: (value: number) => void;
 }) {
   const [value, setValue] = useState(initialValue);
   const [sliderPosition, setSliderPosition] = useState(initialValue);
@@ -39,10 +37,6 @@ export default function Slider({
   const correctedStartValue = sliderPosition - min;
   const percentage = (correctedStartValue * 100) / range;
   const offset = (sliderPosition / max - 0.5) * 10;
-
-  useEffect(() => {
-    if (onMount) onMount(value);
-  }, []);
 
   return (
     <div

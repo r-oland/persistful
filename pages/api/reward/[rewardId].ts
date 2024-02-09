@@ -38,6 +38,11 @@ export default async function handler(
           data.fields.totalCycles as string
         );
 
+      if (data.fields.minCycles)
+        (data.fields.minCycles as string | number) = parseInt(
+          data.fields.minCycles as string
+        );
+
       let image;
 
       if (data.files?.image) {

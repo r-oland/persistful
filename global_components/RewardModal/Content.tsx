@@ -76,6 +76,7 @@ export default function Content({
       addReward.mutate({
         name,
         totalCycles,
+        mode: 'reset',
         image: saveObject.image,
       });
       return handleClose();

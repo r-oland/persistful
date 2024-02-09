@@ -24,11 +24,6 @@ export default async function handler(
     const users = await getCollection<UserEntity>('users');
     const user = await users.findOne({ _id });
 
-    // get active reward with id from user model
-    const activeRewardId = user?.activeReward;
-    const rewards = await getCollection<RewardEntity>('rewards');
-    const activeReward = await rewards.findOne({ _id: activeRewardId });
-
     // Set last validated to today
     await users.updateOne({ _id }, { $set: { lastValidation: new Date() } });
 
@@ -44,11 +39,18 @@ export default async function handler(
           },
         }
       );
-      if (activeReward)
-        await rewards.updateOne(
-          { _id: activeRewardId },
-          { $set: { completedCycles: 0 } }
-        );
+
+      const rewards = await getCollection<RewardEntity>('rewards');
+
+      // reset all open rewards with a streak mode of reset
+      await rewards.updateMany(
+        {
+          userId,
+          mode: 'reset',
+          endDate: { $exists: false },
+        },
+        { $set: { completedCycles: 0 } }
+      );
 
       return res.status(200).send({ message: 'Streaks reset' });
     };

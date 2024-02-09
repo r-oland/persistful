@@ -48,9 +48,10 @@ export default function RewardCard({
       }
     : isCompleted
       ? { text: 'claim your reward', icon: faPartyHorn }
-      : reward.name === 'reset'
+      : reward.mode === 'reset'
         ? { text: 'reset', icon: faRotateRight }
-        : { text: '2', icon: faFire };
+        : // reward.mode === 'streak'
+          { text: '2', icon: faFire };
 
   const handleRewardClick = () => {
     // On overview page

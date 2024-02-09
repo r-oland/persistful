@@ -25,6 +25,8 @@ export default function RewardCard({
   reward: RewardEntity;
   setSelectedReward?: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const overviewPage = !setSelectedReward;
+
   const query = useMediaQ('min', 768);
   const { push } = useRouter();
 
@@ -33,41 +35,47 @@ export default function RewardCard({
 
   const isCompleted = reward.completedCycles === reward.totalCycles;
 
-  const rewardStatus = !user?.activeReward
-    ? 'unset'
-    : isCompleted
-      ? 'completed'
+  const rewardStatus = isCompleted
+    ? 'completed'
+    : !user?.activeReward
+      ? 'unset'
       : user.activeReward === reward._id
         ? 'active'
         : 'stale';
 
-  const rewardContent = !user?.activeReward
+  const rewardContent = isCompleted
     ? {
-        text: 'Setting a reward can be an excellent way of motivating yourself.',
-        icon: undefined,
+        text: !overviewPage ? 'claim your reward' : 'nice job!',
+        icon: faPartyHorn,
       }
-    : isCompleted
-      ? { text: 'claim your reward', icon: faPartyHorn }
+    : !user?.activeReward
+      ? {
+          text: 'setting a reward can be an excellent way of motivating yourself.',
+          icon: undefined,
+        }
       : reward.mode === 'reset'
         ? { text: 'reset', icon: faRotateRight }
         : // reward.mode === 'streak'
           { text: '2', icon: faFire };
 
   const handleRewardClick = () => {
-    // On overview page
-    if (!setSelectedReward) return;
+    if (overviewPage) return;
 
     // Open reward page
     if (isCompleted) return completeReward(reward._id);
 
     // Desktop modal
-    if (query) return setSelectedReward(reward._id);
+    if (query) {
+      if (!user?.activeReward) return setSelectedReward('new');
+      return setSelectedReward!(reward._id);
+    }
     // Mobile page
-    push(`/reward/${reward._id}`);
+    if (!user?.activeReward) return push('/reward/new');
+    return push(`/reward/${reward._id}`);
   };
 
   return (
-    <HardShadow stretch animations={!!setSelectedReward}>
+    <HardShadow stretch animations={!overviewPage}>
       <div className={styles.wrapper} onClick={handleRewardClick}>
         <div className={styles['relative-wrapper']}>
           <div className={styles.image}>
@@ -107,13 +115,17 @@ export default function RewardCard({
                 />
               </svg>
               <p className={styles.count}>
-                {reward.totalCycles - reward.completedCycles}
+                {overviewPage
+                  ? reward.totalCycles
+                  : !user?.activeReward
+                    ? '?'
+                    : reward.totalCycles - reward.completedCycles}
               </p>
             </div>
             <p
               className={`${styles['cycles-left']} ${isCompleted ? styles.completed : ''}`}
             >
-              Cycles left
+              Cycles{overviewPage ? '' : ' left'}
             </p>
           </SmallProgressCircle>
           {shapes.map((shape, i) => (

@@ -11,6 +11,7 @@ export default function useDeleteReward() {
     {
       onSuccess: () => {
         queryClient.invalidateQueries('rewards');
+        queryClient.invalidateQueries('user');
       },
     }
   );

@@ -70,10 +70,31 @@ export default async function handler(
 
     // delete reward
     if (req.method === 'DELETE') {
-      const result = await rewards.findOneAndDelete({ _id }).then((r) => {
+      const result = await rewards
+        .findOneAndDelete({ _id })
         // remove old image
-        fs.unlink(`public${r.value?.image}`);
-      });
+        .then((r) => {
+          fs.unlink(`public${r.value?.image}`);
+        })
+        // Remove activeReward from user object
+        .then(async () => {
+          const users = await getCollection<UserEntity>('users');
+
+          const openRewards = await rewards
+            .find({
+              userId,
+              // no endDate means it's still open
+              endDate: { $exists: false },
+            })
+            .sort({ createdAt: -1 })
+            .toArray();
+
+          await users.findOneAndUpdate(
+            { _id: new ObjectId(userId) as any },
+            // Set first open reward as active reward if it exists, if it doesn't -> undefined
+            { $set: { activeReward: openRewards?.[0]?._id } }
+          );
+        });
 
       res.status(200).send(result);
     }

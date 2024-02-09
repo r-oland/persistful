@@ -21,7 +21,7 @@ function RewardsComp() {
         <div className={styles['scroll-wrapper']}>
           <div className={styles['reward-wrapper']}>
             {rewards.map((r) => (
-              <RewardCard reward={r} key={r._id} overview />
+              <RewardCard reward={r} key={r._id} />
             ))}
           </div>
         </div>

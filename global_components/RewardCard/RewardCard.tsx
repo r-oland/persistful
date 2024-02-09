@@ -13,6 +13,7 @@ import {
 } from '@fortawesome/pro-regular-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
+import useCompleteReward from 'actions/reward/useCompleteReward';
 import styles from './RewardCard.module.scss';
 import { shapes } from './shapes';
 // =========================
@@ -28,6 +29,7 @@ export default function RewardCard({
   const { push } = useRouter();
 
   const { data: user } = useGetUser();
+  const { mutate: completeReward } = useCompleteReward();
 
   const isCompleted = reward.completedCycles === reward.totalCycles;
 
@@ -50,19 +52,22 @@ export default function RewardCard({
         ? { text: 'reset', icon: faRotateRight }
         : { text: '2', icon: faFire };
 
+  const handleRewardClick = () => {
+    // On overview page
+    if (!setSelectedReward) return;
+
+    // Open reward page
+    if (isCompleted) return completeReward(reward._id);
+
+    // Desktop modal
+    if (query) return setSelectedReward(reward._id);
+    // Mobile page
+    push(`/reward/${reward._id}`);
+  };
+
   return (
     <HardShadow stretch animations={!!setSelectedReward}>
-      <div
-        className={styles.wrapper}
-        onClick={
-          setSelectedReward
-            ? () =>
-                query
-                  ? setSelectedReward(reward._id)
-                  : push(`/reward/${reward._id}`)
-            : undefined
-        }
-      >
+      <div className={styles.wrapper} onClick={handleRewardClick}>
         <div className={styles['relative-wrapper']}>
           <div className={styles.image}>
             <Image src={reward.image} layout="fill" alt={reward.name} />

@@ -22,7 +22,7 @@ export default function SideBar() {
           {rewards.length ? (
             <div className={styles['reward-wrapper']}>
               {rewards.map((r) => (
-                <RewardCard reward={r} key={r._id} overview />
+                <RewardCard reward={r} key={r._id} />
               ))}
             </div>
           ) : (

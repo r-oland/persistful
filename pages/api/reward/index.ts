@@ -1,4 +1,3 @@
-import { ObjectId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { addImageToStorage } from 'utils/addImageToStorage';
 import { checkAuth } from 'utils/checkAuth';
@@ -26,7 +25,6 @@ export default async function handler(
 
     // Get user id
     const userId = session.user.uid;
-    const objectUserId = new ObjectId(userId) as any;
 
     if (req.method === 'GET') {
       const data = await rewards.find({ userId }).toArray();
@@ -36,7 +34,6 @@ export default async function handler(
     }
 
     if (req.method === 'POST') {
-      const users = await getCollection<UserEntity>('users');
       const data = await formDataParser(req);
 
       // FormData converts number to string -> convert back
@@ -53,21 +50,13 @@ export default async function handler(
       const image = await addImageToStorage(data, `rewards/${userId}`);
 
       // Add new reward entity
-      const result = await rewards
-        .insertOne({
-          ...(data.fields as any),
-          image,
-          userId,
-          createdAt: new Date(),
-          completedCycles: 0,
-        })
-        .then(async (r) => {
-          await users.findOneAndUpdate(
-            { _id: objectUserId },
-            { $set: { activeReward: r.insertedId } },
-            { upsert: true }
-          );
-        });
+      const result = await rewards.insertOne({
+        ...(data.fields as any),
+        image,
+        userId,
+        createdAt: new Date(),
+        completedCycles: 0,
+      });
 
       return res.status(200).send(result);
     }

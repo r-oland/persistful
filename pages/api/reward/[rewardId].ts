@@ -30,7 +30,10 @@ export default async function handler(
     // update reward
     if (req.method === 'PUT') {
       const data = await formDataParser(req);
+      const setToActive = data.fields.setToActive === 'true';
+
       delete data.fields.id;
+      delete data.fields.setToActive;
 
       // FormData converts number to string -> convert back
       if (data.fields.totalCycles)
@@ -57,6 +60,15 @@ export default async function handler(
           ''
         );
         if (file) bucket.file(file).delete();
+      }
+
+      if (setToActive) {
+        const users = await getCollection<UserEntity>('users');
+
+        await users.findOneAndUpdate(
+          { _id: new ObjectId(userId) as any },
+          { $set: { activeReward: _id } }
+        );
       }
 
       const result = await rewards.findOneAndUpdate(

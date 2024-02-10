@@ -19,7 +19,6 @@ import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import useGetUser from 'actions/user/useGetUser';
-import useUpdateUser from 'actions/user/useUpdateUser';
 import Checkbox from 'global_components/Checkbox/Checkbox';
 import styles from './RewardModal.module.scss';
 // =========================
@@ -34,15 +33,15 @@ export default function Content({
   const { data: user } = useGetUser();
   const addReward = useAddReward();
   const updateReward = useUpdateReward();
-  const updateUser = useUpdateUser();
   const deleteReward = useDeleteReward();
 
-  const isActiveReward = user?.activeReward === reward?._id;
+  const displayActiveCheckbox =
+    !user?.activeReward || user.activeReward === reward?._id;
 
   const [saveObject, setSaveObject] = useState<Partial<RewardEntity>>({});
   const [localImage, setLocalImage] = useState('');
   const [fileToLarge, setFileToLarge] = useState(false);
-  const [isActive, setIsActive] = useState(isActiveReward);
+  const [setToActive, setSetToActive] = useState(false);
 
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
@@ -79,11 +78,6 @@ export default function Content({
   const handleSave = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (isActive)
-      updateUser.mutate({
-        activeReward: reward?._id,
-      });
-
     // Add new reward
     if (!reward) {
       if (!saveObject.image) return alert('No image set');
@@ -94,6 +88,7 @@ export default function Content({
         minCycles,
         mode,
         image: saveObject.image,
+        setToActive,
       });
       return handleClose();
     }
@@ -102,13 +97,15 @@ export default function Content({
     updateReward.mutate({
       ...saveObject,
       id: reward._id,
+      setToActive,
     });
     handleClose();
   };
 
+  // When user has no active reward, always set the new reward to active
   useEffect(() => {
-    if (mode === 'streak') setSaveObject((prev) => ({ ...prev, minCycles }));
-  }, [mode]);
+    if (!user?.activeReward) setSetToActive(true);
+  }, []);
 
   return (
     <form className={styles.wrapper} onSubmit={handleSave}>
@@ -154,14 +151,14 @@ export default function Content({
         </div>
       </div>
       <div
-        className={`${styles['cycles-slider-wrapper']} ${!isActiveReward ? styles.inactive : ''}`}
+        className={`${styles['cycles-slider-wrapper']} ${!displayActiveCheckbox ? styles.inactive : ''}`}
       >
-        {!isActiveReward && (
+        {!displayActiveCheckbox && (
           <div>
             <p className={styles['sub-title']}>Active</p>
             <Checkbox
-              externalValue={isActive}
-              externalOnClick={() => setIsActive((prev) => !prev)}
+              externalValue={setToActive}
+              externalOnClick={() => setSetToActive((prev) => !prev)}
               big
             >
               <></>
@@ -198,9 +195,13 @@ export default function Content({
             <div>
               <Checkbox
                 externalValue={mode === 'streak'}
-                externalOnClick={() =>
-                  setSaveObject((prev) => ({ ...prev, mode: 'streak' }))
-                }
+                externalOnClick={() => {
+                  setSaveObject((prev) => ({
+                    ...prev,
+                    mode: 'streak',
+                    minCycles,
+                  }));
+                }}
               >
                 <span>
                   Don’t reset reward streak on daily streak failure, but only

@@ -25,7 +25,32 @@ async function updateActiveReward(
   const reward = await rewards.findOne({ _id: user.activeReward });
   if (!reward) return;
 
-  const updatedCompletedCycles = reward.completedCycles + newStreak - oldStreak;
+  const getStreakDiffForStreakMode = () => {
+    const streakDiff = newStreak - oldStreak;
+
+    // Not in streak mode, ignore and return streakDiff
+    if (!reward.minCycles || reward.mode !== 'streak') return streakDiff;
+
+    const currentDailyStreak = (user.streak || 0) + newStreak;
+
+    // user has corrected previous input
+    if (streakDiff < 0) return streakDiff;
+    // daily streak is greater then minCycles
+    if (user.streak >= reward.minCycles) return streakDiff;
+    // new daily streak is not high enough to satisfy minCycles
+    if (reward.minCycles > currentDailyStreak) return 0;
+    // daily streak was exactly matched with minCycles in this update
+    if (currentDailyStreak === reward.minCycles) return 1;
+    // daily streak was satisfied in this update, calculate how many cycles were completed since minCycles was satisfied
+    if (currentDailyStreak >= reward.minCycles)
+      return currentDailyStreak + 1 - reward.minCycles;
+
+    // Fallback
+    return streakDiff;
+  };
+
+  const updatedCompletedCycles =
+    reward.completedCycles + getStreakDiffForStreakMode();
 
   const completedCycles =
     updatedCompletedCycles < 0

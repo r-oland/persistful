@@ -214,7 +214,7 @@ export default function Content({
             <Slider
               initialValue={minCycles}
               max={50}
-              min={0}
+              min={1}
               step={1}
               onChange={(value) =>
                 setSaveObject((prev) => ({ ...prev, minCycles: value }))

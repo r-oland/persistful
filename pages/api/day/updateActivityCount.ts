@@ -66,6 +66,9 @@ async function updateActiveReward(
     { _id: user.activeReward },
     { $set: { completedCycles } }
   );
+
+  // Return whether reward was completed in this update to trigger modal in frontend
+  return completedCycles === reward.totalCycles;
 }
 
 export default async function handler(
@@ -121,11 +124,23 @@ export default async function handler(
         activities: newValue,
       }).streak;
 
-      // If streak has changed, update active reward
-      if (oldStreak !== newStreak)
-        await updateActiveReward(session, oldStreak, newStreak);
+      let completedReward = false;
 
-      res.status(200).send({ ...result.value, ...data });
+      // If streak has changed, update active reward
+      if (oldStreak !== newStreak) {
+        const rewardWasCompletedInUpdate = await updateActiveReward(
+          session,
+          oldStreak,
+          newStreak
+        );
+
+        if (rewardWasCompletedInUpdate) completedReward = true;
+      }
+
+      res.status(200).send({
+        day: { ...result.value, ...data },
+        completedReward,
+      });
     }
   } catch (err: any) {
     console.error(err);

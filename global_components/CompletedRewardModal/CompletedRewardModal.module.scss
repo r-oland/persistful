@@ -1,0 +1,33 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  gap: $spacing8;
+  justify-items: center;
+
+  @media screen and (min-width: $tablet) {
+    grid-template-columns: auto 1fr;
+  }
+
+  .image {
+    width: 115px;
+    height: 115px;
+    position: relative;
+
+    img {
+      border-radius: 50%;
+      object-fit: cover;
+    }
+  }
+
+  .content {
+    h3 {
+      margin-bottom: $spacing1;
+    }
+
+    p {
+      margin-bottom: $spacing5;
+      font-size: $font-small;
+    }
+  }
+}

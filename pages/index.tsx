@@ -9,6 +9,7 @@ import { AnimatePresence } from 'framer-motion';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
 import Graph from 'global_components/Graph/Graph';
 import OnboardingModal from 'global_components/OnboardingModal/OnboardingModal';
+import CompletedRewardModal from 'global_components/CompletedRewardModal/CompletedRewardModal';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import DashboardStats from 'global_components/Stats/DashboardStats';
 import { useMediaQ } from 'hooks/useMediaQ';
@@ -20,6 +21,7 @@ import { getStartEndWeek } from 'utils/getStartEndWeek';
 
 type DashboardContextType = {
   setInvalidateActivitiesQuery: React.Dispatch<React.SetStateAction<boolean>>;
+  setCompletedRewardModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
 };
@@ -31,6 +33,8 @@ export default function Dashboard() {
     useState(false);
 
   const [onboardingModalIsOpen, setOnboardingModalIsOpen] = useState(false);
+  const [completedRewardModalIsOpen, setCompletedRewardModalIsOpen] =
+    useState(false);
 
   const query = useMediaQ('min', 1500);
   // @ts-ignore
@@ -64,7 +68,12 @@ export default function Dashboard() {
   }, [user?.finishedOnboarding]);
 
   const value = useMemo(
-    () => ({ setInvalidateActivitiesQuery, activeDay, setActiveDay }),
+    () => ({
+      setInvalidateActivitiesQuery,
+      setCompletedRewardModalIsOpen,
+      activeDay,
+      setActiveDay,
+    }),
     [activeDay]
   );
 
@@ -94,6 +103,13 @@ export default function Dashboard() {
       <AnimatePresence>
         {onboardingModalIsOpen && (
           <OnboardingModal setModalIsOpen={setOnboardingModalIsOpen} />
+        )}
+      </AnimatePresence>
+      <AnimatePresence>
+        {completedRewardModalIsOpen && (
+          <CompletedRewardModal
+            setModalIsOpen={setCompletedRewardModalIsOpen}
+          />
         )}
       </AnimatePresence>
     </DashboardContext.Provider>

@@ -50,7 +50,8 @@ export default function EditableActivityCard({
   const updateActivityCount = useUpdateActivityCount();
   const updateUser = useUpdateUser();
 
-  const { activeDay } = useContext(DashboardContext);
+  const { activeDay, setCompletedRewardModalIsOpen } =
+    useContext(DashboardContext);
   const { setOverlayIsDisplayed } = useContext(MobileActivityCardsContext);
   const { data: day } = useGetDay(activeDay);
 
@@ -125,15 +126,21 @@ export default function EditableActivityCard({
                     activityId: activity._id,
                     value,
                   })
-                  .then(() => {
+                  .then((d) => {
+                    // Open completed reward modal when reward has been completed
+                    if (d.data.completedReward)
+                      setCompletedRewardModalIsOpen(true);
+
+                    // close interactive overlay
                     setDisplayOverlay(false);
 
+                    // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
                     const todayStamp = new Date().toLocaleDateString();
                     const activeDayStamp = activeDay.toLocaleDateString();
 
-                    // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
                     if (todayStamp !== activeDayStamp)
                       return updateUser.mutate({ lastValidation: activeDay });
+                    //
                   });
               }}
               activity={activity}

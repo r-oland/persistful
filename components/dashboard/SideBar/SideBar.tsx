@@ -30,14 +30,21 @@ export default function SideBar() {
           </div>
           <div className={styles['rewards-section']}>
             <h3 className={styles.title}>Rewards</h3>
-            <div className={styles.rewards}>
-              {openRewards?.map((openReward) => (
-                <RewardCard
-                  key={openReward._id}
-                  reward={openReward}
-                  setSelectedReward={setSelectedReward}
-                />
-              ))}
+            {!!openRewards?.length && (
+              <>
+                <div className={`${styles.rewards} `}>
+                  {openRewards?.map((openReward) => (
+                    <RewardCard
+                      key={openReward._id}
+                      reward={openReward}
+                      setSelectedReward={setSelectedReward}
+                    />
+                  ))}
+                </div>
+                {!!(openRewards.length > 2) && <div className={styles.bar} />}
+              </>
+            )}
+            <div className={styles['reward-button']}>
               <Button
                 color="white"
                 onClick={() =>

@@ -1,7 +1,6 @@
-const shapes: ('circle' | 'triangle')[] = ['circle', 'triangle'];
+import { random } from './random';
 
-export const random = (min: number, max: number) =>
-  Math.floor(Math.random() * (max + 1 - min)) + min;
+const shapes: PatternEntity['shape'][] = ['circle', 'triangle'];
 
 export const generatePattern = () => {
   const amountOfItems = random(3, 4);

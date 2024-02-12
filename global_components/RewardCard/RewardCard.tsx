@@ -5,7 +5,7 @@ import SmallProgressCircle from 'global_components/SmallProgressCircle/SmallProg
 import { useMediaQ } from 'hooks/useMediaQ';
 import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   faFire,
   faPartyHorn,
@@ -15,7 +15,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import useCompleteReward from 'actions/reward/useCompleteReward';
 import styles from './RewardCard.module.scss';
-import { shapes } from './shapes';
+import { generateRewardShapes } from './generateRewardShapes';
 // =========================
 
 export default function RewardCard({
@@ -25,6 +25,8 @@ export default function RewardCard({
   reward: RewardEntity;
   setSelectedReward?: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const [rewardShapes] = useState(generateRewardShapes());
+
   const overviewPage = !setSelectedReward;
 
   const query = useMediaQ('min', 768);
@@ -128,7 +130,7 @@ export default function RewardCard({
               Cycles{overviewPage ? '' : ' left'}
             </p>
           </SmallProgressCircle>
-          {shapes.map((shape, i) => (
+          {rewardShapes.map((shape, i) => (
             <Shape
               info={shape}
               color={isCompleted ? 'green' : 'grey'}

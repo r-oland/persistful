@@ -31,7 +31,7 @@ export default function GeneralTopNav({
   const [selectedReward, setSelectedReward] = useState('initial');
 
   // @ts-ignore
-  const query = useMediaQ('min', 825);
+  const query = useMediaQ('min', 850);
   const tabletQuery = useMediaQ('min', 768);
 
   const context = useContext(PwaInstallContext);

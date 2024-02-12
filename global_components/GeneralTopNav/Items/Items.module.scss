@@ -14,6 +14,7 @@
     display: grid;
     grid-auto-flow: column;
     justify-content: space-between;
+    gap: $spacing10;
   }
 
   &.streak,
@@ -28,7 +29,22 @@
 }
 
 .rewards-section {
-  width: 300px;
+  width: 100vw;
+
+  @media screen and (min-width: $tablet) {
+    // 100vw(screen) - 91px(nav) - 3rem(padding) - 3rem(padding)
+    width: calc(100vw - 91px - 3rem - 3rem);
+  }
+
+  @media screen and (min-width: 850px) {
+    // 100vw(screen) - 91px(nav) - 3rem(padding) - 315px(calendar) - 3rem(gap) - 3rem(padding)
+    width: calc(100vw - 91px - 3rem - 315px - 3rem - 3rem);
+
+    &.one-reward {
+      display: grid;
+      justify-content: end;
+    }
+  }
 
   .title {
     margin-bottom: $spacing5;
@@ -42,7 +58,20 @@
   .rewards {
     display: grid;
     gap: $spacing4;
-    justify-items: center;
+    justify-content: start;
     grid-auto-flow: column;
+    overflow: auto;
+    // Center the first and last rewards
+    padding: 0 calc(50vw - 150px);
+
+    @media screen and (min-width: $tablet) {
+      padding: 0;
+    }
+  }
+
+  .reward-button {
+    display: grid;
+    justify-content: center;
+    margin-top: $spacing6;
   }
 }

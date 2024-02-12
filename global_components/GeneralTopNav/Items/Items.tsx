@@ -25,7 +25,7 @@ function Reward({
 
   return (
     <motion.div
-      className={styles['rewards-section']}
+      className={`${styles['rewards-section']} ${openRewards?.length === 1 ? styles['one-reward'] : ''}`}
       variants={framerTopNavChild}
     >
       <h3 className={styles.title}>Rewards</h3>
@@ -38,12 +38,16 @@ function Reward({
           />
         ))}
       </div>
-      <Button
-        color="white"
-        onClick={() => (query ? setSelectedReward('new') : push('/reward/new'))}
-      >
-        New Reward
-      </Button>
+      <div className={styles['reward-button']}>
+        <Button
+          color="white"
+          onClick={() =>
+            query ? setSelectedReward('new') : push('/reward/new')
+          }
+        >
+          New Reward
+        </Button>
+      </div>
     </motion.div>
   );
 }

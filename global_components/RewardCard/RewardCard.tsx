@@ -77,7 +77,7 @@ export default function RewardCard({
   };
 
   return (
-    <HardShadow stretch animations={!overviewPage}>
+    <HardShadow animations={!overviewPage}>
       <div className={styles.wrapper} onClick={handleRewardClick}>
         <div className={styles['relative-wrapper']}>
           <div className={styles.image}>

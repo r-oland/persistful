@@ -24,7 +24,7 @@ export const framerTopNavParent = {
   },
   show: {
     opacity: 1,
-    height: 355,
+    height: 312,
     padding: '2.5rem 3rem',
     transition: {
       delayChildren: 0.5,

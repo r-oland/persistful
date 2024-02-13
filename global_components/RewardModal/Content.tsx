@@ -188,6 +188,9 @@ export default function Content({
                 externalOnClick={() =>
                   setSaveObject((prev) => ({ ...prev, mode: 'reset' }))
                 }
+                disabled={
+                  reward && reward.completedCycles !== 0 && mode !== 'reset'
+                }
               >
                 <span>Reset your reward streak on failure of daily streak</span>
               </Checkbox>
@@ -202,6 +205,9 @@ export default function Content({
                     minCycles,
                   }));
                 }}
+                disabled={
+                  reward && reward.completedCycles !== 0 && mode !== 'streak'
+                }
               >
                 <span>
                   Don’t reset reward streak on daily streak failure, but only

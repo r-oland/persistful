@@ -47,6 +47,11 @@
           font-size: $font-large;
           color: $white;
           margin-bottom: $spacing1;
+          // limit the number of lines to 2
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
         }
 
         .mode {

@@ -15,6 +15,8 @@ function RewardContent() {
   const key = user?.activeReward === id ? 'active' : id;
   const { data: reward } = useGetReward({ id, key });
 
+  if (!reward) return null;
+
   return <Content reward={reward} />;
 }
 

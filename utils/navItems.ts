@@ -1,6 +1,6 @@
 import {
   faBallot,
-  faCalendarAlt,
+  faChartLine,
   faCog,
   faSignOutAlt,
   faTachometerFast,
@@ -9,7 +9,7 @@ import { signOut } from 'next-auth/react';
 
 export const navItems = [
   { name: 'Dashboard', link: '/', icon: faTachometerFast },
-  { name: 'Overview', link: '/overview', icon: faCalendarAlt },
+  { name: 'progress', link: '/progress', icon: faChartLine },
   { name: 'Activities', link: '/activities', icon: faBallot },
   { name: 'Settings', link: '/settings', icon: faCog },
   {

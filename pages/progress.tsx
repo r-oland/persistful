@@ -3,6 +3,8 @@ import useGetDays from 'actions/day/useGetDays';
 import styles from 'components/progress/Progress.module.scss';
 import SideBar from 'components/progress/SideBar/SideBar';
 import { endOfMonth, startOfMonth } from 'date-fns';
+import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import ProgressStats from 'global_components/Stats/ProgressStats';
 import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
@@ -19,10 +21,12 @@ export const ProgressContext = createContext({} as ProgressContextType);
 
 export default function Progress() {
   const query = useMediaQ('min', 1500);
+  const tabletQuery = useMediaQ('min', 768);
 
   const start = startOfMonth(new Date());
   const end = endOfMonth(new Date());
 
+  const [activeDay, setActiveDay] = useState(new Date());
   const [range, setRange] = useState([start, end]);
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
@@ -48,8 +52,16 @@ export default function Progress() {
       </Head>
       <ProgressContext.Provider value={value}>
         <div className={styles.wrapper}>
+          {!query && (
+            <GeneralTopNav
+              activeDay={activeDay}
+              setActiveDay={setActiveDay}
+              overview
+            />
+          )}
+          {!tabletQuery && <ProgressStats />}
           <div className={styles.content}>
-            <h1>Progress</h1>
+            {tabletQuery && <ProgressStats />}
           </div>
           {query && <SideBar />}
         </div>

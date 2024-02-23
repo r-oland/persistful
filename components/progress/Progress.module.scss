@@ -8,16 +8,24 @@
   }
 
   .content {
-    align-content: start;
-    max-width: 1350px;
-    height: calc($app-height - 50px);
     overflow: auto;
-    padding: $spacing10 $spacing11 $spacing11;
+    height: calc($app-height - 50px - 65px - $mobile-nav-height);
+    padding: $spacing7 $spacing5 $spacing4;
     display: grid;
-    gap: $spacing9;
+    gap: $spacing5;
+    align-content: start;
+    grid-template-rows: auto 1fr;
+    max-width: 1350px;
+
+    @media screen and (min-width: $tablet) {
+      height: calc($app-height - 50px);
+      overflow: auto;
+      padding: $spacing10 $spacing11 $spacing11;
+      gap: $spacing9;
+      grid-template-rows: initial;
+    }
 
     @media screen and (min-width: $desktop-extra-large) {
-      height: $app-height;
       padding-top: 90px;
     }
   }

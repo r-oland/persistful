@@ -3,7 +3,7 @@
 .wrapper {
   display: grid;
 
-  @media screen and (min-width: $desktop-extra-large) {
+  @media screen and (min-width: $desktop) {
     grid-template-columns: 1fr auto;
   }
 
@@ -25,7 +25,7 @@
       grid-template-rows: initial;
     }
 
-    @media screen and (min-width: $desktop-extra-large) {
+    @media screen and (min-width: $desktop) {
       padding-top: 90px;
     }
   }

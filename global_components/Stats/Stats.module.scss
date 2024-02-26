@@ -45,7 +45,10 @@
       }
 
       .data {
-        font-size: $font-large;
+        @media screen and (min-width: $tablet) {
+          font-size: $font-large;
+        }
+
         font-weight: $weight-bold;
       }
     }

@@ -20,7 +20,7 @@ type ProgressContextType = {
 export const ProgressContext = createContext({} as ProgressContextType);
 
 export default function Progress() {
-  const query = useMediaQ('min', 1500);
+  const query = useMediaQ('min', 1024);
   const tabletQuery = useMediaQ('min', 768);
 
   const start = startOfMonth(new Date());
@@ -53,11 +53,7 @@ export default function Progress() {
       <ProgressContext.Provider value={value}>
         <div className={styles.wrapper}>
           {!query && (
-            <GeneralTopNav
-              activeDay={activeDay}
-              setActiveDay={setActiveDay}
-              overview
-            />
+            <GeneralTopNav activeDay={activeDay} setActiveDay={setActiveDay} />
           )}
           {!tabletQuery && <ProgressStats />}
           <div className={styles.content}>

@@ -23,8 +23,7 @@ export default function MobileOverviewStats() {
 
   const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
-  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(firstDay, lastDay, { retry: false });
+  const { data: days } = useGetDays(firstDay, lastDay);
 
   const totalDays =
     days

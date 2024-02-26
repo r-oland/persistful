@@ -32,11 +32,7 @@ export default async function handler(
         .find({ userId, createdAt: { $gte: start, $lt: end } })
         .toArray();
 
-      // if entities exist,fetch days
-      if (rangeDates.length) return res.status(200).send(rangeDates);
-
-      // else return nothing
-      return res.status(404).send({ message: 'not found' });
+      return res.status(200).send(rangeDates);
     }
   } catch (err: any) {
     console.error(err);

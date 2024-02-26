@@ -25,7 +25,7 @@ export default function OverviewCalendar() {
   const start = startOfMonth(activeDay);
   const end = endOfMonth(activeDay);
 
-  const { data: days } = useGetDays(start, end, { retry: false });
+  const { data: days } = useGetDays(start, end);
 
   const customDays = days?.map((d) => ({
     date: d.createdAt,

@@ -29,10 +29,7 @@ export default function Progress() {
   const [activeDay, setActiveDay] = useState(new Date());
   const [range, setRange] = useState([start, end]);
 
-  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days, isLoading } = useGetDays(range[0], range[1], {
-    retry: false,
-  });
+  const { data: days, isLoading } = useGetDays(range[0], range[1]);
 
   console.log(days);
 

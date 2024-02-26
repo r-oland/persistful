@@ -70,9 +70,7 @@ export default function ProgressStats() {
   const responsiveDateFormat = mobileQuery ? 'dd/MM/yy' : 'dd MMM yyyy';
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(range[0], range[1], {
-    retry: false,
-  });
+  const { data: days } = useGetDays(range[0], range[1]);
 
   const defaultState: {
     totalTime: string;

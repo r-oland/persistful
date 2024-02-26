@@ -82,12 +82,10 @@ const getRandomText = (
   texts: { title: string; message: string }[],
   streakReached: boolean
 ) => {
-  const randomContent = texts[Math.floor(Math.random() * texts.length)];
+  const randomText = texts[Math.floor(Math.random() * texts.length)];
+  const title = `${streakReached ? '✅' : '❎'} ${randomText.title}`;
 
-  if (streakReached) randomContent.title = `🔥 ${randomContent.title}`;
-  if (!streakReached) randomContent.title = `️🧊 ${randomContent.title}`;
-
-  return randomContent;
+  return { ...randomText, title };
 };
 
 export function getNotificationMessage(currentStreak: number) {

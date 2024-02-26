@@ -3,18 +3,19 @@ import useGetUser from 'actions/user/useGetUser';
 import { add, addDays, differenceInDays } from 'date-fns';
 import React from 'react';
 import { DayPicker } from 'react-day-picker';
-import { getStartEndWeek } from 'utils/getStartEndWeek';
 import { setDateTime } from 'utils/setDateTime';
 // =========================
 
 export default function Calendar({
   activeDay,
   setActiveDay,
-  week,
+  toDate = new Date(),
+  fromDate,
 }: {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-  week?: boolean;
+  toDate?: Date;
+  fromDate?: Date;
 }) {
   const { data: user } = useGetUser();
 
@@ -22,8 +23,6 @@ export default function Calendar({
     const middleOfDay = add(day, { hours: 12 });
     setActiveDay(middleOfDay);
   };
-
-  const { firstDay, lastDay } = getStartEndWeek(activeDay);
 
   const streak = user?.startDateGeneralStreak
     ? Array.from(
@@ -39,26 +38,20 @@ export default function Calendar({
   const secondChance =
     user?.secondChanceDates?.map((scd) => new Date(scd)) || [];
 
-  const sharedProps = {
-    onDayClick: handleDayClick,
-    toDate: new Date(),
-    defaultMonth: activeDay,
-    weekStartsOn: 1 as const,
-    modifiers: { secondChance, streak },
-    modifiersClassNames: {
-      secondChance: 'rdp-second_chance',
-      streak: 'rdp-streak_day',
-    },
-  };
-
-  if (week)
-    return (
-      <DayPicker
-        {...sharedProps}
-        selected={{ from: firstDay, to: lastDay }}
-        mode="range"
-      />
-    );
-
-  return <DayPicker {...sharedProps} selected={activeDay} required />;
+  return (
+    <DayPicker
+      onDayClick={handleDayClick}
+      toDate={toDate}
+      fromDate={fromDate}
+      defaultMonth={activeDay}
+      weekStartsOn={1 as const}
+      modifiers={{ secondChance, streak }}
+      modifiersClassNames={{
+        secondChance: 'rdp-second_chance',
+        streak: 'rdp-streak_day',
+      }}
+      selected={activeDay}
+      required
+    />
+  );
 }

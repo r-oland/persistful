@@ -55,19 +55,13 @@ function Reward({
 function CalendarComp({
   activeDay,
   setActiveDay,
-  overview,
 }: {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-  overview?: boolean;
 }) {
   return (
     <motion.div variants={framerTopNavChild}>
-      <Calendar
-        activeDay={activeDay}
-        setActiveDay={setActiveDay}
-        week={overview}
-      />
+      <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
     </motion.div>
   );
 }
@@ -79,7 +73,6 @@ export default function Items({
   setSelectedReward,
   activeDay,
   setActiveDay,
-  overview,
 }: {
   selected: TopNavSelectedOption;
   setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
@@ -87,7 +80,6 @@ export default function Items({
   setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-  overview?: boolean;
 }) {
   const ref = useRef(null);
 
@@ -122,21 +114,13 @@ export default function Items({
     >
       {selected === 'bar' ? (
         <>
-          <CalendarComp
-            activeDay={activeDay}
-            setActiveDay={setActiveDay}
-            overview={overview}
-          />
+          <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
           <Reward setSelectedReward={setSelectedReward} />
         </>
       ) : selected === 'streak' ? (
         <Reward setSelectedReward={setSelectedReward} />
       ) : selected === 'calendar' ? (
-        <CalendarComp
-          activeDay={activeDay}
-          setActiveDay={setActiveDay}
-          overview={overview}
-        />
+        <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
       ) : (
         <></>
       )}

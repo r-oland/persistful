@@ -40,6 +40,15 @@
       display: grid;
       gap: 2px;
 
+      .name,
+      .data {
+        // clamp to 1 line
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
       .name {
         font-size: $font-extra-small;
       }
@@ -51,6 +60,10 @@
 
         font-weight: $weight-bold;
       }
+    }
+
+    &.with-click {
+      cursor: pointer;
     }
 
     &.green {

@@ -14,17 +14,20 @@ type Color =
 export default function ElementContainer({
   children,
   color,
-  noPadding,
+  padding,
 }: {
   children: React.ReactNode;
   color: Color;
-  noPadding?: boolean;
+  padding?: number | string;
 }) {
   return (
     <HardShadow stretch>
       <div className={`${styles.wrapper} ${styles[color]}`}>
         <div className={styles.bar} />
-        <div className={styles.content} style={{ padding: noPadding ? 0 : '' }}>
+        <div
+          className={styles.content}
+          style={padding ? { padding } : undefined}
+        >
           {children}
         </div>
       </div>

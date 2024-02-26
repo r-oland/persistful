@@ -10,7 +10,6 @@ import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
-import { getStartEndWeek } from 'utils/getStartEndWeek';
 import useGetUser from 'actions/user/useGetUser';
 import styles from './GeneralTopNav.module.scss';
 import Items from './Items/Items';
@@ -21,11 +20,9 @@ export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
 export default function GeneralTopNav({
   activeDay,
   setActiveDay,
-  overview,
 }: {
   activeDay: Date;
   setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-  overview?: boolean;
 }) {
   const [selected, setSelected] = useState<TopNavSelectedOption>('none');
   const [selectedReward, setSelectedReward] = useState('initial');
@@ -49,8 +46,6 @@ export default function GeneralTopNav({
       return setSelected('none');
   }, [query]);
 
-  const { firstDay, lastDay } = getStartEndWeek(activeDay);
-
   return (
     <>
       <TopNavWrapper>
@@ -63,14 +58,7 @@ export default function GeneralTopNav({
         >
           <div className={styles.date} onClick={() => setSelected('calendar')}>
             <FontAwesomeIcon icon={faCalendarDay} />
-            <p>
-              {overview
-                ? `${format(firstDay, 'dd MMM')} - ${format(
-                    lastDay,
-                    'dd MMM '
-                  )}`
-                : format(activeDay, 'dd MMMM yyyy')}
-            </p>
+            <p>{format(activeDay, 'dd MMMM yyyy')}</p>
           </div>
           <div className={styles['icon-wrapper']}>
             {!tabletQuery && (deferredPrompt || canShowIosInstall) && (
@@ -114,7 +102,6 @@ export default function GeneralTopNav({
                 setSelectedReward={setSelectedReward}
                 activeDay={activeDay}
                 setActiveDay={setActiveDay}
-                overview={overview}
               />
             )}
           </AnimatePresence>

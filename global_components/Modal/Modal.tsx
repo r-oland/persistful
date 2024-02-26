@@ -10,15 +10,26 @@ export default function Modal({
   children,
   color,
   setModalIsOpen,
+  wrap,
+  sizeSensitiveContent,
 }: {
   children: React.ReactNode;
   color: 'green' | 'red';
   setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  wrap?: boolean;
+  sizeSensitiveContent?: boolean;
 }) {
   return (
     <motion.div className={styles.wrapper} {...framerFade}>
-      <div className={styles.content}>
-        <ElementContainer color={color}>{children}</ElementContainer>
+      <div
+        className={`${styles.content} ${wrap ? styles.wrap : ''} ${sizeSensitiveContent ? styles['size-sensitive-content'] : ''}`}
+      >
+        <ElementContainer
+          color={color}
+          padding={sizeSensitiveContent ? '1rem' : undefined}
+        >
+          {children}
+        </ElementContainer>
       </div>
       <div
         className={`${styles.shader} ${styles[color]}`}

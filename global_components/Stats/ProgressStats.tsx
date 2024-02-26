@@ -16,14 +16,58 @@ import { ProgressContext } from 'pages/progress';
 import useGetDays from 'actions/day/useGetDays';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { format } from 'date-fns';
+import Modal from 'global_components/Modal/Modal';
+import Calendar from 'global_components/Calendar/Calendar';
+import { AnimatePresence } from 'framer-motion';
 import styles from './Stats.module.scss';
 // =========================
+
+function DatePickerModal({
+  StartEndIndex,
+  setStartEndIndex,
+}: {
+  StartEndIndex: number;
+  setStartEndIndex: React.Dispatch<React.SetStateAction<number>>;
+}) {
+  const { range, setRange } = useContext(ProgressContext);
+
+  return (
+    <Modal
+      setModalIsOpen={() => setStartEndIndex(-1)}
+      color="green"
+      wrap
+      sizeSensitiveContent
+    >
+      <div className={styles.modal}>
+        <Calendar
+          fromDate={StartEndIndex === 1 ? range[0] : undefined}
+          toDate={StartEndIndex === 0 ? range[1] : undefined}
+          activeDay={range[StartEndIndex]}
+          setActiveDay={(date) =>
+            // @ts-ignore
+            setRange((prev) => {
+              // Close modal
+              setStartEndIndex(-1);
+
+              // Change data
+              return prev.map((d, i) => (i === StartEndIndex ? date : d));
+            })
+          }
+        />
+      </div>
+    </Modal>
+  );
+}
 
 export default function ProgressStats() {
   const { isLoading, range } = useContext(ProgressContext);
 
+  // @ts-ignore
+  const mobileQuery = useMediaQ('max', 400);
   const desktopQuery = useMediaQ('min', 1024);
   const largeDesktopQuery = useMediaQ('min', 1500);
+
+  const responsiveDateFormat = mobileQuery ? 'dd/MM/yy' : 'dd MMM yyyy';
 
   // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
   const { data: days } = useGetDays(range[0], range[1], {
@@ -35,18 +79,19 @@ export default function ProgressStats() {
     averageTime: string;
     totalCycles: number;
     daysTracked: number;
-    startDate: string;
-    endDate: string;
+    startDate: Date;
+    endDate: Date;
   } = {
     totalTime: '0:00',
     averageTime: '0:00',
     totalCycles: 0,
     daysTracked: 0,
-    startDate: format(new Date(), 'dd MMM yyyy'),
-    endDate: format(new Date(), 'dd MMM yyyy'),
+    startDate: new Date(),
+    endDate: new Date(),
   };
 
   const [displayData, setDisplayData] = useState(defaultState);
+  const [startEndIndex, setStartEndIndex] = useState(-1);
 
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
@@ -67,8 +112,8 @@ export default function ProgressStats() {
 
     const daysTracked = days?.length || 0;
 
-    const startDate = format(range[0], 'dd MMM yyyy');
-    const endDate = format(range[1], 'dd MMM yyyy');
+    const startDate = range[0];
+    const endDate = range[1];
 
     return setDisplayData({
       totalTime: convertMinutesToHours(totalTime),
@@ -113,31 +158,47 @@ export default function ProgressStats() {
         {
           name: 'Start date',
           icon: faLocationDot,
-          data: displayData.startDate,
+          data: format(displayData.startDate, responsiveDateFormat),
+          onClick: () => setStartEndIndex(0),
         },
         {
           name: 'End date',
           icon: faFlagCheckered,
-          data: displayData.endDate,
+          data: format(displayData.endDate, responsiveDateFormat),
+          onClick: () => setStartEndIndex(1),
         },
       ];
 
   return (
-    <div
-      className={styles.wrapper}
-      style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)` }}
-    >
-      {cards.map((card) => (
-        <div key={card.name} className={`${styles.card} ${styles.green}`}>
-          <div className={styles.icon}>
-            <FontAwesomeIcon icon={card.icon} />
+    <>
+      <div
+        className={styles.wrapper}
+        style={{ gridTemplateColumns: `repeat(${cards.length}, 1fr)` }}
+      >
+        {cards.map((card) => (
+          <div
+            key={card.name}
+            className={`${styles.card} ${styles.green} ${(card as { onClick?: () => void })?.onClick ? styles['with-click'] : ''}`}
+            onClick={(card as { onClick?: () => void })?.onClick}
+          >
+            <div className={styles.icon}>
+              <FontAwesomeIcon icon={card.icon} />
+            </div>
+            <div className={styles['text-wrapper']}>
+              <p className={styles.name}>{card.name}</p>
+              <p className={styles.data}>{card.data}</p>
+            </div>
           </div>
-          <div className={styles['text-wrapper']}>
-            <p className={styles.name}>{card.name}</p>
-            <p className={styles.data}>{card.data}</p>
-          </div>
-        </div>
-      ))}
-    </div>
+        ))}
+      </div>
+      <AnimatePresence>
+        {startEndIndex > -1 && (
+          <DatePickerModal
+            StartEndIndex={startEndIndex}
+            setStartEndIndex={setStartEndIndex}
+          />
+        )}
+      </AnimatePresence>
+    </>
   );
 }

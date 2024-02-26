@@ -36,11 +36,7 @@ export default function MobileOverview() {
   return (
     <MobileOverviewContext.Provider value={value}>
       <div className={styles.wrapper}>
-        <GeneralTopNav
-          activeDay={activeDay}
-          setActiveDay={setActiveDay}
-          overview
-        />
+        <GeneralTopNav activeDay={activeDay} setActiveDay={setActiveDay} />
         {!tabletQuery && <MobileOverviewStats />}
         <div className={styles.content}>
           {tabletQuery && <MobileOverviewStats />}

@@ -1,0 +1,24 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: space-between;
+  padding: 0 $spacing8;
+
+  span {
+    font-size: $font-small;
+  }
+
+  p {
+    font-size: $font-large;
+    font-weight: $weight-bold;
+    @include underline;
+    display: inline-block;
+    margin-top: $spacing1;
+  }
+
+  .end-date {
+    text-align: right;
+  }
+}

@@ -5,6 +5,7 @@ import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
 import { ProgressContext } from 'pages/progress';
 import Calendar from 'global_components/Calendar/Calendar';
 import styles from './SideBar.module.scss';
+import StartEndDate from './StartEndDate/StartEndDate';
 // =========================
 
 export default function SideBar() {
@@ -19,6 +20,7 @@ export default function SideBar() {
     <>
       <div className={styles.wrapper}>
         <div className={styles.content}>
+          <StartEndDate />
           <div className={styles.calendar}>
             <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
           </div>

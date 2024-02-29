@@ -1,5 +1,6 @@
 // Components==============
 import useGetDays from 'actions/day/useGetDays';
+import MobileStats from 'components/progress/MobileStats/MobileStats';
 import styles from 'components/progress/Progress.module.scss';
 import SideBar from 'components/progress/SideBar/SideBar';
 import { endOfMonth, startOfMonth } from 'date-fns';
@@ -22,6 +23,7 @@ export const ProgressContext = createContext({} as ProgressContextType);
 export default function Progress() {
   const query = useMediaQ('min', 1024);
   const tabletQuery = useMediaQ('min', 768);
+  const desktopQuery = useMediaQ('min', 1024);
 
   const start = startOfMonth(new Date());
   const end = endOfMonth(new Date());
@@ -55,6 +57,7 @@ export default function Progress() {
           {!tabletQuery && <ProgressStats />}
           <div className={styles.content}>
             {tabletQuery && <ProgressStats />}
+            {!desktopQuery && <MobileStats />}
           </div>
           {query && <SideBar />}
         </div>

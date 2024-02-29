@@ -1,0 +1,33 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+  justify-items: center;
+  align-content: center;
+  background-color: $white;
+  border: $border-light;
+  padding: $spacing3;
+  gap: $spacing1;
+
+  .stat {
+    display: grid;
+    gap: 0.1rem;
+    text-align: center;
+
+    span {
+      font-size: $font-tiny;
+    }
+
+    p {
+      font-size: $font-small;
+      font-weight: $weight-bold;
+    }
+  }
+
+  .bar {
+    height: 100%;
+    width: 1px;
+    background-color: $grey-light;
+  }
+}

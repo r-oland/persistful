@@ -34,8 +34,8 @@ export default function SideBar() {
             </div>
           </div>
           <div className={styles['rewards-section']}>
-            <h3 className={styles.title}>Rewards</h3>
-            {!!rewards?.length && (
+            <h3 className={styles.title}>Earned Rewards</h3>
+            {rewards?.length ? (
               <>
                 <div className={`${styles.rewards} `}>
                   {rewards?.map((reward) => (
@@ -44,6 +44,11 @@ export default function SideBar() {
                 </div>
                 {!!(rewards.length > 2) && <div className={styles.bar} />}
               </>
+            ) : (
+              <p className={styles['no-rewards']}>
+                It seems that you did not earn any rewards during this period of
+                time.
+              </p>
             )}
           </div>
         </div>

@@ -1,27 +1,42 @@
 // Components==============
 import React, { useContext } from 'react';
 import { ProgressContext } from 'pages/progress';
-import { subYears, subMonths, subWeeks, startOfToday } from 'date-fns';
+import {
+  subYears,
+  subMonths,
+  subWeeks,
+  startOfToday,
+  endOfToday,
+  startOfDay,
+} from 'date-fns';
+import useGetProgressDays from 'actions/day/useGetProgressDays';
 import styles from './QuickDateSelect.module.scss';
 // =========================
 
 export default function QuickDateSelect() {
   const { setRange, range } = useContext(ProgressContext);
+  const { data: days } = useGetProgressDays({ allDays: true });
 
   const buttons = [
     {
       name: 'last week' as const,
-      range: [subWeeks(startOfToday(), 1), startOfToday()],
+      range: { from: subWeeks(startOfToday(), 1), to: endOfToday() },
     },
     {
       name: 'last month' as const,
-      range: [subMonths(startOfToday(), 1), startOfToday()],
+      range: { from: subMonths(startOfToday(), 1), to: endOfToday() },
     },
     {
       name: 'last year' as const,
-      range: [subYears(startOfToday(), 1), startOfToday()],
+      range: { from: subYears(startOfToday(), 1), to: endOfToday() },
     },
-    { name: 'all time' as const, range: [new Date(0), startOfToday()] },
+    {
+      name: 'all time' as const,
+      range: {
+        from: startOfDay(new Date(days ? days[0].createdAt : 0)),
+        to: endOfToday(),
+      },
+    },
   ];
 
   return (
@@ -30,8 +45,8 @@ export default function QuickDateSelect() {
         <div
           key={button.name}
           className={`${styles.button} ${
-            range[0].getTime() === button.range[0].getTime() &&
-            range[1].getTime() === button.range[1].getTime()
+            range.from.getTime() === button.range.from.getTime() &&
+            range.to.getTime() === button.range.to.getTime()
               ? styles.selected
               : ''
           }`}

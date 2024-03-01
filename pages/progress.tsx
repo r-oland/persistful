@@ -1,9 +1,8 @@
 // Components==============
-import useGetDays from 'actions/day/useGetDays';
 import MobileStats from 'components/progress/MobileStats/MobileStats';
 import styles from 'components/progress/Progress.module.scss';
 import SideBar from 'components/progress/SideBar/SideBar';
-import { startOfToday, subMonths } from 'date-fns';
+import { endOfToday, startOfToday, subMonths } from 'date-fns';
 import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
 import ProgressStats from 'global_components/Stats/ProgressStats';
 import { useDeepComparison } from 'hooks/useDeepComparison';
@@ -13,9 +12,8 @@ import React, { createContext, useMemo, useState } from 'react';
 // =========================
 
 type ProgressContextType = {
-  range: Date[];
-  setRange: React.Dispatch<React.SetStateAction<Date[]>>;
-  isLoading: boolean;
+  range: { from: Date; to: Date };
+  setRange: React.Dispatch<React.SetStateAction<{ from: Date; to: Date }>>;
 };
 
 export const ProgressContext = createContext({} as ProgressContextType);
@@ -26,20 +24,17 @@ export default function Progress() {
   const desktopQuery = useMediaQ('min', 1024);
 
   const [activeDay, setActiveDay] = useState(new Date());
-  const [range, setRange] = useState([
-    subMonths(startOfToday(), 1),
-    startOfToday(),
-  ]);
-
-  const { isLoading } = useGetDays(range[0], range[1]);
+  const [range, setRange] = useState<{ from: Date; to: Date }>({
+    from: subMonths(startOfToday(), 1),
+    to: endOfToday(),
+  });
 
   const value = useMemo(
     () => ({
       range,
       setRange,
-      isLoading,
     }),
-    [useDeepComparison(range), isLoading]
+    [useDeepComparison(range)]
   );
 
   return (

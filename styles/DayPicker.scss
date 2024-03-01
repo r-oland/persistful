@@ -45,10 +45,6 @@
     color: $green-dark;
   }
 
-  .rdp-no_streak_day {
-    color: $red-dark;
-  }
-
   .rdp-day_today {
     color: $green;
   }
@@ -88,5 +84,20 @@
 
   .rdp-second_chance {
     color: $red;
+  }
+
+  .rdp-range_selected {
+    background-color: $white;
+    color: $black;
+    border: $border-light;
+    box-shadow: -3px 3px 0px $green-light;
+  }
+
+  .rdp-range_streak_day {
+    color: $green-dark;
+  }
+
+  .rdp-range_no_streak_day {
+    color: $red-dark;
   }
 }

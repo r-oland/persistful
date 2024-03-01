@@ -11,7 +11,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useContext, useState } from 'react';
 import { ProgressContext } from 'pages/progress';
 import { useMediaQ } from 'hooks/useMediaQ';
-import { format } from 'date-fns';
+import { endOfDay, format, startOfDay } from 'date-fns';
 import Modal from 'global_components/Modal/Modal';
 import Calendar from 'global_components/Calendar/Calendar';
 import { AnimatePresence } from 'framer-motion';
@@ -20,34 +20,39 @@ import styles from './Stats.module.scss';
 // =========================
 
 function DatePickerModal({
-  StartEndIndex,
-  setStartEndIndex,
+  fromOrTo,
+  setFromOrTo,
 }: {
-  StartEndIndex: number;
-  setStartEndIndex: React.Dispatch<React.SetStateAction<number>>;
+  fromOrTo: 'from' | 'to';
+  setFromOrTo: React.Dispatch<React.SetStateAction<'from' | 'to' | undefined>>;
 }) {
   const { range, setRange } = useContext(ProgressContext);
 
   return (
     <Modal
-      setModalIsOpen={() => setStartEndIndex(-1)}
+      setModalIsOpen={() => setFromOrTo(undefined)}
       color="green"
       wrap
       sizeSensitiveContent
     >
       <div className={styles.modal}>
         <Calendar
-          fromDate={StartEndIndex === 1 ? range[0] : undefined}
-          toDate={StartEndIndex === 0 ? range[1] : undefined}
-          activeDay={range[StartEndIndex]}
+          fromDate={fromOrTo === 'to' ? range.from : undefined}
+          toDate={fromOrTo === 'from' ? range.to : undefined}
+          activeDay={range[fromOrTo]}
           setActiveDay={(date) =>
-            // @ts-ignore
             setRange((prev) => {
               // Close modal
-              setStartEndIndex(-1);
+              setFromOrTo(undefined);
 
               // Change data
-              return prev.map((d, i) => (i === StartEndIndex ? date : d));
+              return {
+                ...prev,
+                [fromOrTo]:
+                  fromOrTo === 'from'
+                    ? startOfDay(date as Date)
+                    : endOfDay(date as Date),
+              };
             })
           }
         />
@@ -65,7 +70,9 @@ export default function ProgressStats() {
   const responsiveDateFormat = mobileQuery ? 'dd/MM/yy' : 'dd MMM yyyy';
 
   const displayData = useGetProgressStats();
-  const [startEndIndex, setStartEndIndex] = useState(-1);
+  const [fromOrTo, setFromOrTo] = useState<undefined | 'from' | 'to'>(
+    undefined
+  );
 
   const conditionalData = largeDesktopQuery
     ? [
@@ -101,13 +108,13 @@ export default function ProgressStats() {
           name: 'Start date',
           icon: faLocationDot,
           data: format(displayData.startDate, responsiveDateFormat),
-          onClick: () => setStartEndIndex(0),
+          onClick: () => setFromOrTo('from'),
         },
         {
           name: 'End date',
           icon: faFlagCheckered,
           data: format(displayData.endDate, responsiveDateFormat),
-          onClick: () => setStartEndIndex(1),
+          onClick: () => setFromOrTo('to'),
         },
       ];
 
@@ -134,11 +141,8 @@ export default function ProgressStats() {
         ))}
       </div>
       <AnimatePresence>
-        {startEndIndex > -1 && (
-          <DatePickerModal
-            StartEndIndex={startEndIndex}
-            setStartEndIndex={setStartEndIndex}
-          />
+        {!!fromOrTo && (
+          <DatePickerModal fromOrTo={fromOrTo} setFromOrTo={setFromOrTo} />
         )}
       </AnimatePresence>
     </>

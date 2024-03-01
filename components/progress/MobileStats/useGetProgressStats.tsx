@@ -1,5 +1,5 @@
 // Components==============
-import useGetDays from 'actions/day/useGetDays';
+import useGetProgressDays from 'actions/day/useGetProgressDays';
 import { useDeepComparison } from 'hooks/useDeepComparison';
 import { ProgressContext } from 'pages/progress';
 import { useContext, useEffect, useState } from 'react';
@@ -24,12 +24,11 @@ const defaultState: {
 };
 
 export default function useGetProgressStats() {
-  const { isLoading, range } = useContext(ProgressContext);
+  const { range } = useContext(ProgressContext);
 
   const [displayData, setDisplayData] = useState(defaultState);
 
-  // retry = false because days range can be selected that doesn't exists. This prevents it from trying to query in it on fail
-  const { data: days } = useGetDays(range[0], range[1]);
+  const { data: days, isLoading } = useGetProgressDays();
 
   // set display data in a state so it doesn't return undefined values while switching days
   useEffect(() => {
@@ -50,8 +49,8 @@ export default function useGetProgressStats() {
 
     const daysTracked = days?.length || 0;
 
-    const startDate = days?.[0]?.createdAt || range[0];
-    const endDate = days?.[days.length - 1]?.createdAt || range[1];
+    const startDate = range.from;
+    const endDate = range.to;
 
     return setDisplayData({
       totalTime: convertMinutesToHours(totalTime),

@@ -1,6 +1,6 @@
 // Components==============
 import useGetDays from 'actions/day/useGetDays';
-import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
+import useGetProgressRewards from 'actions/reward/useGetProgressRewards';
 import { endOfMonth, startOfMonth } from 'date-fns';
 import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
@@ -39,7 +39,7 @@ export default function DesktopOverview() {
     setRange([start, end]);
   }, [activeDay]);
 
-  const { data: rewards } = useGetRewardsByDays(range[0], range[1], {
+  const { data: rewards } = useGetProgressRewards({
     retry: false,
   });
 

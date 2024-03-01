@@ -1,21 +1,19 @@
 // Components==============
 import RewardCard from 'global_components/RewardCard/RewardCard';
-import React, { useContext, useState } from 'react';
-import useGetRewardsByDays from 'actions/reward/useGetRewardByDays';
+import React, { useContext } from 'react';
 import { ProgressContext } from 'pages/progress';
-import Calendar from 'global_components/Calendar/Calendar';
+import RangeCalendar from 'global_components/Calendar/RangeCalendar';
+import useGetProgressRewards from 'actions/reward/useGetProgressRewards';
 import styles from './SideBar.module.scss';
 import StartEndDate from './StartEndDate/StartEndDate';
 import QuickDateSelect from '../QuickDateSelect/QuickDateSelect';
 // =========================
 
 export default function SideBar() {
-  const { range } = useContext(ProgressContext);
-  const { data: rewards } = useGetRewardsByDays(range[0], range[1], {
+  const { range, setRange } = useContext(ProgressContext);
+  const { data: rewards } = useGetProgressRewards({
     retry: false,
   });
-
-  const [activeDay, setActiveDay] = useState(new Date());
 
   return (
     <>
@@ -30,7 +28,7 @@ export default function SideBar() {
             </div>
             <div className={styles.bar} />
             <div className={styles.calendar}>
-              <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+              <RangeCalendar range={range} setRange={setRange} />
             </div>
           </div>
           <div className={styles['rewards-section']}>

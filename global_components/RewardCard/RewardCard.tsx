@@ -7,6 +7,7 @@ import Image from 'next/legacy/image';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import {
+  faCheck,
   faFire,
   faPartyHorn,
   faRotateRight,
@@ -14,6 +15,7 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetUser from 'actions/user/useGetUser';
 import useCompleteReward from 'actions/reward/useCompleteReward';
+import { format } from 'date-fns';
 import styles from './RewardCard.module.scss';
 import { generateRewardShapes } from './generateRewardShapes';
 // =========================
@@ -27,7 +29,7 @@ export default function RewardCard({
 }) {
   const [rewardShapes] = useState(generateRewardShapes());
 
-  const overviewPage = !setSelectedReward;
+  const progressPage = !setSelectedReward;
 
   const query = useMediaQ('min', 768);
   const { push } = useRouter();
@@ -47,8 +49,10 @@ export default function RewardCard({
 
   const rewardContent = isCompleted
     ? {
-        text: !overviewPage ? 'claim your reward' : 'nice job!',
-        icon: faPartyHorn,
+        text: progressPage
+          ? format(reward.endDate as Date, 'dd MMM yyyy')
+          : 'claim your reward',
+        icon: progressPage ? faCheck : faPartyHorn,
       }
     : !user?.activeReward
       ? {
@@ -61,7 +65,7 @@ export default function RewardCard({
           { text: reward?.minCycles, icon: faFire };
 
   const handleRewardClick = () => {
-    if (overviewPage) return;
+    if (progressPage) return;
 
     // Open reward page
     if (isCompleted) return completeReward(reward._id);
@@ -77,7 +81,7 @@ export default function RewardCard({
   };
 
   return (
-    <HardShadow animations={!overviewPage}>
+    <HardShadow animations={!progressPage}>
       <div className={styles.wrapper} onClick={handleRewardClick}>
         <div className={styles['relative-wrapper']}>
           <div className={styles.image}>
@@ -117,7 +121,7 @@ export default function RewardCard({
                 />
               </svg>
               <p className={styles.count}>
-                {overviewPage
+                {progressPage
                   ? reward.totalCycles
                   : !user?.activeReward
                     ? '?'
@@ -127,7 +131,7 @@ export default function RewardCard({
             <p
               className={`${styles['cycles-left']} ${isCompleted ? styles.completed : ''}`}
             >
-              Cycles{overviewPage ? '' : ' left'}
+              Cycles{progressPage ? '' : ' left'}
             </p>
           </SmallProgressCircle>
           {rewardShapes.map((shape, i) => (

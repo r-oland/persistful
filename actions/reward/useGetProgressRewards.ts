@@ -17,7 +17,7 @@ export default function useGetProgressRewards(
   const query = useQuery<RewardEntity[]>(['rewards', 'all'], getAllRewards, {
     select: (data) =>
       data.filter((d) =>
-        isWithinInterval(new Date(d.createdAt), {
+        isWithinInterval(new Date(d.endDate as Date), {
           start: range.from,
           end: range.to,
         })

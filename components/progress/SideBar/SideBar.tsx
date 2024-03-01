@@ -6,6 +6,7 @@ import { ProgressContext } from 'pages/progress';
 import Calendar from 'global_components/Calendar/Calendar';
 import styles from './SideBar.module.scss';
 import StartEndDate from './StartEndDate/StartEndDate';
+import QuickDateSelect from '../QuickDateSelect/QuickDateSelect';
 // =========================
 
 export default function SideBar() {
@@ -20,7 +21,12 @@ export default function SideBar() {
     <>
       <div className={styles.wrapper}>
         <div className={styles.content}>
-          <StartEndDate />
+          <div className={styles['start-end-date']}>
+            <StartEndDate />
+          </div>
+          <div className={styles['quick-date-select']}>
+            <QuickDateSelect />
+          </div>
           <div className={styles.calendar}>
             <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
           </div>

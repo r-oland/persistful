@@ -31,9 +31,7 @@ export default function Progress() {
   const [activeDay, setActiveDay] = useState(new Date());
   const [range, setRange] = useState([start, end]);
 
-  const { data: days, isLoading } = useGetDays(range[0], range[1]);
-
-  console.log(days);
+  const { isLoading } = useGetDays(range[0], range[1]);
 
   const value = useMemo(
     () => ({

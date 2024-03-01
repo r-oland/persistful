@@ -50,8 +50,8 @@ export default function useGetProgressStats() {
 
     const daysTracked = days?.length || 0;
 
-    const startDate = range[0];
-    const endDate = range[1];
+    const startDate = days?.[0]?.createdAt || range[0];
+    const endDate = days?.[days.length - 1]?.createdAt || range[1];
 
     return setDisplayData({
       totalTime: convertMinutesToHours(totalTime),

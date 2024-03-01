@@ -1,0 +1,24 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: $border-light;
+
+  div {
+    text-align: center;
+    font-size: $font-extra-small;
+    font-weight: $weight-semi-bold;
+    padding: $spacing2 0;
+    transition: 0.2s;
+    cursor: pointer;
+
+    &:not(:last-child) {
+      border-right: $border-light;
+    }
+
+    &.selected {
+      background-color: $green-light;
+    }
+  }
+}

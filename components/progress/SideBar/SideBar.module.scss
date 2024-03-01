@@ -17,9 +17,13 @@
       padding: 0 1.4rem;
     }
 
+    .quick-date-select,
+    .start-end-date,
     .rewards-section {
       padding: 0 $spacing8;
+    }
 
+    .rewards-section {
       .title {
         margin-bottom: $spacing4;
       }

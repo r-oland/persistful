@@ -21,14 +21,17 @@ export default function SideBar() {
     <>
       <div className={styles.wrapper}>
         <div className={styles.content}>
-          <div className={styles['start-end-date']}>
-            <StartEndDate />
-          </div>
-          <div className={styles['quick-date-select']}>
-            <QuickDateSelect />
-          </div>
-          <div className={styles.calendar}>
-            <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+          <div className={styles['date-section']}>
+            <div className={styles['start-end-date']}>
+              <StartEndDate />
+            </div>
+            <div className={styles['quick-date-select']}>
+              <QuickDateSelect />
+            </div>
+            <div className={styles.bar} />
+            <div className={styles.calendar}>
+              <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+            </div>
           </div>
           <div className={styles['rewards-section']}>
             <h3 className={styles.title}>Rewards</h3>

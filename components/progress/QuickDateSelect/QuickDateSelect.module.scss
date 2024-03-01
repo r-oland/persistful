@@ -5,7 +5,7 @@
   grid-template-columns: repeat(4, 1fr);
   border: $border-light;
 
-  div {
+  .button {
     text-align: center;
     font-size: $font-extra-small;
     font-weight: $weight-semi-bold;

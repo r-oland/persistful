@@ -13,14 +13,27 @@
     display: grid;
     gap: $spacing6;
 
-    .calendar {
-      padding: 0 1.4rem;
-    }
-
     .quick-date-select,
     .start-end-date,
+    .bar,
     .rewards-section {
       padding: 0 $spacing8;
+    }
+
+    .date-section {
+      display: grid;
+      gap: $spacing4;
+
+      .bar {
+        height: 1px;
+        background-color: $grey-light;
+        width: calc(100% - 2 * $spacing8);
+        justify-self: center;
+      }
+
+      .calendar {
+        padding: 0 1.4rem;
+      }
     }
 
     .rewards-section {

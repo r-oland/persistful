@@ -30,35 +30,5 @@
     display: grid;
     grid-auto-flow: column;
     gap: $spacing6;
-
-    .reward {
-      position: relative;
-      font-size: $font-h3;
-      cursor: pointer;
-
-      .counter {
-        height: 18px;
-        min-width: 18px;
-        padding: 0 0.35rem;
-        background-color: $red;
-        border-radius: 50px;
-        display: grid;
-        justify-content: center;
-        align-items: center;
-        position: absolute;
-        top: -3px;
-        left: 9px;
-
-        &.completed {
-          background-color: $green;
-        }
-
-        p {
-          color: $white;
-          font-size: $font-tiny;
-          font-weight: $weight-semi-bold;
-        }
-      }
-    }
   }
 }

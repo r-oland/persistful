@@ -1,20 +1,21 @@
 // Components==============
 import { faCalendarDay } from '@fortawesome/pro-regular-svg-icons';
-import { faCircleArrowDown, faGift } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleArrowDown } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import useGetOpenRewards from 'actions/reward/useGetOpenRewards';
 import { format } from 'date-fns';
 import { AnimatePresence } from 'framer-motion';
-import RewardModal from 'global_components/RewardModal/RewardModal';
 import TopNavWrapper from 'global_components/TopNavWrapper/TopNavWrapper';
 import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
-import useGetUser from 'actions/user/useGetUser';
 import { DashboardContext } from 'pages';
-import useGetProgressRewards from 'actions/reward/useGetProgressRewards';
 import styles from './TopNav.module.scss';
 import Items from './Items/Items';
+import {
+  DashboardRewardCount,
+  ProgressRewardCount,
+} from './RewardCount/RewardCount';
+import ConditionalRewardModal from './ConditionalRewardModal';
 // =========================
 
 export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
@@ -31,26 +32,6 @@ export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
   const { activeDay } = useContext(DashboardContext);
 
   const { deferredPrompt, canShowIosInstall } = context;
-
-  const { data: openRewards } = useGetOpenRewards({
-    enabled: page === 'dashboard',
-  });
-  const { data: progressRewards } = useGetProgressRewards({
-    enabled: page === 'progress',
-  });
-  const { data: user } = useGetUser();
-
-  const activeReward = openRewards?.find((or) => or._id === user?.activeReward);
-
-  const rewardCountCondition =
-    page === 'dashboard' ? !!activeReward : progressRewards?.length;
-  const rewardCountCompleted =
-    page === 'dashboard' &&
-    activeReward?.completedCycles === activeReward?.totalCycles;
-  const rewardCount =
-    page === 'dashboard'
-      ? activeReward?.completedCycles
-      : progressRewards?.length || 0;
 
   useEffect(() => {
     if (selected === 'bar' && !query) return setSelected('none');
@@ -87,21 +68,11 @@ export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
                 </div>
               </div>
             )}
-            <div
-              className={styles.reward}
-              onClick={() => setSelected('streak')}
-            >
-              <FontAwesomeIcon icon={faGift} />
-              {rewardCountCondition && (
-                <div
-                  className={`${styles.counter} ${
-                    rewardCountCompleted ? styles.completed : ''
-                  }`}
-                >
-                  <p>{rewardCount}</p>
-                </div>
-              )}
-            </div>
+            {page === 'dashboard' ? (
+              <DashboardRewardCount setSelected={setSelected} />
+            ) : (
+              <ProgressRewardCount setSelected={setSelected} />
+            )}
           </div>
           <AnimatePresence>
             {selected !== 'none' && (
@@ -116,14 +87,12 @@ export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
           </AnimatePresence>
         </div>
       </TopNavWrapper>
-      <AnimatePresence>
-        {selectedReward !== 'initial' && (
-          <RewardModal
-            setSelectedReward={setSelectedReward}
-            reward={openRewards?.find((or) => or._id === selectedReward)}
-          />
-        )}
-      </AnimatePresence>
+      {page === 'dashboard' && (
+        <ConditionalRewardModal
+          selectedReward={selectedReward}
+          setSelectedReward={setSelectedReward}
+        />
+      )}
     </>
   );
 }

@@ -6,7 +6,7 @@
     "build": "next build",
     "serve": "next start -p 1234",
     "lint": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "notification_cron": "tsx scripts/notification_cron.ts"
+    "cron_worker": "tsx scripts/cron_worker.ts"
   },
   "volta": {
     "node": "20.11.0"

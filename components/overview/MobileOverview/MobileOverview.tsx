@@ -1,6 +1,6 @@
 // Components==============
 import useGetDays from 'actions/day/useGetDays';
-import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import TopNav from 'global_components/TopNav/TopNav';
 import Graph from 'global_components/Graph/Graph';
 import ProgressCircle from 'global_components/ProgressCircle/ProgressCircle';
 import MobileOverviewStats from 'global_components/Stats/MobileOverviewStats';
@@ -33,7 +33,7 @@ export default function MobileOverview() {
   return (
     <MobileOverviewContext.Provider value={value}>
       <div className={styles.wrapper}>
-        <GeneralTopNav activeDay={activeDay} setActiveDay={setActiveDay} />
+        <TopNav activeDay={activeDay} setActiveDay={setActiveDay} />
         {!tabletQuery && <MobileOverviewStats />}
         <div className={styles.content}>
           {tabletQuery && <MobileOverviewStats />}

@@ -6,7 +6,7 @@ import styles from 'components/dashboard/Dashboard.module.scss';
 import SideBar from 'components/dashboard/SideBar/SideBar';
 import ValidateEffect from 'components/dashboard/ValidateEffect';
 import { AnimatePresence } from 'framer-motion';
-import GeneralTopNav from 'global_components/GeneralTopNav/GeneralTopNav';
+import TopNav from 'global_components/TopNav/TopNav';
 import Graph from 'global_components/Graph/Graph';
 import OnboardingModal from 'global_components/OnboardingModal/OnboardingModal';
 import CompletedRewardModal from 'global_components/CompletedRewardModal/CompletedRewardModal';
@@ -80,9 +80,7 @@ export default function Dashboard() {
         <title>Dashboard</title>
       </Head>
       <div className={styles.wrapper}>
-        {!query && (
-          <GeneralTopNav activeDay={activeDay} setActiveDay={setActiveDay} />
-        )}
+        {!query && <TopNav page="dashboard" />}
         {!tabletQuery && <DashboardStats />}
         <div className={styles.content}>
           {tabletQuery && <DashboardStats />}

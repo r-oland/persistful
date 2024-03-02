@@ -11,19 +11,15 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
 import useGetUser from 'actions/user/useGetUser';
-import styles from './GeneralTopNav.module.scss';
+import { DashboardContext } from 'pages';
+import useGetProgressRewards from 'actions/reward/useGetProgressRewards';
+import styles from './TopNav.module.scss';
 import Items from './Items/Items';
 // =========================
 
 export type TopNavSelectedOption = 'bar' | 'calendar' | 'streak' | 'none';
 
-export default function GeneralTopNav({
-  activeDay,
-  setActiveDay,
-}: {
-  activeDay: Date;
-  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-}) {
+export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
   const [selected, setSelected] = useState<TopNavSelectedOption>('none');
   const [selectedReward, setSelectedReward] = useState('initial');
 
@@ -32,13 +28,29 @@ export default function GeneralTopNav({
   const tabletQuery = useMediaQ('min', 768);
 
   const context = useContext(PwaInstallContext);
+  const { activeDay } = useContext(DashboardContext);
 
   const { deferredPrompt, canShowIosInstall } = context;
 
-  const { data: openRewards } = useGetOpenRewards();
+  const { data: openRewards } = useGetOpenRewards({
+    enabled: page === 'dashboard',
+  });
+  const { data: progressRewards } = useGetProgressRewards({
+    enabled: page === 'progress',
+  });
   const { data: user } = useGetUser();
 
   const activeReward = openRewards?.find((or) => or._id === user?.activeReward);
+
+  const rewardCountCondition =
+    page === 'dashboard' ? !!activeReward : progressRewards?.length;
+  const rewardCountCompleted =
+    page === 'dashboard' &&
+    activeReward?.completedCycles === activeReward?.totalCycles;
+  const rewardCount =
+    page === 'dashboard'
+      ? activeReward?.completedCycles
+      : progressRewards?.length || 0;
 
   useEffect(() => {
     if (selected === 'bar' && !query) return setSelected('none');
@@ -58,7 +70,7 @@ export default function GeneralTopNav({
         >
           <div className={styles.date} onClick={() => setSelected('calendar')}>
             <FontAwesomeIcon icon={faCalendarDay} />
-            <p>{format(activeDay, 'dd MMMM yyyy')}</p>
+            {page === 'dashboard' && <p>{format(activeDay, 'dd MMMM yyyy')}</p>}
           </div>
           <div className={styles['icon-wrapper']}>
             {!tabletQuery && (deferredPrompt || canShowIosInstall) && (
@@ -80,15 +92,13 @@ export default function GeneralTopNav({
               onClick={() => setSelected('streak')}
             >
               <FontAwesomeIcon icon={faGift} />
-              {!!activeReward && (
+              {rewardCountCondition && (
                 <div
                   className={`${styles.counter} ${
-                    activeReward?.totalCycles === activeReward?.completedCycles
-                      ? styles.completed
-                      : ''
+                    rewardCountCompleted ? styles.completed : ''
                   }`}
                 >
-                  <p>{activeReward?.completedCycles || 0}</p>
+                  <p>{rewardCount}</p>
                 </div>
               )}
             </div>
@@ -100,8 +110,7 @@ export default function GeneralTopNav({
                 setSelected={setSelected}
                 selectedReward={selectedReward}
                 setSelectedReward={setSelectedReward}
-                activeDay={activeDay}
-                setActiveDay={setActiveDay}
+                page={page}
               />
             )}
           </AnimatePresence>

@@ -3,65 +3,83 @@ import { motion } from 'framer-motion';
 import Calendar from 'global_components/Calendar/Calendar';
 import RewardCard from 'global_components/RewardCard/RewardCard';
 import { useOnClickOutside } from 'hooks/useOnClickOutside';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { framerTopNavChild, framerTopNavParent } from 'utils/framerAnimations';
 import Button from 'global_components/Button/Button';
 import { useRouter } from 'next/router';
 import useGetOpenRewards from 'actions/reward/useGetOpenRewards';
 import { useMediaQ } from 'hooks/useMediaQ';
-import { TopNavSelectedOption } from '../GeneralTopNav';
+import { DashboardContext } from 'pages';
+import useGetProgressRewards from 'actions/reward/useGetProgressRewards';
+import { ProgressContext } from 'pages/progress';
+import RangeCalendar from 'global_components/Calendar/RangeCalendar';
+import { TopNavSelectedOption } from '../TopNav';
 import styles from './Items.module.scss';
 // =========================
 
 function Reward({
   setSelectedReward,
+  page,
 }: {
   setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
+  page: 'dashboard' | 'progress';
 }) {
-  const { data: openRewards } = useGetOpenRewards();
+  const { data: openRewards } = useGetOpenRewards({
+    enabled: page === 'dashboard',
+  });
+  const { data: progressRewards } = useGetProgressRewards({
+    enabled: page === 'progress',
+  });
+
+  const rewards = page === 'dashboard' ? openRewards : progressRewards;
 
   const query = useMediaQ('min', 768);
   const { push } = useRouter();
 
   return (
     <motion.div
-      className={`${styles['rewards-section']} ${openRewards?.length === 1 ? styles['one-reward'] : ''}`}
+      className={`${styles['rewards-section']} ${rewards?.length === 1 ? styles['one-reward'] : ''}`}
       variants={framerTopNavChild}
     >
       <h3 className={styles.title}>Rewards</h3>
       <div className={styles.rewards}>
-        {openRewards?.map((openReward) => (
+        {rewards?.map((reward) => (
           <RewardCard
-            key={openReward._id}
-            reward={openReward}
-            setSelectedReward={setSelectedReward}
+            key={reward._id}
+            reward={reward}
+            setSelectedReward={
+              page === 'dashboard' ? setSelectedReward : undefined
+            }
           />
         ))}
       </div>
-      <div className={styles['reward-button']}>
-        <Button
-          color="white"
-          onClick={() =>
-            query ? setSelectedReward('new') : push('/reward/new')
-          }
-        >
-          New Reward
-        </Button>
-      </div>
+      {page === 'dashboard' && (
+        <div className={styles['reward-button']}>
+          <Button
+            color="white"
+            onClick={() =>
+              query ? setSelectedReward('new') : push('/reward/new')
+            }
+          >
+            New Reward
+          </Button>
+        </div>
+      )}
     </motion.div>
   );
 }
 
-function CalendarComp({
-  activeDay,
-  setActiveDay,
-}: {
-  activeDay: Date;
-  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
-}) {
+function CalendarComp({ page }: { page: 'dashboard' | 'progress' }) {
+  const { activeDay, setActiveDay } = useContext(DashboardContext);
+  const { range, setRange } = useContext(ProgressContext);
+
   return (
     <motion.div variants={framerTopNavChild}>
-      <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+      {page === 'dashboard' ? (
+        <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
+      ) : (
+        <RangeCalendar range={range} setRange={setRange} />
+      )}
     </motion.div>
   );
 }
@@ -71,17 +89,17 @@ export default function Items({
   setSelected,
   selectedReward,
   setSelectedReward,
-  activeDay,
-  setActiveDay,
+  page,
 }: {
   selected: TopNavSelectedOption;
   setSelected: React.Dispatch<React.SetStateAction<TopNavSelectedOption>>;
   selectedReward: string;
   setSelectedReward: React.Dispatch<React.SetStateAction<string>>;
-  activeDay: Date;
-  setActiveDay: React.Dispatch<React.SetStateAction<Date>>;
+  page: 'dashboard' | 'progress';
 }) {
   const ref = useRef(null);
+
+  const { activeDay } = useContext(DashboardContext);
 
   useOnClickOutside({
     refs: [ref],
@@ -114,13 +132,13 @@ export default function Items({
     >
       {selected === 'bar' ? (
         <>
-          <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
-          <Reward setSelectedReward={setSelectedReward} />
+          <CalendarComp page={page} />
+          <Reward page={page} setSelectedReward={setSelectedReward} />
         </>
       ) : selected === 'streak' ? (
-        <Reward setSelectedReward={setSelectedReward} />
+        <Reward page={page} setSelectedReward={setSelectedReward} />
       ) : selected === 'calendar' ? (
-        <CalendarComp activeDay={activeDay} setActiveDay={setActiveDay} />
+        <CalendarComp page={page} />
       ) : (
         <></>
       )}

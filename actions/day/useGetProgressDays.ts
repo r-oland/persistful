@@ -6,7 +6,8 @@ import { useQuery, UseQueryOptions } from 'react-query';
 import { isWithinInterval } from 'date-fns';
 // =========================
 
-const getDays = () => axios.get('/api/day').then(({ data }) => data);
+const getDays = () =>
+  axios.get('/api/day/progressDays').then(({ data }) => data);
 
 export default function useGetProgressDays(
   options?: UseQueryOptions<DayEntity[]> & { allDays?: boolean }

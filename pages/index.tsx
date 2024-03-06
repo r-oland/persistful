@@ -17,6 +17,7 @@ import Head from 'next/head';
 import React, { createContext, useEffect, useMemo, useState } from 'react';
 import { useQueryClient } from 'react-query';
 import { getStartEndWeek } from 'utils/getStartEndWeek';
+import useValidateStreaks from 'actions/user/useValidateStreaks';
 // =========================
 
 type DashboardContextType = {
@@ -62,6 +63,12 @@ export default function Dashboard() {
     },
     [invalidateActivitiesQuery]
   );
+
+  const { mutate } = useValidateStreaks();
+
+  useEffect(() => {
+    mutate();
+  }, []);
 
   useEffect(() => {
     if (user && !user.finishedOnboarding) return setOnboardingModalIsOpen(true);

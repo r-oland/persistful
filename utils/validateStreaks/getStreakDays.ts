@@ -1,5 +1,5 @@
 import { getDayAchievements } from 'utils/getDayAchievements';
-import { differenceInCalendarDays, getWeek } from 'date-fns';
+import { add, differenceInCalendarDays, getWeek } from 'date-fns';
 import { validateStreaksArgs } from 'pages/api/user/validateStreaks';
 
 export function getStreakDays({ days, user }: validateStreaksArgs) {
@@ -25,10 +25,17 @@ export function getStreakDays({ days, user }: validateStreaksArgs) {
         days[i - 1].createdAt,
         day.createdAt
       );
-      if (gap > 1) {
+
+      if (gap > 2) break; // Gap can never be more then 1 day -> always break the streak
+
+      // gap 2 = 1 missed day
+      if (gap === 2) {
         if (secondChance && !missedChanceThisWeek) {
           // Use the second chance for this week
           missedChanceThisWeek = true;
+
+          // This is the day before the missed day, so push 1 day ahead to the second chance dates
+          secondChanceDates.push(add(day.createdAt, { days: 1 }));
         } else {
           // The streak is broken
           break;

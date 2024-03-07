@@ -5,13 +5,13 @@ import { validateStreaksArgs } from 'pages/api/user/validateStreaks';
 export function getStreakDays({ days, user }: validateStreaksArgs) {
   const secondChance = user.rules.secondChange;
   let missedChanceThisWeek = false;
-  let currentWeek = getWeek(days[0].createdAt);
+  let currentWeek = getWeek(days[0].createdAt, { weekStartsOn: 1 });
   const streakDays: DayEntity[] = [];
   const secondChanceDates: Date[] = [];
 
   for (let i = 0; i < days.length; i++) {
     const day = days[i];
-    const weekNumber = getWeek(day.createdAt);
+    const weekNumber = getWeek(day.createdAt, { weekStartsOn: 1 });
 
     // Reset the second chance if it's a new week
     if (weekNumber !== currentWeek) {

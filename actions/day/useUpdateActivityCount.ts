@@ -17,11 +17,12 @@ export default function useUpdateActivityCount() {
 
   const mutation = useMutation(
     (data: UpdateActivityCountTypes) =>
-      axios.put(`/api/day/updateActivityCount`, data),
+      axios
+        .put(`/api/day/updateActivityCount`, data)
+        .then((r) => r.data as { oldStreak: number; newStreak: number }),
     {
       onSuccess: () => {
         queryClient.invalidateQueries('days');
-        queryClient.invalidateQueries('rewards');
         // invalidate query after user has left dashboard page
         setInvalidateActivitiesQuery(true);
       },

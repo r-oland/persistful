@@ -93,7 +93,9 @@ export default async function handler(
       { $set: { streak: total, secondChanceDates, startDateGeneralStreak } }
     );
 
-    return res.status(200).send({ message: 'streaks updated' });
+    return res
+      .status(200)
+      .send({ message: 'streaks updated', startDateGeneralStreak });
   } catch (err: any) {
     console.error(err);
     return res.status(500).send(err?.message || err);

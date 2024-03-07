@@ -3,7 +3,6 @@ import { IconName } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useGetDay from 'actions/day/useGetDay';
 import useUpdateActivityCount from 'actions/day/useUpdateActivityCount';
-import useUpdateUser from 'actions/user/useUpdateUser';
 import { MobileActivityCardsContext } from 'components/dashboard/Activities/Activities';
 import { AnimatePresence } from 'framer-motion';
 import HardShadow from 'global_components/HardShadow/HardShadow';
@@ -13,6 +12,11 @@ import { DashboardContext } from 'pages';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 import { getActivityCount } from 'utils/getActivityCount';
 import { getActivityPercentage } from 'utils/getActivityPercentage';
+import useValidateStreaks from 'actions/user/useValidateStreaks';
+import useUpdateRewardStreak from 'actions/reward/useUpdateRewardStreak';
+import useGetUser from 'actions/user/useGetUser';
+import { setDateTime } from 'utils/setDateTime';
+import { add } from 'date-fns';
 import styles from './ActivityCard.module.scss';
 import ActivityProgress from './ActivityProgress/ActivityProgress';
 import Overlay from './Overlay/Overlay';
@@ -48,12 +52,14 @@ export default function EditableActivityCard({
 }) {
   const [displayOverlay, setDisplayOverlay] = useState(false);
   const updateActivityCount = useUpdateActivityCount();
-  const updateUser = useUpdateUser();
+  const updateRewardStreak = useUpdateRewardStreak();
+  const validateStreaks = useValidateStreaks({ noRewardInvalidation: true });
 
   const { activeDay, setCompletedRewardModalIsOpen } =
     useContext(DashboardContext);
   const { setOverlayIsDisplayed } = useContext(MobileActivityCardsContext);
   const { data: day } = useGetDay(activeDay);
+  const { data: user } = useGetUser();
 
   const query = useMediaQ('min', 525);
 
@@ -79,6 +85,52 @@ export default function EditableActivityCard({
   const percentage = getActivityPercentage(activity, day?.activities);
 
   const inactiveWithCount = activity.status !== 'active' && activity.count;
+
+  const handleAdd = async (
+    e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+    value: number
+  ): Promise<void> => {
+    e.stopPropagation();
+
+    const { oldStreak, newStreak } = await updateActivityCount.mutateAsync({
+      id: day!._id,
+      activityId: activity._id,
+      value,
+    });
+
+    const todayStamp = new Date().toLocaleDateString();
+    const activeDayStamp = activeDay.toLocaleDateString();
+
+    let startDateStreak = user?.startDateGeneralStreak;
+
+    // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
+    if (todayStamp !== activeDayStamp) {
+      const { startDateGeneralStreak } = await validateStreaks.mutateAsync();
+      startDateStreak = startDateGeneralStreak;
+    }
+
+    const activityIsUpdatedInStreak =
+      startDateStreak &&
+      setDateTime(
+        // Previous day so rewards streak can also be decreased when the startDate is the same as the active day
+        add(new Date(startDateStreak), { days: -1 }),
+        'start'
+      ).getTime() <= activeDay.getTime();
+
+    // Check if day was edited that is part of the current streak
+    if (activityIsUpdatedInStreak) {
+      const { completedReward } = await updateRewardStreak.mutateAsync({
+        oldStreak,
+        newStreak,
+      });
+
+      // Open completed reward modal when reward has been completed
+      if (completedReward) setCompletedRewardModalIsOpen(true);
+    }
+
+    // close interactive overlay
+    setDisplayOverlay(false);
+  };
 
   return (
     <ConditionalWrapper inactive={!!inactiveWithCount}>
@@ -117,32 +169,7 @@ export default function EditableActivityCard({
         <AnimatePresence>
           {displayOverlay && day && (
             <Overlay
-              handleAdd={(e, value) => {
-                e.stopPropagation();
-
-                updateActivityCount
-                  .mutateAsync({
-                    id: day._id,
-                    activityId: activity._id,
-                    value,
-                  })
-                  .then((d) => {
-                    // Open completed reward modal when reward has been completed
-                    if (d.data.completedReward)
-                      setCompletedRewardModalIsOpen(true);
-
-                    // close interactive overlay
-                    setDisplayOverlay(false);
-
-                    // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
-                    const todayStamp = new Date().toLocaleDateString();
-                    const activeDayStamp = activeDay.toLocaleDateString();
-
-                    if (todayStamp !== activeDayStamp)
-                      return updateUser.mutate({ lastValidation: activeDay });
-                    //
-                  });
-              }}
+              handleAdd={handleAdd}
               activity={activity}
               percentage={percentage}
               day={day}

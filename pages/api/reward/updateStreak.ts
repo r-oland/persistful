@@ -1,4 +1,3 @@
-import { UpdateRewardStreakTypes } from 'actions/reward/useUpdateRewardStreak';
 import { ObjectId } from 'mongodb';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
@@ -14,7 +13,7 @@ export default async function handler(
     if (!session) return;
 
     if (req.method === 'PUT') {
-      const data = req.body as UpdateRewardStreakTypes;
+      const data = req.body as { oldStreak: number; newStreak: number };
       const { oldStreak, newStreak } = data;
 
       let completedReward = false;

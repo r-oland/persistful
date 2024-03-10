@@ -3,9 +3,9 @@ import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 // =========================
 
-export const validateStreaks = () =>
+export const validateStreaks = (activeDay: Date) =>
   axios
-    .put('/api/user/validateStreaks')
+    .put('/api/user/validateStreaks', { activeDay })
     .then((r) => r.data as { startDateGeneralStreak?: Date });
 
 export default function useValidateStreaks() {

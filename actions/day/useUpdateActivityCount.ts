@@ -3,9 +3,8 @@ import axios from 'axios';
 import { useContext } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { DashboardContext } from 'pages/index';
-import { setDateTime } from 'utils/setDateTime';
-import { add } from 'date-fns';
 import { validateStreaks } from 'actions/user/useValidateStreaks';
+import { checkIfActivityIsUpdatedInStreak } from 'utils/checkIfActivityIsUpdatedInStreak';
 // =========================
 
 export type UpdateActivityCountTypes = {
@@ -45,19 +44,14 @@ const updateActivityCount = async ({
 
   // If you mutate day entities in the past, make sure the validateStreak action runs to update streaks accordingly
   if (todayStamp !== activeDayStamp) {
-    const { startDateGeneralStreak } = await validateStreaks();
+    const { startDateGeneralStreak } = await validateStreaks(activeDay);
     startDateStreak = startDateGeneralStreak;
   }
 
-  const activityIsUpdatedInStreak =
-    setDateTime(
-      startDateStreak
-        ? // Previous day so rewards streak can also be decreased when the startDate is the same as the active day
-          add(new Date(startDateStreak), { days: -1 })
-        : // If there is no startDateGeneralStreak, we assume the streak started today
-          new Date(),
-      'start'
-    ).getTime() <= activeDay.getTime();
+  const activityIsUpdatedInStreak = checkIfActivityIsUpdatedInStreak(
+    activeDay,
+    startDateStreak
+  );
 
   // Check if day was edited that is part of the current streak
   if (activityIsUpdatedInStreak) {

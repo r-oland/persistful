@@ -1,8 +1,14 @@
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { add, differenceInCalendarDays, getWeek } from 'date-fns';
-import { validateStreaksArgs } from 'pages/api/user/validateStreaks';
+import { WithId } from 'mongodb';
 
-export function getStreakDays({ days, user }: validateStreaksArgs) {
+export function getStreakDays({
+  days,
+  user,
+}: {
+  days: WithId<DayEntity>[];
+  user: WithId<UserEntity>;
+}) {
   const secondChance = user.rules.secondChange;
   let currentWeek = getWeek(days[0].createdAt, { weekStartsOn: 1 });
   const streakDays: DayEntity[] = [];

@@ -5,7 +5,7 @@ import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
 import { setDateTime } from 'utils/setDateTime';
 import { getStreakDays } from 'utils/validateStreaks/getStreakDays';
-import { resetStreaks } from 'utils/validateStreaks/reset';
+import { reset } from 'utils/validateStreaks/reset';
 
 export type validateStreaksArgs = {
   req: NextApiRequest;
@@ -31,6 +31,7 @@ export default async function handler(
     const _id = new ObjectId(userId) as any;
     const users = await getCollection<UserEntity>('users');
     const user = await users.findOne({ _id });
+    const activeDay = new Date(req.body.activeDay);
 
     if (!user) return res.status(404).send('User not found');
 
@@ -52,22 +53,7 @@ export default async function handler(
       )
       .toArray();
 
-    const args = {
-      req,
-      res,
-      userId,
-      _id,
-      users,
-      user,
-      days,
-    };
-
-    // Helper func that resets streaks
-    const reset = resetStreaks(args);
-
-    if (!days.length) return reset();
-
-    const { streakDays, secondChanceDates } = getStreakDays(args);
+    const { streakDays, secondChanceDates } = getStreakDays({ days, user });
 
     // total sum of all completed streak day cycles
     const total = streakDays
@@ -79,7 +65,15 @@ export default async function handler(
       // fallback if streak was never broken -> grab first day
       streakDays[0]?.createdAt;
 
-    if (!total) return reset();
+    if (!total)
+      return reset({
+        res,
+        userId,
+        _id,
+        users,
+        startDateGeneralStreak,
+        activeDay,
+      });
 
     // update streak in user model
     await users.updateOne(

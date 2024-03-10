@@ -25,7 +25,7 @@ function Effect() {
     if (!user || !day) return;
 
     // set lastValidation when editing previous date
-    if (lastValidationString !== todayString) validateStreaks.mutate();
+    if (lastValidationString !== todayString) validateStreaks.mutate(activeDay);
   }, [lastValidationString, todayString, !!day]);
 
   // if today's day entity doesn't exists yet, add it

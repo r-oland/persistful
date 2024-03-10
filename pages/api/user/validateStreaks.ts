@@ -79,12 +79,6 @@ export default async function handler(
       // fallback if streak was never broken -> grab first day
       streakDays[0]?.createdAt;
 
-    console.log({
-      total,
-      secondChanceDates,
-      startDateGeneralStreak,
-    });
-
     if (!total) return reset();
 
     // update streak in user model

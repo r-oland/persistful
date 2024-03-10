@@ -1,0 +1,63 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  background-color: $white;
+  border: $border-light;
+  gap: $spacing4;
+  padding: $spacing4;
+  height: max-content;
+
+  @media screen and (min-width: $tablet) {
+    padding: $spacing7 $spacing8;
+    gap: $spacing6;
+  }
+
+  .top {
+    display: grid;
+    gap: $spacing4;
+    grid-template-columns: auto 1fr;
+
+    .title {
+      font-size: $font-small;
+      font-weight: $weight-semi-bold;
+      @include underline;
+
+      @media screen and (min-width: $tablet) {
+        font-size: $font-large;
+      }
+    }
+
+    .day-selector {
+      justify-self: end;
+      font-size: $font-small;
+      cursor: pointer;
+
+      svg {
+        font-size: $font-extra-small;
+      }
+    }
+  }
+
+  .content {
+    display: grid;
+    gap: $spacing4;
+
+    @media screen and (min-width: $desktop-large) {
+      grid-template-columns: auto auto 1fr;
+      justify-content: start;
+      gap: $spacing6;
+    }
+
+    .bar {
+      background-color: $grey-light;
+      height: 1px;
+      width: 100%;
+
+      @media screen and (min-width: $desktop-large) {
+        width: 1px;
+        height: 100%;
+      }
+    }
+  }
+}

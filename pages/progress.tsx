@@ -9,6 +9,7 @@ import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useMemo, useState } from 'react';
+import ActivityLineGraph from 'components/progress/ActivityLineGraph/ActivityLineGraph';
 // =========================
 
 type ProgressContextType = {
@@ -48,6 +49,7 @@ export default function Progress() {
           <div className={styles.content}>
             {tabletQuery && <ProgressStats />}
             {!desktopQuery && <MobileStats />}
+            <ActivityLineGraph />
           </div>
           {query && <SideBar />}
         </div>

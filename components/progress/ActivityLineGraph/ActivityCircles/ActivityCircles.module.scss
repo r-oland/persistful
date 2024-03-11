@@ -23,6 +23,11 @@
     align-content: start;
     gap: $spacing1;
     cursor: pointer;
+    transition: 0.2s;
+
+    &.inactive {
+      opacity: 0.25;
+    }
 
     .name {
       font-size: $font-extra-small;

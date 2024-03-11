@@ -1,0 +1,67 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 48px;
+  height: 48px;
+  position: relative;
+
+  .background,
+  .stroke {
+    width: 100%;
+    height: 100%;
+  }
+
+  .background {
+    position: absolute;
+    stroke: $green-light;
+
+    circle {
+      fill: $green;
+    }
+  }
+
+  .stroke {
+    position: absolute;
+    transform: rotate(-90deg);
+    stroke: $green-dark;
+  }
+
+  &.penalty {
+    .background {
+      stroke: $red-light;
+
+      circle {
+        fill: $red;
+      }
+    }
+
+    .stroke {
+      stroke: $red-dark;
+    }
+  }
+
+  .content {
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: $white;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 0.05rem;
+
+    p {
+      font-size: $font-tiny;
+      font-weight: $weight-semi-bold;
+    }
+
+    .icon {
+      font-size: $font-tiny;
+      opacity: 0.8;
+    }
+  }
+}

@@ -16,6 +16,8 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     y: day.sum,
   }));
 
+  const circleRef = useRef(null);
+
   // bounds = area inside the graph axis = calculated by subtracting the margins
   const axesRef = useRef(null);
   const boundsWidth = width - MARGIN.right - MARGIN.left;
@@ -51,6 +53,9 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     const svgElement = d3.select(axesRef.current);
     svgElement.selectAll('*').remove();
 
+    const circleElement = d3.select(circleRef.current);
+    circleElement.selectAll('*').remove();
+
     const yAxisGenerator = d3
       .axisLeft(yScale)
       .tickValues(d3.range(0, yAxisMax + 60, 60)) // Set tick values to every hour
@@ -61,6 +66,21 @@ function LineGraph({ width, height }: { width: number; height: number }) {
 
     // Change tick color
     yAxis.selectAll('line').attr('stroke', '#f8f8f9');
+
+    // Prevent a large amount of circles from being rendered
+    if (daysSum.length < width / 6) {
+      // Render the data points
+      circleElement
+        .selectAll('circle')
+        .data(data)
+        .enter()
+        .append('circle')
+        .attr('cx', (d) => xScale(d.x))
+        .attr('cy', (d) => yScale(d.y))
+        .attr('r', 2) // Set the radius of the circles
+        .attr('fill', '#E8FCF5')
+        .attr('stroke', '#282F36');
+    }
 
     yAxis.select('.domain').remove(); // Remove the axis path
   }, [yScale, boundsHeight]);
@@ -96,6 +116,12 @@ function LineGraph({ width, height }: { width: number; height: number }) {
           strokeWidth={1}
         />
       </g>
+      <g
+        ref={circleRef}
+        transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
+        width={boundsWidth}
+        height={boundsHeight}
+      />
     </svg>
   );
 }

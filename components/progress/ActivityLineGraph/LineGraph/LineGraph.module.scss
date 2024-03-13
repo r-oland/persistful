@@ -5,10 +5,15 @@
   width: 100%;
   height: 200px;
   border: $border-light;
+  position: relative;
 
   @media screen and (min-width: $desktop-large) {
-    min-height: 304px;
-    height: 100%;
+    height: 304px;
     width: 100%;
+  }
+
+  .graph {
+    // So that responsive resizing works
+    position: absolute;
   }
 }

@@ -16,6 +16,7 @@ type ActivityLineGraphContextType = {
   setActiveActivity: React.Dispatch<React.SetStateAction<string>>;
   activities: ActivityEntity[];
   totalCount: number;
+  daysSum: number[];
 };
 
 export const ActivityLineGraphContext = createContext(
@@ -23,9 +24,10 @@ export const ActivityLineGraphContext = createContext(
 );
 
 export default function ActivityLineGraph() {
-  const { data: days, isLoading } = useGetProgressDays();
   const [activities, setActivities] = useState<ActivityEntity[]>([]);
+  const [daysSum, setDaysSum] = useState<number[]>([]);
   const { data: activityEntities } = useGetActivities();
+  const { data: dayEntities, isLoading } = useGetProgressDays();
   const [activeActivity, setActiveActivity] = useState('');
 
   const totalCount = useMemo(
@@ -35,9 +37,9 @@ export default function ActivityLineGraph() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!days?.length && !isLoading) return setActivities([]);
+    if (!dayEntities?.length && !isLoading) return setActivities([]);
 
-    const sums = (days || [])
+    const sums = (dayEntities || [])
       .flatMap((day) => day.activities)
       .reduce((acc: DailyActivityEntity[], activity) => {
         const sum = getActivitySum([activity]);
@@ -77,11 +79,40 @@ export default function ActivityLineGraph() {
       ) as ActivityEntity[];
 
     setActivities(combinedActivities);
-  }, [useDeepComparison(days), isLoading]);
+  }, [useDeepComparison(dayEntities), isLoading]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    if (!dayEntities?.length && !isLoading) return setActivities([]);
+
+    setDaysSum(
+      dayEntities
+        .map((d) =>
+          activeActivity
+            ? {
+                ...d,
+                activities: d.activities.filter(
+                  (a) => activeActivity === a._id
+                ),
+              }
+            : d
+        )
+        .map((d) => {
+          const sum = d.activities.reduce((acc, a) => acc + a.count, 0);
+          return sum;
+        }) || []
+    );
+  }, [useDeepComparison(dayEntities), isLoading, activeActivity]);
 
   const value = useMemo(
-    () => ({ activeActivity, setActiveActivity, activities, totalCount }),
-    [activeActivity, activities, totalCount]
+    () => ({
+      activeActivity,
+      setActiveActivity,
+      activities,
+      totalCount,
+      daysSum,
+    }),
+    [activeActivity, activities, totalCount, daysSum]
   );
 
   return (
@@ -96,7 +127,7 @@ export default function ActivityLineGraph() {
         <div className={styles.content}>
           <ActivityCircles />
           <div className={styles.bar} />
-          <LineGraph />
+          {!!daysSum.length && <LineGraph />}
         </div>
       </div>
     </ActivityLineGraphContext.Provider>

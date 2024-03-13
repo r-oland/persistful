@@ -43,29 +43,24 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     [data, width]
   );
 
-  // Render the X and Y axis using d3.js, not react
+  // Render the Y axis using d3.js, not react
   useEffect(() => {
     const svgElement = d3.select(axesRef.current);
     svgElement.selectAll('*').remove();
-    const xAxisGenerator = d3.axisBottom(xScale);
-    svgElement
-      .append('g')
-      .attr('transform', `translate(0,${boundsHeight})`)
-      .call(xAxisGenerator);
 
-    const yAxisGenerator = d3.axisLeft(yScale);
+    const yAxisGenerator = d3.axisLeft(yScale).ticks(5);
     svgElement.append('g').call(yAxisGenerator);
-  }, [xScale, yScale, boundsHeight]);
+  }, [yScale, boundsHeight]);
 
   // Build the line
   const lineBuilder = d3
     .line<DataPoint>()
     .x((d) => xScale(d.x))
     .y((d) => yScale(d.y));
+
   const linePath = lineBuilder(data);
-  if (!linePath) {
-    return null;
-  }
+
+  if (!linePath) return null;
 
   return (
     <svg width={width} height={height} className={styles.graph}>

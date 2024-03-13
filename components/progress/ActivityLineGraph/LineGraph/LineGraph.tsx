@@ -23,7 +23,6 @@ function LineGraph({ width, height }: { width: number; height: number }) {
 
   // Y axis
   const [, max] = d3.extent(data, (d) => d.y);
-  const highestHour = Math.ceil((max || 0) / 60);
 
   const yScale = useMemo(
     () =>
@@ -52,10 +51,15 @@ function LineGraph({ width, height }: { width: number; height: number }) {
 
     const yAxisGenerator = d3
       .axisLeft(yScale)
-      .ticks(Math.min(highestHour, 4))
-      .tickFormat((d) => `${Math.ceil(Number(d) / 60)}h`);
+      .tickSize(-boundsWidth)
+      .tickFormat((d) => `${Number(d) / 60}h`);
 
-    svgElement.append('g').call(yAxisGenerator);
+    const yAxis = svgElement.append('g').call(yAxisGenerator);
+
+    // Change tick color
+    yAxis.selectAll('line').attr('stroke', '#f8f8f9');
+
+    yAxis.select('.domain').remove(); // Remove the axis path
   }, [yScale, boundsHeight]);
 
   // Build the line
@@ -73,6 +77,12 @@ function LineGraph({ width, height }: { width: number; height: number }) {
       <g
         width={boundsWidth}
         height={boundsHeight}
+        ref={axesRef}
+        transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
+      />
+      <g
+        width={boundsWidth}
+        height={boundsHeight}
         transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
       >
         <path
@@ -83,12 +93,6 @@ function LineGraph({ width, height }: { width: number; height: number }) {
           strokeWidth={1}
         />
       </g>
-      <g
-        width={boundsWidth}
-        height={boundsHeight}
-        ref={axesRef}
-        transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
-      />
     </svg>
   );
 }

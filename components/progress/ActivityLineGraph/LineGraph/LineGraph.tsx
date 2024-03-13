@@ -23,6 +23,8 @@ function LineGraph({ width, height }: { width: number; height: number }) {
 
   // Y axis
   const [, max] = d3.extent(data, (d) => d.y);
+  const highestHour = Math.ceil((max || 0) / 60);
+
   const yScale = useMemo(
     () =>
       d3
@@ -48,7 +50,11 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     const svgElement = d3.select(axesRef.current);
     svgElement.selectAll('*').remove();
 
-    const yAxisGenerator = d3.axisLeft(yScale).ticks(5);
+    const yAxisGenerator = d3
+      .axisLeft(yScale)
+      .ticks(Math.min(highestHour, 4))
+      .tickFormat((d) => `${Math.ceil(Number(d) / 60)}h`);
+
     svgElement.append('g').call(yAxisGenerator);
   }, [yScale, boundsHeight]);
 

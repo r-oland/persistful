@@ -11,9 +11,9 @@ type DataPoint = { x: number; y: number };
 function LineGraph({ width, height }: { width: number; height: number }) {
   const { daysSum } = useContext(ActivityLineGraphContext);
 
-  const data = daysSum.map((activity, index) => ({
+  const data = daysSum.map((day, index) => ({
     x: index,
-    y: activity,
+    y: day.sum,
   }));
 
   // bounds = area inside the graph axis = calculated by subtracting the margins
@@ -74,7 +74,7 @@ function LineGraph({ width, height }: { width: number; height: number }) {
           opacity={1}
           stroke="#18E597"
           fill="none"
-          strokeWidth={1.25}
+          strokeWidth={1}
         />
       </g>
       <g

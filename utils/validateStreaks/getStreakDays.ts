@@ -33,7 +33,8 @@ export function getStreakDays({
         const secondChanceDateIndex = secondChanceDates.findIndex(
           (sd) => sd === secondChanceDatesInLastWeek[0]
         );
-        secondChanceDates.splice(secondChanceDateIndex);
+        if (secondChanceDateIndex > -1)
+          secondChanceDates.splice(secondChanceDateIndex);
         //
 
         // clear streak days for this week starting from the last second chance date
@@ -41,7 +42,8 @@ export function getStreakDays({
           (sd) =>
             sd.createdAt.getTime() < secondChanceDatesInLastWeek[0].getTime()
         );
-        streakDays.splice(streakDayIndex);
+
+        if (streakDayIndex > -1) streakDays.splice(streakDayIndex);
         //
 
         break;

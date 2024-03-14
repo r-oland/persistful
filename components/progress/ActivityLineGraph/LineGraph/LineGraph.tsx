@@ -8,27 +8,26 @@ import { renderAxes, renderCircles, renderLine } from './renderMethods';
 const MARGIN = { top: 30, right: 30, bottom: 30, left: 40 };
 
 export default function LineGraph() {
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
   const { activities } = useContext(ActivityLineGraphContext);
   const { daysSum } = useContext(ActivityLineGraphContext);
+
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<SVGSVGElement | null>(null);
+  const lineRef = useRef<SVGSVGElement | null>(null);
+  const axesRef = useRef<SVGSVGElement | null>(null);
 
   const { width, height } = useDimensions({ current: wrapperRef.current }, [
     activities.length,
   ]);
 
+  // bounds = area inside the graph axis = calculated by subtracting the margins
+  const boundsWidth = width - MARGIN.right - MARGIN.left;
+  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
+
   const data = daysSum.map((day, index) => ({
     x: index,
     y: day.sum,
   }));
-
-  const circleRef = useRef<SVGSVGElement | null>(null);
-  const lineRef = useRef<SVGSVGElement | null>(null);
-
-  // bounds = area inside the graph axis = calculated by subtracting the margins
-  const axesRef = useRef<SVGSVGElement | null>(null);
-  const boundsWidth = width - MARGIN.right - MARGIN.left;
-  const boundsHeight = height - MARGIN.top - MARGIN.bottom;
 
   // Y axis
   const [, max] = d3.extent(data, (d) => d.y);

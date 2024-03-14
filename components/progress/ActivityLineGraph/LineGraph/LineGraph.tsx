@@ -4,7 +4,7 @@ import { useDimensions } from 'hooks/useDimensions';
 import styles from './LineGraph.module.scss';
 import { ActivityLineGraphContext } from '../ActivityLineGraph';
 
-const MARGIN = { top: 20, right: 20, bottom: 35, left: 40 };
+const MARGIN = { top: 30, right: 30, bottom: 30, left: 40 };
 
 type DataPoint = { x: number; y: number };
 
@@ -63,6 +63,12 @@ function LineGraph({ width, height }: { width: number; height: number }) {
       .tickFormat((d) => `${Math.floor(Number(d) / 60)}h`);
 
     const yAxis = svgElement.append('g').call(yAxisGenerator);
+
+    // Move the text slightly to the left and change the fill of the text
+    yAxis
+      .selectAll('text')
+      .attr('x', -8) // Move the text 10 units to the left
+      .attr('fill', '#A8ACB1'); // Change the fill of the text to #A8ACB1
 
     // Change tick color
     yAxis.selectAll('line').attr('stroke', '#f8f8f9');

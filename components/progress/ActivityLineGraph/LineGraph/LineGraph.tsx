@@ -17,6 +17,7 @@ function LineGraph({ width, height }: { width: number; height: number }) {
   }));
 
   const circleRef = useRef(null);
+  const lineRef = useRef(null);
 
   // bounds = area inside the graph axis = calculated by subtracting the margins
   const axesRef = useRef(null);
@@ -56,6 +57,26 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     const circleElement = d3.select(circleRef.current);
     circleElement.selectAll('*').remove();
 
+    const lineElement = d3.select(lineRef.current);
+    lineElement.selectAll('*').remove();
+
+    // Build the line
+    const lineBuilder = d3
+      .line<DataPoint>()
+      .x((d) => xScale(d.x))
+      .y((d) => yScale(d.y));
+
+    const linePath = lineBuilder(data);
+
+    // Render the line
+    lineElement
+      .append('path')
+      .attr('d', linePath)
+      .attr('opacity', 1)
+      .attr('stroke', '#18E597')
+      .attr('fill', 'none')
+      .attr('strokeWidth', 1);
+
     const yAxisGenerator = d3
       .axisLeft(yScale)
       .tickValues(d3.range(0, yAxisMax + 60, 60)) // Set tick values to every hour
@@ -91,16 +112,6 @@ function LineGraph({ width, height }: { width: number; height: number }) {
     yAxis.select('.domain').remove(); // Remove the axis path
   }, [yScale, boundsHeight]);
 
-  // Build the line
-  const lineBuilder = d3
-    .line<DataPoint>()
-    .x((d) => xScale(d.x))
-    .y((d) => yScale(d.y));
-
-  const linePath = lineBuilder(data);
-
-  if (!linePath) return null;
-
   return (
     <svg width={width} height={height} className={styles.graph}>
       <g
@@ -113,15 +124,8 @@ function LineGraph({ width, height }: { width: number; height: number }) {
         width={boundsWidth}
         height={boundsHeight}
         transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
-      >
-        <path
-          d={linePath}
-          opacity={1}
-          stroke="#18E597"
-          fill="none"
-          strokeWidth={1}
-        />
-      </g>
+        ref={lineRef}
+      />
       <g
         ref={circleRef}
         transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}

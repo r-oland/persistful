@@ -10,7 +10,7 @@ import QuickDateSelect from '../QuickDateSelect/QuickDateSelect';
 // =========================
 
 export default function SideBar() {
-  const { range, setRange } = useContext(ProgressContext);
+  const { range, setRange, highlightedDay } = useContext(ProgressContext);
   const { data: rewards } = useGetProgressRewards({
     retry: false,
   });
@@ -28,7 +28,11 @@ export default function SideBar() {
             </div>
             <div className={styles.bar} />
             <div className={styles.calendar}>
-              <RangeCalendar range={range} setRange={setRange} />
+              <RangeCalendar
+                range={range}
+                setRange={setRange}
+                highlightedDay={highlightedDay}
+              />
             </div>
           </div>
           <div className={styles['rewards-section']}>

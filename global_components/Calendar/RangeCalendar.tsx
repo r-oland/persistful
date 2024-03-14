@@ -10,9 +10,11 @@ import { setDateTime } from 'utils/setDateTime';
 export default function RangeCalendar({
   range,
   setRange,
+  highlightedDay,
 }: {
   range: { from: Date; to: Date };
   setRange: React.Dispatch<React.SetStateAction<{ from: Date; to: Date }>>;
+  highlightedDay?: Date;
 }) {
   const { data: days } = useGetProgressDays({ allDays: true });
 
@@ -41,19 +43,23 @@ export default function RangeCalendar({
       ?.filter((d) => !d.hasStreak)
       ?.map((d) => setDateTime(new Date(d.date), 'middle')) || [];
 
+  const highlightedDayMod = highlightedDay ? [highlightedDay] : [];
+
   return (
     <DayPicker
       toDate={new Date()}
       fromDate={days?.[0]?.createdAt}
       defaultMonth={range.to}
       weekStartsOn={1 as const}
-      modifiers={{ rangeSelected, streakDays, noStreakDays }}
+      modifiers={{ rangeSelected, streakDays, noStreakDays, highlightedDayMod }}
       modifiersClassNames={{
         noStreakDays: 'rdp-range_no_streak_day',
         streakDays: 'rdp-range_streak_day',
         rangeSelected: 'rdp-range_selected',
+        highlightedDayMod: 'rdp-range_highlighted_day',
       }}
       selected={range}
+      month={highlightedDay}
       onSelect={(rangeValue) => {
         // User clicked on first date again, default is to unset complete range. Override this by setting range to first date
         if (!rangeValue)

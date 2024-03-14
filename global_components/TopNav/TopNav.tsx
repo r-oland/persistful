@@ -9,6 +9,7 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import { handlePwaInstall, PwaInstallContext } from 'hooks/usePwaInstall';
 import React, { useContext, useEffect, useState } from 'react';
 import { DashboardContext } from 'pages';
+import { ProgressContext } from 'pages/progress';
 import styles from './TopNav.module.scss';
 import Items from './Items/Items';
 import {
@@ -30,6 +31,7 @@ export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
 
   const context = useContext(PwaInstallContext);
   const { activeDay } = useContext(DashboardContext);
+  const { highlightedDay } = useContext(ProgressContext);
 
   const { deferredPrompt, canShowIosInstall } = context;
 
@@ -52,6 +54,9 @@ export default function TopNav({ page }: { page: 'dashboard' | 'progress' }) {
           <div className={styles.date} onClick={() => setSelected('calendar')}>
             <FontAwesomeIcon icon={faCalendarDay} />
             {page === 'dashboard' && <p>{format(activeDay, 'dd MMMM yyyy')}</p>}
+            {page === 'progress' && highlightedDay && (
+              <p>{format(highlightedDay, 'dd MMMM yyyy')}</p>
+            )}
           </div>
           <div className={styles['icon-wrapper']}>
             {!tabletQuery && (deferredPrompt || canShowIosInstall) && (

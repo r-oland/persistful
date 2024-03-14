@@ -15,6 +15,8 @@ import ActivityLineGraph from 'components/progress/ActivityLineGraph/ActivityLin
 type ProgressContextType = {
   range: { from: Date; to: Date };
   setRange: React.Dispatch<React.SetStateAction<{ from: Date; to: Date }>>;
+  highlightedDay?: Date;
+  setHighlightedDay: React.Dispatch<React.SetStateAction<Date | undefined>>;
 };
 
 export const ProgressContext = createContext({} as ProgressContextType);
@@ -29,12 +31,18 @@ export default function Progress() {
     to: endOfToday(),
   });
 
+  const [highlightedDay, setHighlightedDay] = useState<Date | undefined>(
+    undefined
+  );
+
   const value = useMemo(
     () => ({
       range,
       setRange,
+      highlightedDay,
+      setHighlightedDay,
     }),
-    [useDeepComparison(range)]
+    [useDeepComparison(range), highlightedDay]
   );
 
   return (

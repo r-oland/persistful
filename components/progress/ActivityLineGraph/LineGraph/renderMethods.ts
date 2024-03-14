@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-type DataPoint = { x: number; y: number };
+export type DataPoint = { x: number; y: number };
 
 export function renderAxes(
   axesRef: React.RefObject<SVGSVGElement>,

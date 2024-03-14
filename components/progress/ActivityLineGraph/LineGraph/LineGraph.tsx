@@ -4,6 +4,7 @@ import { useDimensions } from 'hooks/useDimensions';
 import styles from './LineGraph.module.scss';
 import { ActivityLineGraphContext } from '../ActivityLineGraph';
 import { renderAxes, renderCircles, renderLine } from './renderMethods';
+import Cursor, { useHandleCursorLogic } from './Cursor';
 
 const MARGIN = { top: 30, right: 30, bottom: 30, left: 40 };
 
@@ -54,6 +55,9 @@ export default function LineGraph() {
     [data, width]
   );
 
+  const { cursorPosition, setCursorPosition, onMouseMove } =
+    useHandleCursorLogic(xScale, yScale, data);
+
   useEffect(() => {
     renderAxes(axesRef, yScale, boundsWidth, yAxisMax);
     renderLine(lineRef, data, xScale, yScale);
@@ -66,21 +70,27 @@ export default function LineGraph() {
         <g
           width={boundsWidth}
           height={boundsHeight}
-          ref={axesRef}
           transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
-        />
-        <g
-          width={boundsWidth}
-          height={boundsHeight}
-          ref={lineRef}
-          transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
-        />
-        <g
-          width={boundsWidth}
-          height={boundsHeight}
-          ref={circleRef}
-          transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
-        />
+        >
+          <g width={boundsWidth} height={boundsHeight} ref={axesRef} />
+          <g width={boundsWidth} height={boundsHeight} ref={lineRef} />
+          <g width={boundsWidth} height={boundsHeight} ref={circleRef} />
+          {cursorPosition !== null && (
+            <Cursor height={boundsHeight} position={cursorPosition} />
+          )}
+          <rect
+            x={0}
+            y={0}
+            width={boundsWidth}
+            height={boundsHeight}
+            onMouseMove={onMouseMove}
+            onMouseLeave={() => setCursorPosition(null)}
+            onTouchMove={onMouseMove}
+            onTouchEnd={() => setCursorPosition(null)}
+            visibility="hidden"
+            pointerEvents="all"
+          />
+        </g>
       </svg>
     </div>
   );

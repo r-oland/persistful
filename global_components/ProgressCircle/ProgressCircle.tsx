@@ -8,8 +8,7 @@ import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { getProgress } from 'utils/getProgress';
 import Circles from './Circles/Circles';
 import styles from './ProgressCircle.module.scss';
-import { ProgressCircleTypes, useDayData } from './useDayData';
-import { useRangeData } from './useRangeData';
+import { useDayData } from './useDayData';
 // =========================
 
 function CounterTitle({
@@ -29,11 +28,9 @@ function CounterTitle({
   );
 }
 
-function DisplayComponent({
-  displayData,
-}: {
-  displayData: ProgressCircleTypes;
-}) {
+export default function ProgressCircle({ activeDay }: { activeDay: Date }) {
+  const displayData = useDayData(activeDay);
+
   return (
     <div className={styles.wrapper}>
       <Circles progress={displayData.progress} phantom={displayData.phantom} />
@@ -52,37 +49,4 @@ function DisplayComponent({
       </div>
     </div>
   );
-}
-
-function DayComponent({ activeDay }: { activeDay: Date }) {
-  const displayData = useDayData(activeDay);
-
-  return <DisplayComponent displayData={displayData} />;
-}
-
-function RangeComponent({
-  days,
-  isLoading,
-}: {
-  days?: DayEntity[];
-  isLoading?: boolean;
-}) {
-  const displayData = useRangeData(days, isLoading);
-
-  return <DisplayComponent displayData={displayData} />;
-}
-
-export default function ProgressCircle({
-  activeDay,
-  days,
-  isLoading,
-}: {
-  activeDay?: Date;
-  days?: DayEntity[];
-  isLoading?: boolean;
-}) {
-  if (activeDay) return <DayComponent activeDay={activeDay} />;
-
-  // overview
-  return <RangeComponent days={days} isLoading={isLoading} />;
 }

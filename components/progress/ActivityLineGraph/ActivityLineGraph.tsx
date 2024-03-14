@@ -101,14 +101,15 @@ export default function ActivityLineGraph() {
 
     const sums: { sum: number; date: Date }[] = [];
 
-    const filteredDayEntities = dayEntities.map((d) =>
-      activeActivity
-        ? {
-            ...d,
-            activities: d.activities.filter((a) => activeActivity === a._id),
-          }
-        : d
-    );
+    const filteredDayEntities =
+      dayEntities?.map((d) =>
+        activeActivity
+          ? {
+              ...d,
+              activities: d.activities.filter((a) => activeActivity === a._id),
+            }
+          : d
+      ) || [];
 
     filteredDayEntities.forEach((d) => {
       const sum = getActivitySum(d.activities);

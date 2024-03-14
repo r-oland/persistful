@@ -181,7 +181,7 @@ export default function ActivityLineGraph() {
         <div className={styles.content}>
           <ActivityCircles />
           <div className={styles.bar} />
-          {!!daysSum.length && <LineGraph />}
+          <LineGraph />
         </div>
       </div>
     </ActivityLineGraphContext.Provider>

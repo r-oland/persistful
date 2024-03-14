@@ -112,7 +112,7 @@ export default function ActivityLineGraph() {
       ) || [];
 
     filteredDayEntities.forEach((d) => {
-      const sum = getActivitySum(d.activities);
+      const sum = getActivitySum(d.activities, true);
       sums.push({ sum, date: new Date(d.createdAt) });
     });
 

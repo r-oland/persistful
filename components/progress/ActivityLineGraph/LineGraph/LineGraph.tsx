@@ -31,15 +31,17 @@ export default function LineGraph() {
   }));
 
   // Y axis
-  const [, max] = d3.extent(data, (d) => d.y);
+  const [min, max] = d3.extent(data, (d) => d.y);
   const maxHours = Math.ceil((max || 0) / 60); // Convert max minutes to hours and round up
+  const minHours = Math.floor((min || 0) / 60); // Convert min minutes to hours and round down
   const yAxisMax = maxHours * 60; // Convert max hours back to minutes
+  const yAxisMin = minHours * 60; // Convert min hours back to minutes
 
   const yScale = useMemo(
     () =>
       d3
         .scaleLinear()
-        .domain([0, yAxisMax || 0])
+        .domain([yAxisMin || 0, yAxisMax || 0])
         .range([boundsHeight, 0]),
     [data, height]
   );
@@ -59,7 +61,7 @@ export default function LineGraph() {
     useHandleCursorLogic(xScale, yScale, data);
 
   useEffect(() => {
-    renderAxes(axesRef, yScale, boundsWidth, yAxisMax);
+    renderAxes(axesRef, yScale, boundsWidth, yAxisMax, yAxisMin);
     renderLine(lineRef, data, xScale, yScale);
     renderCircles(circleRef, data, xScale, yScale, daysSum, width);
   }, [yScale, boundsHeight]);

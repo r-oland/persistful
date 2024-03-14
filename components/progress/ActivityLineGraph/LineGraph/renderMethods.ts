@@ -6,14 +6,15 @@ export function renderAxes(
   axesRef: React.RefObject<SVGSVGElement>,
   yScale: d3.ScaleLinear<number, number>,
   boundsWidth: number,
-  yAxisMax: number
+  yAxisMax: number,
+  yAxisMin: number
 ) {
   const axesElement = d3.select(axesRef.current);
   axesElement.selectAll('*').remove();
 
   const yAxisGenerator = d3
     .axisLeft(yScale)
-    .tickValues(d3.range(0, yAxisMax + 60, 60)) // Set tick values to every hour
+    .tickValues(d3.range(yAxisMin, yAxisMax + 60, 60)) // Set tick values to every hour
     .tickSize(-boundsWidth)
     .tickFormat((d) => `${Math.floor(Number(d) / 60)}h`);
 

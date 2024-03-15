@@ -47,7 +47,7 @@ export function ProgressRewardCount({
   return (
     <div className={styles.wrapper} onClick={() => setSelected('streak')}>
       <FontAwesomeIcon icon={faGift} />
-      {rewards?.length && (
+      {!!rewards?.length && (
         <div className={styles.counter}>
           <p>{rewards.length}</p>
         </div>

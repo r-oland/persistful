@@ -69,6 +69,17 @@
     }
   }
 
+  .no-rewards {
+    font-size: $font-small;
+    padding: 0 $spacing4;
+    text-align: center;
+
+    @media screen and (min-width: $tablet) {
+      padding: 0;
+      text-align: initial;
+    }
+  }
+
   .reward-button {
     display: grid;
     justify-content: center;

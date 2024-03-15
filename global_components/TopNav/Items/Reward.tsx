@@ -59,11 +59,17 @@ function ProgressRewards() {
       variants={framerTopNavChild}
     >
       <h3 className={styles.title}>Earned Rewards</h3>
-      <div className={styles.rewards}>
-        {rewards?.map((reward) => (
-          <RewardCard key={reward._id} reward={reward} />
-        ))}
-      </div>
+      {rewards?.length ? (
+        <div className={styles.rewards}>
+          {rewards.map((reward) => (
+            <RewardCard key={reward._id} reward={reward} />
+          ))}
+        </div>
+      ) : (
+        <p className={styles['no-rewards']}>
+          It seems that you did not earn any rewards during this period of time.
+        </p>
+      )}
     </motion.div>
   );
 }

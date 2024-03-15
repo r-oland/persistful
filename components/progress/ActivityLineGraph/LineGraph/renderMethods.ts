@@ -2,6 +2,9 @@ import * as d3 from 'd3';
 
 export type DataPoint = { x: number; y: number };
 
+const animationDuration = 350;
+const animationEasing = d3.easeCubicIn;
+
 export function renderAxes(
   axesRef: React.RefObject<SVGSVGElement>,
   yScale: d3.ScaleLinear<number, number>,
@@ -36,7 +39,9 @@ export function renderLine(
   lineRef: React.RefObject<SVGSVGElement>,
   data: DataPoint[],
   xScale: d3.ScaleLinear<number, number>,
-  yScale: d3.ScaleLinear<number, number>
+  yScale: d3.ScaleLinear<number, number>,
+  width: number,
+  height: number
 ) {
   const lineElement = d3.select(lineRef.current);
   lineElement.selectAll('*').remove();
@@ -53,10 +58,26 @@ export function renderLine(
   lineElement
     .append('path')
     .attr('d', linePath)
-    .attr('opacity', 1)
     .attr('stroke', '#18E597')
     .attr('fill', 'none')
     .attr('strokeWidth', 1);
+
+  // Create a rect that covers the line
+  const coverRect = lineElement
+    .append('rect')
+    .attr('x', 0)
+    .attr('y', -1)
+    .attr('width', width)
+    .attr('height', height + 2)
+    .attr('fill', '#fff');
+
+  // Animate the rect to reveal the line
+  coverRect
+    .transition()
+    .duration(animationDuration)
+    .ease(animationEasing)
+    .attr('x', width)
+    .attr('width', 0);
 }
 
 export function renderCircles(
@@ -80,8 +101,13 @@ export function renderCircles(
       .append('circle')
       .attr('cx', (d) => xScale(d.x))
       .attr('cy', (d) => yScale(d.y))
-      .attr('r', 2) // Set the radius of the circles
+      .attr('r', 0) // start from 0 radius
       .attr('fill', '#E8FCF5')
-      .attr('stroke', '#282F36');
+      .attr('stroke', '#282F36')
+      .transition() // start a transition
+      .delay((d, i) => i * (animationDuration / data.length)) // add a delay based on the index
+      .duration(animationDuration * 0.85)
+      .ease(animationEasing)
+      .attr('r', 2);
   }
 }

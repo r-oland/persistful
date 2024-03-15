@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { useDimensions } from 'hooks/useDimensions';
+import { useDeepComparison } from 'hooks/useDeepComparison';
 import styles from './LineGraph.module.scss';
 import { ActivityLineGraphContext } from '../ActivityLineGraph';
 import { renderAxes, renderCircles, renderLine } from './renderMethods';
@@ -62,9 +63,9 @@ export default function LineGraph() {
 
   useEffect(() => {
     renderAxes(axesRef, yScale, boundsWidth, yAxisMax, yAxisMin);
-    renderLine(lineRef, data, xScale, yScale);
+    renderLine(lineRef, data, xScale, yScale, boundsWidth, boundsHeight);
     renderCircles(circleRef, data, xScale, yScale, daysSum, width);
-  }, [yScale, boundsHeight]);
+  }, [useDeepComparison(daysSum), boundsWidth, boundsHeight]);
 
   return (
     <div ref={wrapperRef} className={styles.wrapper}>

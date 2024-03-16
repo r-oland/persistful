@@ -137,7 +137,9 @@ export default function ActivityLineGraph() {
 
     if (displayMode === 'All days') {
       // Take a snapshot of the sums for reference
-      const sumSnapshot = [...sums];
+      const sumSnapshot = new Map(
+        sums.map((s) => [s.date.toLocaleDateString(), s])
+      );
 
       // Reset the sums array
       sums.length = 0;
@@ -147,12 +149,9 @@ export default function ActivityLineGraph() {
 
       // Loop through the range and fill in the missing days
       for (let d = firstDate; d <= lastDate; d.setDate(d.getDate() + 1)) {
-        const dateString = d.toLocaleDateString();
-        const dayWithSum = sumSnapshot.find(
-          (s) => s.date.toLocaleDateString() === dateString
-        );
+        const dayWithSum = sumSnapshot.get(d.toLocaleDateString());
 
-        if (!dayWithSum) sums.push({ sum: 0, date: new Date(d) });
+        if (!dayWithSum) sums.push({ sum: 0, date: d });
         else sums.push(dayWithSum);
       }
     }

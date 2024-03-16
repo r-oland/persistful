@@ -2,18 +2,15 @@
 
 .wrapper {
   display: grid;
-  grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
-  justify-items: center;
-  align-content: center;
+  grid-template-columns: repeat(4, 1fr);
   background-color: $white;
   border: $border-light;
-  padding: $spacing3;
-  gap: $spacing1;
 
   .stat {
+    text-align: center;
+    padding: $spacing2 0;
     display: grid;
     gap: 0.1rem;
-    text-align: center;
 
     span {
       font-size: $font-tiny;
@@ -23,11 +20,9 @@
       font-size: $font-small;
       font-weight: $weight-bold;
     }
-  }
 
-  .bar {
-    height: 100%;
-    width: 1px;
-    background-color: $grey-light;
+    &:not(:last-child) {
+      border-right: $border-light;
+    }
   }
 }

@@ -10,7 +10,7 @@
   .card {
     display: grid;
     grid-template-columns: auto 1fr;
-    gap: $spacing4;
+    gap: $spacing3;
     align-content: center;
     align-items: center;
     border-radius: $border-radius;
@@ -79,5 +79,23 @@
         color: $red-dark;
       }
     }
+  }
+}
+
+.modal {
+  display: grid;
+  gap: $spacing3;
+
+  .title {
+    font-size: $font-small;
+    font-weight: $weight-semi-bold;
+    margin-bottom: $spacing2;
+    text-align: center;
+  }
+
+  .bar {
+    width: 100%;
+    height: 1px;
+    background-color: $grey-light;
   }
 }

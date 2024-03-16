@@ -34,7 +34,6 @@ export default function MobileStats() {
             <span>{stat.name}</span>
             <p>{stat.data}</p>
           </div>
-          {i !== stats.length - 1 && <div className={styles.bar} />}
         </React.Fragment>
       ))}
     </div>

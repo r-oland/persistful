@@ -11,7 +11,11 @@ import { useDeepComparison } from 'hooks/useDeepComparison';
 import { getActivitySum } from 'utils/getActivitySum';
 import useGetActivities from 'actions/activity/useGetActivities';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faEye, faEyeSlash } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faEmptySet,
+  faEye,
+  faEyeSlash,
+} from '@fortawesome/pro-solid-svg-icons';
 import { ProgressContext } from 'pages/progress';
 import styles from './ActivityLineGraph.module.scss';
 import ActivityCircles from './ActivityCircles/ActivityCircles';
@@ -51,7 +55,22 @@ export default function ActivityLineGraph() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!dayEntities?.length && !isLoading) return setActivities([]);
+    if (!dayEntities?.length && !isLoading)
+      return setActivities([
+        {
+          _id: '',
+          userId: '',
+          name: 'No data',
+          count: 0,
+          countCalc: 30,
+          penalty: true,
+          timesCount: 0,
+          countMode: 'minutes',
+          createdAt: new Date(),
+          icon: faEmptySet as any,
+          status: 'active',
+        },
+      ]);
 
     const sums = (dayEntities || [])
       .flatMap((day) => day.activities)
@@ -97,7 +116,7 @@ export default function ActivityLineGraph() {
 
   useEffect(() => {
     if (isLoading) return;
-    if (!dayEntities?.length && !isLoading) return setActivities([]);
+    if (!dayEntities?.length && !isLoading) return setDaysSum([]);
 
     const sums: { sum: number; date: Date }[] = [];
 

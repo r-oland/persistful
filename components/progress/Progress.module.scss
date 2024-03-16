@@ -14,7 +14,6 @@
     display: grid;
     gap: $spacing5;
     align-content: start;
-    grid-template-rows: auto 1fr;
     max-width: 1350px;
 
     @media screen and (min-width: $tablet) {
@@ -22,7 +21,6 @@
       overflow: auto;
       padding: $spacing10 $spacing11 $spacing11;
       gap: $spacing9;
-      grid-template-rows: initial;
     }
 
     @media screen and (min-width: $desktop) {

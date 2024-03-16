@@ -4,7 +4,7 @@ import styles from 'components/progress/Progress.module.scss';
 import SideBar from 'components/progress/SideBar/SideBar';
 import { endOfToday, startOfToday, subMonths } from 'date-fns';
 import TopNav from 'global_components/TopNav/TopNav';
-import ProgressStats from 'global_components/Stats/ProgressStats';
+import ProgressStats from 'global_components/Stats/ProgressStats/ProgressStats';
 import { useDeepComparison } from 'hooks/useDeepComparison';
 import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';

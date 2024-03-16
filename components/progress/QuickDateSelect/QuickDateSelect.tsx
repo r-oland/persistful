@@ -13,7 +13,11 @@ import useGetProgressDays from 'actions/day/useGetProgressDays';
 import styles from './QuickDateSelect.module.scss';
 // =========================
 
-export default function QuickDateSelect() {
+export default function QuickDateSelect({
+  callback,
+}: {
+  callback?: () => void;
+}) {
   const { setRange, range } = useContext(ProgressContext);
   const { data: days } = useGetProgressDays({ allDays: true });
 
@@ -50,7 +54,10 @@ export default function QuickDateSelect() {
               ? styles.selected
               : ''
           }`}
-          onClick={() => setRange(button.range)}
+          onClick={() => {
+            setRange(button.range);
+            if (callback) callback();
+          }}
         >
           {button.name}
         </div>

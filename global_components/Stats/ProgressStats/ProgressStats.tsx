@@ -8,15 +8,15 @@ import {
   faLocationDot,
 } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useContext, useState } from 'react';
-import { ProgressContext } from 'pages/progress';
-import { useMediaQ } from 'hooks/useMediaQ';
-import { endOfDay, format, startOfDay } from 'date-fns';
-import Modal from 'global_components/Modal/Modal';
-import Calendar from 'global_components/Calendar/Calendar';
-import { AnimatePresence } from 'framer-motion';
 import useGetProgressStats from 'components/progress/MobileStats/useGetProgressStats';
-import styles from './Stats.module.scss';
+import QuickDateSelect from 'components/progress/QuickDateSelect/QuickDateSelect';
+import { format } from 'date-fns';
+import { AnimatePresence } from 'framer-motion';
+import Modal from 'global_components/Modal/Modal';
+import DatePickCalendar from 'global_components/Stats/ProgressStats/DatePickCalendar';
+import { useMediaQ } from 'hooks/useMediaQ';
+import React, { useState } from 'react';
+import styles from '../Stats.module.scss';
 // =========================
 
 function DatePickerModal({
@@ -26,8 +26,6 @@ function DatePickerModal({
   fromOrTo: 'from' | 'to';
   setFromOrTo: React.Dispatch<React.SetStateAction<'from' | 'to' | undefined>>;
 }) {
-  const { range, setRange } = useContext(ProgressContext);
-
   return (
     <Modal
       setModalIsOpen={() => setFromOrTo(undefined)}
@@ -36,26 +34,12 @@ function DatePickerModal({
       sizeSensitiveContent
     >
       <div className={styles.modal}>
-        <Calendar
-          fromDate={fromOrTo === 'to' ? range.from : undefined}
-          toDate={fromOrTo === 'from' ? range.to : undefined}
-          activeDay={range[fromOrTo]}
-          setActiveDay={(date) =>
-            setRange((prev) => {
-              // Close modal
-              setFromOrTo(undefined);
-
-              // Change data
-              return {
-                ...prev,
-                [fromOrTo]:
-                  fromOrTo === 'from'
-                    ? startOfDay(date as Date)
-                    : endOfDay(date as Date),
-              };
-            })
-          }
-        />
+        <div>
+          <p className={styles.title}>Quick range select</p>
+          <QuickDateSelect callback={() => setFromOrTo(undefined)} />
+        </div>
+        <div className={styles.bar} />
+        <DatePickCalendar fromOrTo={fromOrTo} setFromOrTo={setFromOrTo} />
       </div>
     </Modal>
   );
@@ -63,7 +47,7 @@ function DatePickerModal({
 
 export default function ProgressStats() {
   // @ts-ignore
-  const mobileQuery = useMediaQ('max', 400);
+  const mobileQuery = useMediaQ('max', 389);
   const desktopQuery = useMediaQ('min', 1024);
   const largeDesktopQuery = useMediaQ('min', 1500);
 

@@ -60,7 +60,7 @@ export default function useGetProgressStats() {
       startDate,
       endDate,
     });
-  }, [useDeepComparison(days), isLoading]);
+  }, [range, useDeepComparison(days), isLoading]);
 
   return displayData;
 }

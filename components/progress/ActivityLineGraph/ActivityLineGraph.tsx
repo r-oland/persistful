@@ -151,8 +151,9 @@ export default function ActivityLineGraph() {
       for (let d = firstDate; d <= lastDate; d.setDate(d.getDate() + 1)) {
         const dayWithSum = sumSnapshot.get(d.toLocaleDateString());
 
-        if (!dayWithSum) sums.push({ sum: 0, date: d });
-        else sums.push(dayWithSum);
+        if (!dayWithSum) {
+          sums.push({ sum: 0, date: new Date(d) });
+        } else sums.push(dayWithSum);
       }
     }
 

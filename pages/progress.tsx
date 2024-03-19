@@ -18,6 +18,7 @@ type ProgressContextType = {
   setRange: React.Dispatch<React.SetStateAction<{ from: Date; to: Date }>>;
   highlightedDay?: Date;
   setHighlightedDay: React.Dispatch<React.SetStateAction<Date | undefined>>;
+  scrollRef: React.RefObject<HTMLDivElement>;
 };
 
 export const ProgressContext = createContext({} as ProgressContextType);
@@ -26,6 +27,7 @@ export default function Progress() {
   const query = useMediaQ('min', 1024);
   const tabletQuery = useMediaQ('min', 768);
   const desktopQuery = useMediaQ('min', 1024);
+  const scrollRef = React.useRef<HTMLDivElement>(null);
 
   const [range, setRange] = useState<{ from: Date; to: Date }>({
     from: subMonths(startOfToday(), 1),
@@ -42,8 +44,9 @@ export default function Progress() {
       setRange,
       highlightedDay,
       setHighlightedDay,
+      scrollRef,
     }),
-    [useDeepComparison(range), highlightedDay]
+    [useDeepComparison(range), highlightedDay, scrollRef]
   );
 
   return (
@@ -55,7 +58,7 @@ export default function Progress() {
         <div className={styles.wrapper}>
           {!query && <TopNav page="progress" />}
           {!tabletQuery && <ProgressStats />}
-          <div className={styles.content}>
+          <div className={styles.content} ref={scrollRef}>
             {tabletQuery && <ProgressStats />}
             {!desktopQuery && <MobileStats />}
             <ActivityLineGraph />

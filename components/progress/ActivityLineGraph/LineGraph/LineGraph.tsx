@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useMemo, useRef } from 'react';
 import * as d3 from 'd3';
 import { useDimensions } from 'hooks/useDimensions';
 import { useDeepComparison } from 'hooks/useDeepComparison';
+import { ProgressContext } from 'pages/progress';
 import styles from './LineGraph.module.scss';
 import { ActivityLineGraphContext } from '../ActivityLineGraph';
 import { renderAxes, renderCircles, renderLine } from './renderMethods';
@@ -12,6 +13,7 @@ const MARGIN = { top: 30, right: 30, bottom: 30, left: 40 };
 export default function LineGraph() {
   const { activities } = useContext(ActivityLineGraphContext);
   const { daysSum } = useContext(ActivityLineGraphContext);
+  const { scrollRef } = useContext(ProgressContext);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<SVGSVGElement | null>(null);
@@ -89,7 +91,16 @@ export default function LineGraph() {
             onMouseMove={onMouseMove}
             onMouseLeave={() => setCursorPosition(null)}
             onTouchMove={onMouseMove}
-            onTouchEnd={() => setCursorPosition(null)}
+            onTouchStart={() => {
+              // Lock scroll position
+              if (scrollRef.current)
+                scrollRef.current.style.overflow = 'hidden';
+            }}
+            onTouchEnd={() => {
+              // Unlock scroll position
+              if (scrollRef.current) scrollRef.current.style.overflow = 'auto';
+              setCursorPosition(null);
+            }}
             visibility="hidden"
             pointerEvents="all"
           />

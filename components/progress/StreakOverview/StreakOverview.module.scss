@@ -1,0 +1,56 @@
+@import 'styles/Variables';
+
+.wrapper {
+  display: grid;
+  background-color: $white;
+  border: $border-light;
+  gap: $spacing4;
+  padding: $spacing4;
+  height: max-content;
+
+  @media screen and (min-width: $tablet) {
+    padding: $spacing7 $spacing8;
+    gap: $spacing6;
+  }
+
+  .top {
+    display: grid;
+    gap: $spacing4;
+    grid-template-columns: auto 1fr;
+
+    .title {
+      font-size: $font-small;
+      font-weight: $weight-semi-bold;
+      @include underline;
+
+      @media screen and (min-width: $tablet) {
+        font-size: $font-large;
+      }
+    }
+
+    .sort {
+      justify-self: end;
+      font-size: $font-small;
+      cursor: pointer;
+
+      svg {
+        font-size: $font-extra-small;
+      }
+    }
+  }
+
+  .streaks {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: $spacing4;
+
+    .streak {
+      border: $border-light;
+      padding: $spacing2;
+      margin-bottom: $spacing1;
+      display: grid;
+      justify-content: start;
+      gap: $spacing4;
+    }
+  }
+}

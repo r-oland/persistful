@@ -10,6 +10,7 @@ import { useMediaQ } from 'hooks/useMediaQ';
 import Head from 'next/head';
 import React, { createContext, useMemo, useState } from 'react';
 import ActivityLineGraph from 'components/progress/ActivityLineGraph/ActivityLineGraph';
+import StreakOverview from 'components/progress/StreakOverview/StreakOverview';
 // =========================
 
 type ProgressContextType = {
@@ -58,6 +59,7 @@ export default function Progress() {
             {tabletQuery && <ProgressStats />}
             {!desktopQuery && <MobileStats />}
             <ActivityLineGraph />
+            <StreakOverview />
           </div>
           {query && <SideBar />}
         </div>

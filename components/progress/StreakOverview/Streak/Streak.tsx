@@ -17,7 +17,8 @@ export default function Streak({
 }) {
   const { setRange, range } = useContext(ProgressContext);
 
-  const percentage = (streak.totalStreaks / maxStreak) * 100;
+  // 0.5 is added to prevent a double right border at 100%
+  const percentage = (streak.totalStreaks / maxStreak) * 100 + 0.5;
 
   const sameAsRange =
     range.from.toLocaleDateString() === streak.startDate.toLocaleDateString() &&

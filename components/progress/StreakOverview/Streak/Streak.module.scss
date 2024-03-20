@@ -31,10 +31,11 @@
       .streak {
         white-space: nowrap; // Prevent line break
         position: absolute;
-        top: -4px;
+        top: -3.5px;
         left: 50%;
         transform: translateX(-50%);
         font-size: $font-tiny;
+        font-weight: $weight-semi-bold;
         padding: $spacing1;
         color: $white;
         transition: 0.2s;

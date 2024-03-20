@@ -13,8 +13,7 @@
   @media screen and (min-width: $desktop-large) {
     grid-auto-flow: row;
     grid-template-columns: auto auto;
-    height: 100%;
-    overflow: initial;
+    height: 304px;
   }
 
   .activity {

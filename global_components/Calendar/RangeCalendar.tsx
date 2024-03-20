@@ -11,10 +11,14 @@ export default function RangeCalendar({
   range,
   setRange,
   highlightedDay,
+  month,
+  setMonth,
 }: {
   range: { from: Date; to: Date };
   setRange: React.Dispatch<React.SetStateAction<{ from: Date; to: Date }>>;
   highlightedDay?: Date;
+  month: Date;
+  setMonth: React.Dispatch<React.SetStateAction<Date>>;
 }) {
   const { data: days } = useGetProgressDays({ allDays: true });
 
@@ -59,7 +63,8 @@ export default function RangeCalendar({
         highlightedDayMod: 'rdp-range_highlighted_day',
       }}
       selected={range}
-      month={highlightedDay}
+      month={highlightedDay || month}
+      onMonthChange={setMonth}
       onSelect={(rangeValue) => {
         // User clicked on first date again, default is to unset complete range. Override this by setting range to first date
         if (!rangeValue)

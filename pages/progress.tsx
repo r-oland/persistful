@@ -19,6 +19,8 @@ type ProgressContextType = {
   highlightedDay?: Date;
   setHighlightedDay: React.Dispatch<React.SetStateAction<Date | undefined>>;
   scrollRef: React.RefObject<HTMLDivElement>;
+  month: Date;
+  setMonth: React.Dispatch<React.SetStateAction<Date>>;
 };
 
 export const ProgressContext = createContext({} as ProgressContextType);
@@ -38,6 +40,8 @@ export default function Progress() {
     undefined
   );
 
+  const [month, setMonth] = useState(new Date());
+
   const value = useMemo(
     () => ({
       range,
@@ -45,8 +49,10 @@ export default function Progress() {
       highlightedDay,
       setHighlightedDay,
       scrollRef,
+      month,
+      setMonth,
     }),
-    [useDeepComparison(range), highlightedDay, scrollRef]
+    [useDeepComparison(range), highlightedDay, scrollRef, month]
   );
 
   return (

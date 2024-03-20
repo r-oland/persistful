@@ -19,7 +19,7 @@ export default function Streak({
   maxCount: number;
   countType: 'Streaks' | 'Days';
 }) {
-  const { setRange, range } = useContext(ProgressContext);
+  const { setRange, range, setMonth } = useContext(ProgressContext);
 
   const percentage = Math.max(
     ((countType === 'Streaks' ? streak.totalStreaks : streak.totalDays) /
@@ -44,12 +44,14 @@ export default function Streak({
       <HardShadow stretch animations={!sameAsRange}>
         <div
           className={styles.bar}
-          onClick={() =>
+          onClick={() => {
             setRange({
               from: startOfDay(streak.startDate),
               to: endOfDay(streak.endDate),
-            })
-          }
+            });
+
+            setMonth(streak.startDate);
+          }}
         >
           <motion.div
             className={styles.progress}

@@ -10,7 +10,8 @@ import QuickDateSelect from '../QuickDateSelect/QuickDateSelect';
 // =========================
 
 export default function SideBar() {
-  const { range, setRange, highlightedDay } = useContext(ProgressContext);
+  const { range, setRange, highlightedDay, month, setMonth } =
+    useContext(ProgressContext);
   const { data: rewards } = useGetProgressRewards({
     retry: false,
   });
@@ -32,6 +33,8 @@ export default function SideBar() {
                 range={range}
                 setRange={setRange}
                 highlightedDay={highlightedDay}
+                month={month}
+                setMonth={setMonth}
               />
             </div>
           </div>

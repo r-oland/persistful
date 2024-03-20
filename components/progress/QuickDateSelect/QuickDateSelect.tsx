@@ -18,7 +18,7 @@ export default function QuickDateSelect({
 }: {
   callback?: () => void;
 }) {
-  const { setRange, range } = useContext(ProgressContext);
+  const { setRange, range, setMonth } = useContext(ProgressContext);
   const { data: days } = useGetProgressDays({ allDays: true });
 
   const buttons = [
@@ -56,6 +56,7 @@ export default function QuickDateSelect({
           }`}
           onClick={() => {
             setRange(button.range);
+            setMonth(new Date());
             if (callback) callback();
           }}
         >

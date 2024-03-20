@@ -15,8 +15,9 @@
 
   .top {
     display: grid;
-    gap: $spacing4;
-    grid-template-columns: auto 1fr;
+    gap: $spacing2;
+    grid-template-columns: 1fr auto auto auto;
+    align-items: center;
 
     .title {
       font-size: $font-small;
@@ -35,7 +36,15 @@
 
       svg {
         font-size: $font-extra-small;
+        transform: translateY(-1px);
       }
+    }
+
+    .divider {
+      height: calc(100% - 10px);
+      width: 1px;
+      background-color: $grey;
+      transform: translateY(1px);
     }
   }
 

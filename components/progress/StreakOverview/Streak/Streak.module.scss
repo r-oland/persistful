@@ -26,6 +26,24 @@
       background-color: $green-dark;
       border-right: $border;
       height: 100%;
+      position: relative;
+
+      .streak {
+        white-space: nowrap; // Prevent line break
+        position: absolute;
+        top: -4px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: $font-tiny;
+        padding: $spacing1;
+        color: $white;
+        transition: 0.2s;
+
+        svg {
+          font-size: 8px;
+          transform: translateY(-1px);
+        }
+      }
     }
   }
 }

@@ -4,21 +4,32 @@ import { endOfDay, format, startOfDay } from 'date-fns';
 import HardShadow from 'global_components/HardShadow/HardShadow';
 import { motion } from 'framer-motion';
 import { ProgressContext } from 'pages/progress';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendarAlt, faFlame } from '@fortawesome/pro-solid-svg-icons';
 import styles from './Streak.module.scss';
 import { StreakEntity } from '../StreakOverview';
 // =========================
 
 export default function Streak({
   streak,
-  maxStreak,
+  maxCount,
+  countType,
 }: {
   streak: StreakEntity;
-  maxStreak: number;
+  maxCount: number;
+  countType: 'Streaks' | 'Days';
 }) {
   const { setRange, range } = useContext(ProgressContext);
 
-  // 0.5 is added to prevent a double right border at 100%
-  const percentage = (streak.totalStreaks / maxStreak) * 100 + 0.5;
+  const percentage = Math.max(
+    ((countType === 'Streaks' ? streak.totalStreaks : streak.totalDays) /
+      maxCount) *
+      100 +
+      // 0.5 is added to prevent a double right border at 100%
+      0.5,
+    // minimum width of 10% to prevent cramped count
+    10
+  );
 
   const sameAsRange =
     range.from.toLocaleDateString() === streak.startDate.toLocaleDateString() &&
@@ -44,7 +55,14 @@ export default function Streak({
             className={styles.progress}
             initial={{ width: 0 }}
             animate={{ width: `${percentage}%` }}
-          />
+          >
+            <p className={styles.streak}>
+              <FontAwesomeIcon
+                icon={countType === 'Streaks' ? faFlame : faCalendarAlt}
+              />{' '}
+              {countType === 'Streaks' ? streak.totalStreaks : streak.totalDays}
+            </p>
+          </motion.div>
         </div>
       </HardShadow>
     </div>

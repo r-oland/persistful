@@ -125,7 +125,21 @@ export default function StreakOverview() {
               : b.totalStreaks - a.totalStreaks;
           return b.startDate.getTime() - a.startDate.getTime();
         })
-        .filter((s) => range.from <= s.startDate && s.endDate <= range.to),
+        .filter((s) => {
+          const startedInRange =
+            s.startDate >= range.from && s.startDate <= range.to;
+          const endedInRange = s.endDate >= range.from && s.endDate <= range.to;
+          const startedBeforeRange =
+            s.startDate < range.from && s.endDate >= range.from;
+          const endedAfterRange =
+            s.startDate <= range.to && s.endDate > range.to;
+          return (
+            startedInRange ||
+            endedInRange ||
+            startedBeforeRange ||
+            endedAfterRange
+          );
+        }),
     [streakEntities, range, sort, countType]
   );
 

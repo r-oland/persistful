@@ -15,9 +15,13 @@ export default function Streak({
   streak: StreakEntity;
   maxStreak: number;
 }) {
-  const { setRange } = useContext(ProgressContext);
+  const { setRange, range } = useContext(ProgressContext);
 
   const percentage = (streak.totalStreaks / maxStreak) * 100;
+
+  const sameAsRange =
+    range.from.toLocaleDateString() === streak.startDate.toLocaleDateString() &&
+    range.to.toLocaleDateString() === streak.endDate.toLocaleDateString();
 
   return (
     <div className={styles.wrapper}>
@@ -25,7 +29,7 @@ export default function Streak({
         <p className={styles.date}>{format(streak.startDate, 'dd MMM yyyy')}</p>
         <p className={styles.date}>{format(streak.endDate, 'dd MMM yyyy')}</p>
       </div>
-      <HardShadow stretch animations>
+      <HardShadow stretch animations={!sameAsRange}>
         <div
           className={styles.bar}
           onClick={() =>

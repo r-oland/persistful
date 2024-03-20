@@ -8,6 +8,7 @@ import useGetUser from 'actions/user/useGetUser';
 import { getStreakDays } from 'utils/validateStreaks/getStreakDays';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { ProgressContext } from 'pages/progress';
+import { useMediaQ } from 'hooks/useMediaQ';
 import styles from './StreakOverview.module.scss';
 import Streak from './Streak/Streak';
 // =========================
@@ -25,16 +26,15 @@ export default function StreakOverview() {
   );
 
   const [streakEntities, setStreakEntities] = useState<StreakEntity[]>([]);
+  const [showAll, setShowAll] = useState(false);
+
+  const query = useMediaQ('min', 768);
+  const limit = query ? 12 : 3;
 
   const { data: days } = useGetProgressDays({ allDays: true });
   const { data: user } = useGetUser();
 
   const { range } = useContext(ProgressContext);
-
-  const maxStreak = useMemo(
-    () => Math.max(...streakEntities.map((s) => s.totalStreaks)),
-    [streakEntities]
-  );
 
   useEffect(() => {
     if (!days || !user) return;
@@ -96,10 +96,28 @@ export default function StreakOverview() {
     setStreakEntities(streaks);
   }, [days, user]);
 
+  const maxStreak = useMemo(
+    () => Math.max(...streakEntities.map((s) => s.totalStreaks)),
+    [streakEntities]
+  );
+
+  const sortedAndFilteredStreaks = useMemo(
+    () =>
+      streakEntities
+        .sort((a, b) => {
+          if (sort === 'Highest streak') return b.totalStreaks - a.totalStreaks;
+          return b.startDate.getTime() - a.startDate.getTime();
+        })
+        .filter((s) => range.from <= s.startDate && s.endDate <= range.to),
+    [streakEntities, range, sort]
+  );
+
   return (
     <div className={styles.wrapper}>
       <div className={styles.top}>
-        <p className={styles.title}>Streaks</p>
+        <p className={styles.title}>
+          Streak{sortedAndFilteredStreaks.length > 1 ? 's' : ''}
+        </p>
         <div
           className={styles.sort}
           onClick={() =>
@@ -112,17 +130,21 @@ export default function StreakOverview() {
         </div>
       </div>
       <div className={styles.streaks}>
-        {streakEntities
-          .sort((a, b) => {
-            if (sort === 'Highest streak')
-              return b.totalStreaks - a.totalStreaks;
-            return b.startDate.getTime() - a.startDate.getTime();
-          })
-          .filter((s) => range.from <= s.startDate && s.endDate <= range.to)
+        {sortedAndFilteredStreaks
+          .filter((_, i) => (showAll ? true : i < limit))
           .map((streak, i) => (
             <Streak key={i} streak={streak} maxStreak={maxStreak} />
           ))}
       </div>
+      {sortedAndFilteredStreaks.length > limit && (
+        <button
+          type="button" // Add the type attribute with the value of "button"
+          className={styles['show-more']}
+          onClick={() => setShowAll((prev) => !prev)}
+        >
+          Show {showAll ? 'less' : 'more'}
+        </button>
+      )}
     </div>
   );
 }

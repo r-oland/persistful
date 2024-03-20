@@ -44,4 +44,11 @@
     grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
     gap: $spacing4;
   }
+
+  .show-more {
+    font-size: $font-extra-small;
+    font-weight: $weight-semi-bold;
+    text-align: center;
+    color: $green-dark;
+  }
 }

@@ -14,14 +14,19 @@ export default function CalendarComponent({
   page: 'dashboard' | 'progress';
 }) {
   const { activeDay, setActiveDay } = useContext(DashboardContext);
-  const { range, setRange } = useContext(ProgressContext);
+  const { range, setRange, month, setMonth } = useContext(ProgressContext);
 
   return (
     <motion.div variants={framerTopNavChild}>
       {page === 'dashboard' ? (
         <Calendar activeDay={activeDay} setActiveDay={setActiveDay} />
       ) : (
-        <RangeCalendar range={range} setRange={setRange} />
+        <RangeCalendar
+          range={range}
+          setRange={setRange}
+          month={month}
+          setMonth={setMonth}
+        />
       )}
     </motion.div>
   );

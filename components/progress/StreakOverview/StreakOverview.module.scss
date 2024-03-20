@@ -41,16 +41,7 @@
 
   .streaks {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
     gap: $spacing4;
-
-    .streak {
-      border: $border-light;
-      padding: $spacing2;
-      margin-bottom: $spacing1;
-      display: grid;
-      justify-content: start;
-      gap: $spacing4;
-    }
   }
 }

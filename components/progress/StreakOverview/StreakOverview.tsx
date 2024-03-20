@@ -1,32 +1,45 @@
 /* eslint-disable no-continue */
 // Components==============
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSort } from '@fortawesome/pro-solid-svg-icons';
 import useGetProgressDays from 'actions/day/useGetProgressDays';
 import useGetUser from 'actions/user/useGetUser';
 import { getStreakDays } from 'utils/validateStreaks/getStreakDays';
-import { format } from 'date-fns';
 import { getDayAchievements } from 'utils/getDayAchievements';
+import { ProgressContext } from 'pages/progress';
 import styles from './StreakOverview.module.scss';
+import Streak from './Streak/Streak';
 // =========================
+
+export type StreakEntity = {
+  startDate: Date;
+  endDate: Date;
+  totalDays: number;
+  totalStreaks: number;
+};
 
 export default function StreakOverview() {
   const [sort, setSort] = useState<'Highest streak' | 'Most recent'>(
     'Highest streak'
   );
 
-  const [clickedStreaks, setClickedStreaks] = useState<number[]>([]);
-
-  const [streakEntities, setStreakEntities] = useState<DayEntity[][]>([[]]);
+  const [streakEntities, setStreakEntities] = useState<StreakEntity[]>([]);
 
   const { data: days } = useGetProgressDays({ allDays: true });
   const { data: user } = useGetUser();
 
+  const { range } = useContext(ProgressContext);
+
+  const maxStreak = useMemo(
+    () => Math.max(...streakEntities.map((s) => s.totalStreaks)),
+    [streakEntities]
+  );
+
   useEffect(() => {
     if (!days || !user) return;
 
-    const streaks: DayEntity[][] = [];
+    const streaks: StreakEntity[] = [];
 
     const sortedDays = days!
       .map((d) => ({ ...d, createdAt: new Date(d.createdAt) }))
@@ -50,15 +63,26 @@ export default function StreakOverview() {
         user: user!,
       });
 
-      // If there's no streak accomplished, move on to the next day
-      if (streakDays.length === 0) {
+      // If the streak is smaller then 3, move on to the next day
+      // IMPORTANT NOTE: This should always check that there is at least 1 day in the streak
+      if (streakDays.length < 3) {
         // Remove last day from the remaining days
         remainingDays = remainingDays.slice(1);
 
         continue;
       }
 
-      streaks.push(streakDays);
+      // Get relevant information from the streak days
+      const startDate = streakDays[streakDays.length - 1].createdAt;
+      const endDate = streakDays[0].createdAt;
+      const totalDays = streakDays.length;
+      const totalStreaks = streakDays.reduce(
+        (count, day) => count + getDayAchievements(day).streak,
+        0
+      );
+
+      // Add the streak to the streaks variable
+      streaks.push({ startDate, endDate, totalDays, totalStreaks });
 
       // Set the new remaining days to the days that are not in the streak variable
       remainingDays = remainingDays.filter(
@@ -88,35 +112,16 @@ export default function StreakOverview() {
         </div>
       </div>
       <div className={styles.streaks}>
-        {streakEntities.map((streak, i) => (
-          <div
-            key={i}
-            className={styles.streak}
-            style={{
-              backgroundColor: clickedStreaks.includes(i) ? '#18e597' : 'white',
-            }}
-            onClick={() => {
-              if (clickedStreaks.includes(i)) {
-                setClickedStreaks(
-                  clickedStreaks.filter((index) => index !== i)
-                );
-              } else {
-                setClickedStreaks([...clickedStreaks, i]);
-              }
-            }}
-          >
-            <p>
-              {streak?.[0]
-                ? `${format(streak[0].createdAt, 'dd MMM yyyy')}`
-                : 'N/a'}{' '}
-              -{' '}
-              {streak?.[streak.length - 1]
-                ? `${format(streak[streak.length - 1].createdAt, 'dd MMM yyyy')}`
-                : 'N/a'}{' '}
-              : <b>{streak.length} days</b>
-            </p>
-          </div>
-        ))}
+        {streakEntities
+          .sort((a, b) => {
+            if (sort === 'Highest streak')
+              return b.totalStreaks - a.totalStreaks;
+            return b.startDate.getTime() - a.startDate.getTime();
+          })
+          .filter((s) => range.from <= s.startDate && s.endDate <= range.to)
+          .map((streak, i) => (
+            <Streak key={i} streak={streak} maxStreak={maxStreak} />
+          ))}
       </div>
     </div>
   );

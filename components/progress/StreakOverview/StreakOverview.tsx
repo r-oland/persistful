@@ -34,7 +34,7 @@ export default function StreakOverview() {
   const [showAll, setShowAll] = useState(false);
 
   const query = useMediaQ('min', 768);
-  const limit = query ? 12 : 3;
+  const limit = query ? 9 : 3;
 
   const { data: days } = useGetProgressDays({ allDays: true });
   const { data: user } = useGetUser();

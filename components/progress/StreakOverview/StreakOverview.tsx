@@ -173,16 +173,22 @@ export default function StreakOverview() {
         </div>
       </div>
       <div className={styles.streaks}>
-        {sortedAndFilteredStreaks
-          .filter((_, i) => (showAll ? true : i < limit))
-          .map((streak, i) => (
-            <Streak
-              key={i}
-              streak={streak}
-              maxCount={maxCount}
-              countType={countType}
-            />
-          ))}
+        {sortedAndFilteredStreaks.length ? (
+          sortedAndFilteredStreaks
+            .filter((_, i) => (showAll ? true : i < limit))
+            .map((streak, i) => (
+              <Streak
+                key={i}
+                streak={streak}
+                maxCount={maxCount}
+                countType={countType}
+              />
+            ))
+        ) : (
+          <p className={styles['no-streaks']}>
+            No streaks found during this period
+          </p>
+        )}
       </div>
       {sortedAndFilteredStreaks.length > limit && (
         <button

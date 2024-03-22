@@ -57,6 +57,10 @@
       grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
     gap: $spacing4;
+
+    .no-streaks {
+      font-size: $font-small;
+    }
   }
 
   .show-more {

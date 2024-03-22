@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { DaySumType } from '../ActivityLineGraph';
 
 export type DataPoint = { x: number; y: number };
 
@@ -33,6 +34,45 @@ export function renderAxes(
   yAxis.selectAll('line').attr('stroke', '#f8f8f9');
 
   yAxis.select('.domain').remove(); // Remove the axis path
+}
+
+export function renderGoalLine(
+  goalRef: React.RefObject<SVGSVGElement>,
+  xScale: d3.ScaleLinear<number, number>,
+  yScale: d3.ScaleLinear<number, number>,
+  daysSum: DaySumType[]
+) {
+  const goalElement = d3.select(goalRef.current);
+  goalElement.selectAll('*').remove();
+
+  let lastValidDailyGoal =
+    daysSum.find((day) => day.rules?.dailyGoal)?.rules?.dailyGoal || 0;
+
+  const data = daysSum.map((day, index) => {
+    if (day.rules?.dailyGoal) lastValidDailyGoal = day.rules.dailyGoal;
+
+    return {
+      x: index,
+      y: day.rules?.dailyGoal || lastValidDailyGoal,
+    };
+  });
+
+  // Build the line
+  const lineBuilder = d3
+    .line<DataPoint>()
+    .x((d) => xScale(d.x))
+    .y((d) => yScale(d.y));
+
+  const linePath = lineBuilder(data);
+
+  // Render the line
+  goalElement
+    .append('path')
+    .attr('d', linePath)
+    .attr('stroke', '#68b99a')
+    .attr('opacity', 0.25)
+    .attr('fill', 'none')
+    .attr('strokeWidth', 1);
 }
 
 export function renderLine(

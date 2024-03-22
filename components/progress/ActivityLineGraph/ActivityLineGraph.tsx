@@ -24,12 +24,14 @@ import LineGraph from './LineGraph/LineGraph';
 
 type ActivityLineGraphDisplayMode = 'All days' | 'Active days';
 
+export type DaySumType = { sum: number; date: Date; rules?: RulesEntity };
+
 type ActivityLineGraphContextType = {
   activeActivity: string;
   setActiveActivity: React.Dispatch<React.SetStateAction<string>>;
   activities: ActivityEntity[];
   totalCount: number;
-  daysSum: { sum: number; date: Date }[];
+  daysSum: DaySumType[];
   displayMode: ActivityLineGraphDisplayMode;
 };
 
@@ -39,7 +41,7 @@ export const ActivityLineGraphContext = createContext(
 
 export default function ActivityLineGraph() {
   const [activities, setActivities] = useState<ActivityEntity[]>([]);
-  const [daysSum, setDaysSum] = useState<{ sum: number; date: Date }[]>([]);
+  const [daysSum, setDaysSum] = useState<DaySumType[]>([]);
   const { data: activityEntities } = useGetActivities();
   const { data: dayEntities, isLoading } = useGetProgressDays();
   const [activeActivity, setActiveActivity] = useState('');
@@ -118,7 +120,7 @@ export default function ActivityLineGraph() {
     if (isLoading) return;
     if (!dayEntities?.length && !isLoading) return setDaysSum([]);
 
-    const sums: { sum: number; date: Date }[] = [];
+    const sums: DaySumType[] = [];
 
     const filteredDayEntities =
       dayEntities?.map((d) =>
@@ -132,7 +134,7 @@ export default function ActivityLineGraph() {
 
     filteredDayEntities.forEach((d) => {
       const sum = getActivitySum(d.activities, true);
-      sums.push({ sum, date: new Date(d.createdAt) });
+      sums.push({ sum, date: new Date(d.createdAt), rules: d.rules });
     });
 
     if (displayMode === 'All days') {

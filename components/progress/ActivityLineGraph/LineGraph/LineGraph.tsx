@@ -5,7 +5,12 @@ import { useDeepComparison } from 'hooks/useDeepComparison';
 import { ProgressContext } from 'pages/progress';
 import styles from './LineGraph.module.scss';
 import { ActivityLineGraphContext } from '../ActivityLineGraph';
-import { renderAxes, renderCircles, renderLine } from './renderMethods';
+import {
+  renderAxes,
+  renderCircles,
+  renderGoalLine,
+  renderLine,
+} from './renderMethods';
 import Cursor, { useHandleCursorLogic } from './Cursor';
 
 const MARGIN = { top: 30, right: 30, bottom: 30, left: 40 };
@@ -17,6 +22,7 @@ export default function LineGraph() {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
   const circleRef = useRef<SVGSVGElement | null>(null);
+  const goalLineRef = useRef<SVGSVGElement | null>(null);
   const lineRef = useRef<SVGSVGElement | null>(null);
   const axesRef = useRef<SVGSVGElement | null>(null);
 
@@ -65,6 +71,7 @@ export default function LineGraph() {
 
   useEffect(() => {
     renderAxes(axesRef, yScale, boundsWidth, yAxisMax, yAxisMin);
+    renderGoalLine(goalLineRef, xScale, yScale, daysSum);
     renderLine(lineRef, data, xScale, yScale, boundsWidth, boundsHeight);
     renderCircles(circleRef, data, xScale, yScale, daysSum, width);
   }, [useDeepComparison(daysSum), boundsWidth, boundsHeight]);
@@ -78,6 +85,7 @@ export default function LineGraph() {
           transform={`translate(${[MARGIN.left, MARGIN.top].join(',')})`}
         >
           <g width={boundsWidth} height={boundsHeight} ref={axesRef} />
+          <g width={boundsWidth} height={boundsHeight} ref={goalLineRef} />
           <g width={boundsWidth} height={boundsHeight} ref={lineRef} />
           <g width={boundsWidth} height={boundsHeight} ref={circleRef} />
           {cursorPosition !== null && (

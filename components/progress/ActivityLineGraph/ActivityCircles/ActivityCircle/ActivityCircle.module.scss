@@ -43,6 +43,20 @@
     }
   }
 
+  &.bonus-time {
+    .background {
+      stroke: $green-light;
+
+      circle {
+        fill: $green-dark;
+      }
+    }
+
+    .stroke {
+      stroke: $green-dark;
+    }
+  }
+
   .content {
     position: absolute;
     top: 55%;

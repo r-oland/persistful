@@ -37,7 +37,7 @@ export default function ActivityCircle({
 
   return (
     <div
-      className={`${styles.wrapper} ${activity.penalty ? styles.penalty : ''}`}
+      className={`${styles.wrapper} ${activity.penalty ? styles.penalty : ''} ${activity._id === 'bonusTime' ? styles['bonus-time'] : ''}`}
     >
       <svg viewBox="0 0 100 100" className={styles.background}>
         <circle

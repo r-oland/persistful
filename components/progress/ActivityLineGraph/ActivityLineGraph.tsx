@@ -15,6 +15,7 @@ import {
   faEmptySet,
   faEye,
   faEyeSlash,
+  faOctagonPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { ProgressContext } from 'pages/progress';
 import { getDayAchievements } from 'utils/getDayAchievements';
@@ -39,6 +40,37 @@ type ActivityLineGraphContextType = {
 export const ActivityLineGraphContext = createContext(
   {} as ActivityLineGraphContextType
 );
+
+const bonusActivity = {
+  _id: 'bonusTime',
+  name: 'Bonus time',
+  count: 0,
+  countCalc: 0,
+  penalty: false,
+  timesCount: 0,
+  countMode: 'minutes' as const,
+  createdAt: new Date(),
+  icon: faOctagonPlus as any,
+  status: 'active',
+};
+
+const addBonusTimeAsActivity = (days: DayEntity[]) =>
+  days.map((day) => {
+    if (!day.rules.prm) return day;
+
+    const hasPenaltyActivities = day.activities.some(
+      (a) => a.penalty && a.count > 0
+    );
+
+    if (hasPenaltyActivities) return day;
+
+    // Else add bonus time as an activity
+    const activities = [
+      ...day.activities,
+      { ...bonusActivity, count: day.rules.bonusTime },
+    ];
+    return { ...day, activities };
+  });
 
 export default function ActivityLineGraph() {
   const [activities, setActivities] = useState<ActivityEntity[]>([]);
@@ -75,7 +107,7 @@ export default function ActivityLineGraph() {
         },
       ]);
 
-    const sums = (dayEntities || [])
+    const sums = (addBonusTimeAsActivity(dayEntities) || [])
       .flatMap((day) => day.activities)
       .reduce((acc: DailyActivityEntity[], activity) => {
         const sum = getActivitySum([activity]);
@@ -100,7 +132,7 @@ export default function ActivityLineGraph() {
 
     const combinedActivities = sums
       ?.map((activitySum) => {
-        const activity = activityEntities?.find(
+        const activity = [...(activityEntities || []), bonusActivity]?.find(
           (a) => a._id === activitySum._id
         );
         if (activity) return { ...activity, ...activitySum };
@@ -109,7 +141,12 @@ export default function ActivityLineGraph() {
       .filter(Boolean)
       // Highest count first
       .sort((a, b) => (b?.count || 0) - (a?.count || 0))
-      // Penalty last
+      // Bonus time after that
+      .sort(
+        (a, b) =>
+          (a?._id === 'bonusTime' ? 1 : 0) - (b?._id === 'bonusTime' ? 1 : 0)
+      )
+      // Penalty time last
       .sort(
         (a, b) => (a?.penalty ? 1 : 0) - (b?.penalty ? 1 : 0)
       ) as ActivityEntity[];
@@ -124,7 +161,7 @@ export default function ActivityLineGraph() {
     const sums: DaySumType[] = [];
 
     const filteredDayEntities =
-      dayEntities?.map((d) =>
+      addBonusTimeAsActivity(dayEntities)?.map((d) =>
         activeActivity
           ? {
               ...d,
@@ -138,8 +175,12 @@ export default function ActivityLineGraph() {
 
       // Display sum isolated to the activity
       if (activeActivity) sum = getActivitySum(d.activities);
-      // Display sum of all activities including bonus time and penalties
-      else sum = getDayAchievements(d).total;
+      else {
+        // Display sum of all activities including bonus time and penalties
+        const { total, bonusScore } = getDayAchievements(d);
+        // Subtract bonus time as it's already included as an activity
+        sum = total - bonusScore;
+      }
       sums.push({ sum, date: new Date(d.createdAt), rules: d.rules });
     });
 

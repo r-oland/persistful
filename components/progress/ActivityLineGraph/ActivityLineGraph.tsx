@@ -17,6 +17,7 @@ import {
   faEyeSlash,
 } from '@fortawesome/pro-solid-svg-icons';
 import { ProgressContext } from 'pages/progress';
+import { getDayAchievements } from 'utils/getDayAchievements';
 import styles from './ActivityLineGraph.module.scss';
 import ActivityCircles from './ActivityCircles/ActivityCircles';
 import LineGraph from './LineGraph/LineGraph';
@@ -133,7 +134,12 @@ export default function ActivityLineGraph() {
       ) || [];
 
     filteredDayEntities.forEach((d) => {
-      const sum = getActivitySum(d.activities, true);
+      let sum = 0;
+
+      // Display sum isolated to the activity
+      if (activeActivity) sum = getActivitySum(d.activities);
+      // Display sum of all activities including bonus time and penalties
+      else sum = getDayAchievements(d).total;
       sums.push({ sum, date: new Date(d.createdAt), rules: d.rules });
     });
 

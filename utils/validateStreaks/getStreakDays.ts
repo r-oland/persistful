@@ -64,14 +64,21 @@ export function getStreakDays({
       // gap 2 = 1 missed day
       if (gap === 2) {
         if (secondChance) {
-          // This might look weird, but it's correct
-          const nextDayHasStreak = !!getDayAchievements(day).streak;
+          const nextDay = add(day.createdAt, { days: 1 });
+          const isMonday = nextDay.getDay() === 1;
 
-          // Make sure the next day after the gap has a streak
-          if (nextDayHasStreak) {
-            // This is the day before the missed day, so push 1 day ahead to the second chance dates
-            secondChanceDates.push(add(day.createdAt, { days: 1 }));
-          } else break;
+          // Monday is an edge case, as it may always be a second chance
+          if (isMonday) secondChanceDates.push(nextDay);
+          else {
+            // This might look weird, but it's correct
+            const previousDayHasStreak = !!getDayAchievements(day).streak;
+
+            // Make sure the previous day before the gap has a streak
+            if (previousDayHasStreak) {
+              // This is the day before the missed day, so push 1 day ahead to the second chance dates
+              secondChanceDates.push(nextDay);
+            } else break;
+          }
         } else {
           // The streak is broken
           break;
@@ -83,21 +90,26 @@ export function getStreakDays({
     if (getDayAchievements(day).streak) {
       streakDays.push(day);
     } else if (secondChance) {
-      // Get the day before the current day
-      const nextDay = days.find(
-        (d) =>
-          d.createdAt.toLocaleDateString() ===
-          sub(day.createdAt, { days: 1 }).toLocaleDateString()
-      );
+      const isMonday = day.createdAt.getDay() === 1;
+      // Monday is an edge case, as it may always be a second chance
+      if (isMonday) secondChanceDates.push(day.createdAt);
+      else {
+        // Get the day before the current day
+        const nextDay = days.find(
+          (d) =>
+            d.createdAt.toLocaleDateString() ===
+            sub(day.createdAt, { days: 1 }).toLocaleDateString()
+        );
 
-      // Check if the day before the current day has a streak
-      const nextDayHasStreak = !!getDayAchievements(nextDay).streak;
+        // Check if the day before the current day has a streak
+        const nextDayHasStreak = !!getDayAchievements(nextDay).streak;
 
-      // Make sure the day before the current day has a valid streak
-      if (nextDayHasStreak) {
-        // Use the second chance for this week
-        secondChanceDates.push(day.createdAt);
-      } else break;
+        // Make sure the day before the current day has a valid streak
+        if (nextDayHasStreak) {
+          // Use the second chance for this week
+          secondChanceDates.push(day.createdAt);
+        } else break;
+      }
     } else {
       // The streak is broken
       break;

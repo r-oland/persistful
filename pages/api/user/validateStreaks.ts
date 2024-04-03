@@ -1,3 +1,4 @@
+import { sub } from 'date-fns';
 import { Collection, ObjectId, WithId } from 'mongodb';
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
@@ -55,17 +56,21 @@ export default async function handler(
 
     const { streakDays, secondChanceDates } = getStreakDays({ days, user });
 
-    // total sum of all completed streak day cycles
-    const total = streakDays
-      .map((day) => getDayAchievements(day).streak)
-      .reduce((prev, cur) => prev + cur, 0);
-
     const startDateGeneralStreak =
       streakDays[streakDays.length - 1]?.createdAt ||
       // fallback if streak was never broken -> grab first day
       streakDays[0]?.createdAt;
 
-    if (!total)
+    const lastDayInStreak = new Date(
+      Math.max(
+        streakDays[0].createdAt.getTime(),
+        secondChanceDates[0].getTime()
+      )
+    ).toLocaleDateString();
+
+    const yesterday = sub(new Date(), { days: 1 }).toLocaleDateString();
+
+    if (lastDayInStreak !== yesterday)
       return reset({
         res,
         userId,
@@ -74,6 +79,11 @@ export default async function handler(
         startDateGeneralStreak,
         activeDay,
       });
+
+    // total sum of all completed streak day cycles
+    const total = streakDays
+      .map((day) => getDayAchievements(day).streak)
+      .reduce((prev, cur) => prev + cur, 0);
 
     // update streak in user model
     await users.updateOne(

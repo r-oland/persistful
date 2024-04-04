@@ -10,7 +10,11 @@ const getStreak = (
 
   const positiveReinforcementMode = day?.rules.prm;
   // possible if you have prm enabled -> will happen when you have no penalty activities
-  const bonusScore = totalNegative === 0 ? day.rules.bonusTime : 0;
+  const bonusScore = positiveReinforcementMode
+    ? totalNegative === 0
+      ? day.rules.bonusTime
+      : 0
+    : 0;
 
   const total = positiveReinforcementMode
     ? totalPositive + bonusScore

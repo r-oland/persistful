@@ -63,8 +63,8 @@ export default async function handler(
 
     const lastDayInStreak = new Date(
       Math.max(
-        streakDays[0].createdAt.getTime(),
-        secondChanceDates[0].getTime()
+        streakDays[0].createdAt?.getTime() || 0,
+        secondChanceDates[0]?.getTime() || 0
       )
     ).toLocaleDateString();
 

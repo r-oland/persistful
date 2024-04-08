@@ -4,7 +4,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { getCollection } from 'utils/getMongo';
-import { setDateTime } from 'utils/setDateTime';
 import { getStreakDays } from 'utils/validateStreaks/getStreakDays';
 import { reset } from 'utils/validateStreaks/reset';
 
@@ -44,11 +43,7 @@ export default async function handler(
     // Fetch all days before today
     const days = await dayCollection
       .find(
-        {
-          userId,
-          // exclude today
-          createdAt: { $lt: setDateTime(new Date(), 'start') },
-        },
+        { userId },
         // sort on most recent first
         { sort: { createdAt: -1 } }
       )
@@ -61,10 +56,16 @@ export default async function handler(
       // fallback if streak was never broken -> grab first day
       streakDays[0]?.createdAt;
 
+    const excludeToday = (date: Date) =>
+      date.toLocaleDateString() !== new Date().toLocaleDateString();
+
     const lastDayInStreak = new Date(
       Math.max(
-        streakDays[0].createdAt?.getTime() || 0,
-        secondChanceDates[0]?.getTime() || 0
+        streakDays
+          // Don't include today in search for last day in streak
+          .filter((d) => excludeToday(d.createdAt))[0]
+          .createdAt?.getTime() || 0,
+        secondChanceDates.filter(excludeToday)[0]?.getTime() || 0
       )
     ).toLocaleDateString();
 

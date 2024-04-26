@@ -32,7 +32,9 @@ export default function SideBar() {
             <h3 className={styles.title}>Rewards</h3>
             {!!openRewards?.length && (
               <>
-                <div className={`${styles.rewards} `}>
+                <div
+                  className={`${styles.rewards} ${openRewards.length > 2 ? styles['has-scroll'] : ''}`}
+                >
                   {openRewards?.map((openReward) => (
                     <RewardCard
                       key={openReward._id}

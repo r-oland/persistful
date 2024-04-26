@@ -29,6 +29,10 @@
         gap: $spacing4;
         max-height: 362px;
         overflow: auto;
+
+        &.has-scroll {
+          padding-bottom: $spacing4;
+        }
       }
 
       .bar {

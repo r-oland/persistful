@@ -49,23 +49,21 @@ export default async function handler(
       )
       .toArray();
 
-    const { streakDays, secondChanceDates } = getStreakDays({ days, user });
+    const { streakDays, secondChanceDates } = getStreakDays({
+      days,
+      user,
+      skipToday: true,
+    });
 
     const startDateGeneralStreak =
       streakDays[streakDays.length - 1]?.createdAt ||
       // fallback if streak was never broken -> grab first day
       streakDays[0]?.createdAt;
 
-    const excludeToday = (date: Date) =>
-      date.toLocaleDateString() !== new Date().toLocaleDateString();
-
     const lastDayInStreak = new Date(
       Math.max(
-        streakDays
-          // Don't include today in search for last day in streak
-          .filter((d) => excludeToday(d.createdAt))[0]
-          .createdAt?.getTime() || 0,
-        secondChanceDates.filter(excludeToday)[0]?.getTime() || 0
+        streakDays[0]?.createdAt?.getTime() || 0,
+        secondChanceDates[0]?.getTime() || 0
       )
     ).toLocaleDateString();
 

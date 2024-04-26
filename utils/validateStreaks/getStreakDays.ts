@@ -1,3 +1,4 @@
+/* eslint-disable no-continue */
 import { getDayAchievements } from 'utils/getDayAchievements';
 import { add, differenceInCalendarDays, getWeek, sub } from 'date-fns';
 import { WithId } from 'mongodb';
@@ -5,12 +6,15 @@ import { WithId } from 'mongodb';
 export function getStreakDays({
   days,
   user,
+  skipToday,
 }: {
   days: WithId<DayEntity>[];
   user: WithId<UserEntity>;
+  skipToday?: boolean;
 }) {
   const secondChance = user.rules.secondChange;
   let currentWeek = getWeek(days[0].createdAt);
+  const today = new Date().toLocaleDateString();
   const streakDays: DayEntity[] = [];
   const secondChanceDates: Date[] = [];
   const getSecondChanceDatesInLastWeek = (week: number) =>
@@ -20,6 +24,10 @@ export function getStreakDays({
 
   for (let i = 0; i < days.length; i++) {
     const day = days[i];
+
+    // Don't use today's data for any calculations or validations
+    if (skipToday && day.createdAt.toLocaleDateString() === today) continue;
+
     const weekNumber = getWeek(day.createdAt);
 
     // Reset the second chance if it's a new week

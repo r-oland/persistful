@@ -29,13 +29,14 @@
     }
 
     .day-selector {
-      display: block;
+      white-space: nowrap;
       justify-self: end;
       font-size: $font-small;
       cursor: pointer;
 
       svg {
         font-size: $font-extra-small;
+        transform: translateY(-0.5px);
       }
     }
   }

@@ -30,7 +30,7 @@
     }
 
     .sort {
-      display: block;
+      white-space: nowrap;
       justify-self: end;
       font-size: $font-small;
       cursor: pointer;

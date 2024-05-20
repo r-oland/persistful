@@ -19,6 +19,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { ProgressContext } from 'pages/progress';
 import { getDayAchievements } from 'utils/getDayAchievements';
+import { differenceInDays } from 'date-fns';
 import styles from './ActivityLineGraph.module.scss';
 import ActivityCircles from './ActivityCircles/ActivityCircles';
 import LineGraph from './LineGraph/LineGraph';
@@ -86,6 +87,11 @@ export default function ActivityLineGraph() {
   const totalCount = useMemo(
     () => activities?.reduce((total, item) => total + item.count, 0) || 0,
     [activities]
+  );
+
+  const noMissingDaysInSum = useMemo(
+    () => dayEntities?.length === differenceInDays(range.to, range.from) + 1,
+    [dayEntities, range]
   );
 
   useEffect(() => {
@@ -233,7 +239,7 @@ export default function ActivityLineGraph() {
         <div className={styles.top}>
           <p className={styles.title}>Activities</p>
           <div
-            className={styles['day-selector']}
+            className={`${styles['day-selector']} ${noMissingDaysInSum ? styles.disabled : ''}`}
             onClick={() =>
               setDisplayMode(
                 displayMode === 'All days' ? 'Active days' : 'All days'

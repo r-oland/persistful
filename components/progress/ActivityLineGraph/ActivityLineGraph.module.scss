@@ -33,10 +33,16 @@
       justify-self: end;
       font-size: $font-small;
       cursor: pointer;
+      transition: 0.2s;
 
       svg {
         font-size: $font-extra-small;
         transform: translateY(-0.5px);
+      }
+
+      &.disabled {
+        color: $grey;
+        pointer-events: none;
       }
     }
   }

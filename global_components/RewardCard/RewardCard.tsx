@@ -39,13 +39,15 @@ export default function RewardCard({
 
   const isCompleted = reward.completedCycles === reward.totalCycles;
 
-  const rewardStatus = isCompleted
-    ? 'completed'
-    : !user?.activeReward
-      ? 'unset'
-      : user.activeReward === reward._id
-        ? 'active'
-        : 'stale';
+  const getRewardStatus = () => {
+    if (isCompleted) return 'completed';
+    if (!user?.activeReward) return 'unset';
+    if (user.activeReward === reward._id) return 'active';
+    if (reward.completedCycles > 0) return 'started';
+    return 'stale';
+  };
+
+  const rewardStatus = getRewardStatus();
 
   const rewardContent = isCompleted
     ? {

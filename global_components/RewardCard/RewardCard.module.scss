@@ -71,6 +71,10 @@
           padding: 0.15rem $spacing2;
           border-radius: $border-radius;
 
+          &.started {
+            background-color: $green-light;
+          }
+
           &.active,
           &.completed {
             background-color: $green-dark;

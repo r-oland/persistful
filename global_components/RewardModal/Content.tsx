@@ -42,6 +42,8 @@ export default function Content({
   const [localImage, setLocalImage] = useState('');
   const [fileToLarge, setFileToLarge] = useState(false);
   const [setToActive, setSetToActive] = useState(false);
+  const [maxSliderTotal, setMaxSliderTotal] = useState(120);
+  const [maxSliderMin, setMaxSliderMin] = useState(50);
 
   const name =
     saveObject?.name !== undefined ? saveObject.name : reward?.name || '';
@@ -51,7 +53,6 @@ export default function Content({
   const image = localImage || reward?.image || '';
   const completedCycles = reward?.completedCycles || 0;
   const minSlider = completedCycles + 1;
-  const maxSlider = 120;
 
   const totalCounter = useCounter(totalCycles);
   const { push } = useRouter();
@@ -169,12 +170,13 @@ export default function Content({
           <p className={styles['sub-title']}>Amount of cycles</p>
           <Slider
             initialValue={totalCycles}
-            max={maxSlider}
+            max={maxSliderTotal}
             min={minSlider}
             step={1}
             onChange={(value) =>
               setSaveObject((prev) => ({ ...prev, totalCycles: value }))
             }
+            increaseMax={setMaxSliderTotal}
           />
         </div>
       </div>
@@ -219,7 +221,8 @@ export default function Content({
           {mode === 'streak' && (
             <Slider
               initialValue={minCycles}
-              max={50}
+              max={maxSliderMin}
+              increaseMax={setMaxSliderMin}
               min={1}
               step={1}
               onChange={(value) =>
@@ -247,7 +250,7 @@ export default function Content({
             percentage={
               reward
                 ? (100 / totalCycles) * completedCycles
-                : (100 / maxSlider) * totalCycles
+                : (100 / maxSliderTotal) * totalCycles
             }
           >
             {reward ? (

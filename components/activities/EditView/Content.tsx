@@ -55,6 +55,7 @@ export default function Content({
   const [saveObject, setSaveObject] = useState<Partial<ActivityEntity>>(
     newActivity ? defaultValues : {}
   );
+  const [maxCountCalc, setMaxCountCalc] = useState(120);
   //
 
   // functions
@@ -249,7 +250,8 @@ export default function Content({
                 onChange={handleCountCalcChange}
                 penalty={penaltyMode}
                 min={10}
-                max={120}
+                max={maxCountCalc}
+                increaseMax={setMaxCountCalc}
                 time
               />
             </motion.div>

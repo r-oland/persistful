@@ -3,7 +3,7 @@ import useGetUser from 'actions/user/useGetUser';
 import useUpdateUser from 'actions/user/useUpdateUser';
 import Checkbox from 'global_components/Checkbox/Checkbox';
 import Slider from 'global_components/Slider/Slider';
-import React from 'react';
+import React, { useState } from 'react';
 import styles from './Rules.module.scss';
 // =========================
 
@@ -11,6 +11,9 @@ export default function Rules() {
   const { data: user } = useGetUser();
   const { mutate } = useUpdateUser();
   const rules = user?.rules;
+
+  const [maxDailyGoal, setMaxDailyGoal] = useState(240);
+  const [maxBonusTime, setMaxBonusTime] = useState(120);
 
   if (!rules) return null;
 
@@ -30,7 +33,8 @@ export default function Rules() {
           initialValue={rules.dailyGoal}
           onChange={(dailyGoal) => updateRules({ dailyGoal })}
           min={10}
-          max={240}
+          max={maxDailyGoal}
+          increaseMax={setMaxDailyGoal}
           time
         />
       </div>
@@ -80,7 +84,8 @@ export default function Rules() {
             initialValue={rules.bonusTime}
             onChange={(bonusTime) => updateRules({ bonusTime })}
             min={10}
-            max={120}
+            max={maxBonusTime}
+            increaseMax={setMaxBonusTime}
             time
           />
         </div>

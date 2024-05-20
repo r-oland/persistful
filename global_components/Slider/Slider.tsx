@@ -1,6 +1,8 @@
 // Components==============
 import React, { useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import styles from './Slider.module.scss';
 // =========================
 
@@ -10,6 +12,7 @@ export default function Slider({
   penalty,
   min,
   max,
+  increaseMax,
   time,
   step = 5,
   hideValue,
@@ -19,6 +22,7 @@ export default function Slider({
   penalty?: boolean;
   min: number;
   max: number;
+  increaseMax?: React.Dispatch<React.SetStateAction<number>>;
   time?: boolean;
   step?: number;
   hideValue?: boolean;
@@ -51,6 +55,15 @@ export default function Slider({
         className={styles.slider}
         onChange={handleChange}
       />
+      {!!increaseMax && max === sliderPosition && (
+        <div
+          className={styles['increase-max']}
+          // 60 because it works nice with time values
+          onClick={() => increaseMax(sliderPosition + 60)}
+        >
+          <FontAwesomeIcon icon={faPlus} />
+        </div>
+      )}
       {!hideValue && (
         <p
           style={{

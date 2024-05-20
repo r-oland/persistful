@@ -11,6 +11,26 @@
     font-size: $font-small;
   }
 
+  .increase-max {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 18px;
+    background-color: $green;
+    color: $white;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+
+    &:hover {
+      background-color: $green-dark;
+    }
+  }
+
   &.hide-value {
     padding-bottom: 0;
   }
@@ -25,6 +45,14 @@
 
       &::-moz-range-thumb {
         background: $red;
+      }
+    }
+
+    .increase-max {
+      background-color: $red;
+
+      &:hover {
+        background-color: $red-dark;
       }
     }
   }

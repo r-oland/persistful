@@ -44,8 +44,9 @@ export default function Slider({
 
   // Resolve bug where initial max value is lower than initial value
   useEffect(() => {
-    if (initialValue > max && increaseMax) increaseMax(initialValue);
-  }, [initialValue]);
+    // + 30 for visual appearance (+ is not displayed in initially)
+    if (initialValue >= max && increaseMax) increaseMax(initialValue + 30);
+  }, []);
 
   return (
     <div

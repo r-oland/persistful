@@ -22,7 +22,11 @@
   gap: $spacing5;
 
   .inactive-message {
+    background-color: $red-light;
+    padding: $spacing3;
     color: $red-dark;
+    border-radius: $border-radius;
+    text-align: center;
   }
 
   p,

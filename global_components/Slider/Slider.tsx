@@ -1,5 +1,5 @@
 // Components==============
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { convertMinutesToHours } from 'utils/convertMinutesToHours';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
@@ -41,6 +41,11 @@ export default function Slider({
   const correctedStartValue = sliderPosition - min;
   const percentage = (correctedStartValue * 100) / range;
   const offset = (sliderPosition / max - 0.5) * 10;
+
+  // Resolve bug where initial max value is lower than initial value
+  useEffect(() => {
+    if (initialValue > max && increaseMax) increaseMax(initialValue);
+  }, [initialValue]);
 
   return (
     <div

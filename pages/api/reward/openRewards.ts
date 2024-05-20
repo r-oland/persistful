@@ -3,24 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { checkAuth } from 'utils/checkAuth';
 import { getCollection } from 'utils/getMongo';
 
-function moveActiveRewardToFront(
-  rewards: RewardEntity[],
-  activeRewardId?: string
-) {
-  if (!activeRewardId) return rewards;
-
-  const activeReward = rewards.find(
-    (r) => r._id?.toString() === activeRewardId?.toString()
-  );
-
-  if (activeReward) {
-    const index = rewards.indexOf(activeReward);
-    rewards.splice(index, 1);
-    rewards.unshift(activeReward);
-  }
-  return rewards;
-}
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -40,14 +22,27 @@ export default async function handler(
       // get open rewards (rewards that are not claimed)
       const rewards = await getCollection<RewardEntity>('rewards');
       const openRewards = await rewards
-        .find({
-          userId: session.user.uid,
+        .aggregate([
           // no endDate means it's still open
-          endDate: { $exists: false },
-        })
-        .sort({ createdAt: -1 })
-        .toArray()
-        .then((r) => moveActiveRewardToFront(r, user?.activeReward));
+          { $match: { userId: session.user.uid, endDate: { $exists: false } } },
+          // Temporarily add isActiveReward field to sort on
+          {
+            $addFields: {
+              isActiveReward: {
+                $cond: [{ $eq: ['$_id', user?.activeReward] }, 1, 0],
+              },
+            },
+          },
+          // Sort on priority of listed fields
+          { $sort: { isActiveReward: -1, completedCycles: -1, createdAt: -1 } },
+          // Remove isActiveReward field after serving it's purpose in sort
+          {
+            $project: {
+              isActiveReward: 0,
+            },
+          },
+        ])
+        .toArray();
 
       // if they doen't exist, return nothing
       if (!openRewards.length) return res.status(200).send([]);
